@@ -12,7 +12,6 @@ import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,19 +29,9 @@ import java.util.WeakHashMap;
  */
 public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
-
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
     private TopTipBar topTipBar;
-
-    private Handler handler = new Handler();
-
-    private AbsListView.OnScrollListener onScrollListener;
-
-    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView,
-            boolean showOriStatus) {
-        this(fragment, bean, listView, showOriStatus, false);
-    }
 
     public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView,
             boolean showOriStatus, boolean pref) {
@@ -62,13 +51,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                     int totalItemCount) {
-//                VelocityListView velocityListView = (VelocityListView) view;
-//                if (velocityListView.getVelocity() < 0) {
-//                    topTipBar.hideCount();
-//                } else if (velocityListView.getVelocity() > 0) {
-//                    if (topTipBar.getValues().size() == 0) {
-//                        return;
-//                    }
 
                 View childView = Utility
                         .getListViewItemViewFromPosition(listView, firstVisibleItem);
@@ -85,7 +67,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                     handle(position + 1);
                 }
             }
-//            }
 
             private void handle(int position) {
                 if (position > 0 && topTipBar != null && position < bean.size()) {
@@ -195,30 +176,26 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     }
 
-    protected void buildOriWeiboContent(final MessageBean repost_msg, ViewHolder holder,
+    protected void buildOriWeiboContent(final MessageBean oriWeibo, ViewHolder holder,
             int position) {
 
         holder.repost_content.setVisibility(View.VISIBLE);
 
-        boolean isSameTag = repost_msg.getId().equals((String) holder.repost_content.getTag());
+        holder.repost_content_pic.setVisibility(View.GONE);
+        holder.repost_content_pic_multi.setVisibility(View.GONE);
 
-        if (!isSameTag) {
-            holder.repost_content.setText(repost_msg.getListViewSpannableString());
-            holder.repost_content.setTag(repost_msg.getId());
-        }
+        holder.content_pic.setVisibility(View.GONE);
+        holder.content_pic_multi.setVisibility(View.GONE);
 
-        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
-            if (repost_msg.isMultiPics()) {
-                buildMultiPic(repost_msg, holder.repost_content_pic_multi);
-                interruptPicDownload(holder.repost_content_pic);
+        holder.repost_content.setText(oriWeibo.getListViewSpannableString());
+
+        if (oriWeibo.havePicture()) {
+            if (oriWeibo.isMultiPics()) {
+                buildMultiPic(oriWeibo, holder.repost_content_pic_multi);
             } else {
-                buildPic(repost_msg, holder.repost_content_pic, position);
-                interruptPicDownload(holder.repost_content_pic_multi);
+                buildPic(oriWeibo, holder.repost_content_pic, position);
             }
 
-        } else {
-            interruptPicDownload(holder.repost_content_pic_multi);
-            interruptPicDownload(holder.repost_content_pic);
         }
 
     }

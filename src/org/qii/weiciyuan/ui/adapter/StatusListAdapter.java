@@ -183,9 +183,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         if (showOriStatus) {
             boolean checkRepostsCount = (msg.getReposts_count() != 0);
             boolean checkCommentsCount = (msg.getComments_count() != 0);
-            boolean checkPic = (!TextUtils.isEmpty(msg.getThumbnail_pic())
+            boolean checkPic = msg.havePicture()
                     || (msg.getRetweeted_status() != null
-                    && !TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())));
+                    && msg.getRetweeted_status().havePicture());
             checkPic = (checkPic && !SettingUtility.isEnablePic());
             boolean checkGps = (msg.getGeo() != null);
 
@@ -229,8 +229,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.content_pic.setVisibility(View.GONE);
         holder.content_pic_multi.setVisibility(View.GONE);
 
-        if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-
+        if (msg.havePicture()) {
             if (msg.isMultiPics()) {
                 buildMultiPic(msg, holder.content_pic_multi);
             } else {
@@ -275,7 +274,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         boolean interruptRepostPic = false;
         boolean interruptRepostMultiPic = false;
 
-        if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+        if (msg.havePicture()) {
             if (msg.isMultiPics()) {
                 interruptPic = true;
             } else {
@@ -285,7 +284,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         if (repost_msg != null && showOriStatus) {
 
-            if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
+            if (repost_msg.havePicture()) {
                 if (repost_msg.isMultiPics()) {
                     interruptRepostPic = true;
                 } else {
@@ -365,18 +364,13 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.repost_content.setTag(repost_msg.getId());
         }
 
-        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
+        if (repost_msg.havePicture()) {
             if (repost_msg.isMultiPics()) {
                 buildMultiPic(repost_msg, holder.repost_content_pic_multi);
-                interruptPicDownload(holder.repost_content_pic);
             } else {
                 buildPic(repost_msg, holder.repost_content_pic, position);
-                interruptPicDownload(holder.repost_content_pic_multi);
             }
 
-        } else {
-            interruptPicDownload(holder.repost_content_pic_multi);
-            interruptPicDownload(holder.repost_content_pic);
         }
     }
 

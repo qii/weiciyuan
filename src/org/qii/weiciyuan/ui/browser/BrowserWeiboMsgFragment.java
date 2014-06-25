@@ -450,7 +450,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         layout.content_pic_multi.setVisibility(View.GONE);
 
         //sina weibo official account can send repost message with picture, fuck sina weibo
-        if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
+        if (msg.havePicture() && msg.getRetweeted_status() == null) {
             displayPictures(msg, layout.content_pic_multi, layout.content_pic, refreshPic);
         }
 
@@ -475,7 +475,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
             layout.repost_pic.setVisibility(View.GONE);
             layout.repost_pic_multi.setVisibility(View.GONE);
 
-            if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
+            if (repostMsg.havePicture()) {
                 displayPictures(repostMsg, layout.repost_pic_multi, layout.repost_pic, refreshPic);
             }
         }

@@ -393,6 +393,9 @@ public class MessageBean extends ItemBean implements Parcelable {
         this.original_pic = original_pic;
     }
 
+    public boolean havePicture() {
+        return pic_urls.size() > 0 || pic_ids.size() > 0;
+    }
 
     @Override
     public boolean equals(Object otherObject) {
