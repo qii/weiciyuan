@@ -11,7 +11,6 @@ import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
-import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.HeaderListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
@@ -197,11 +196,11 @@ public class Utility {
     }
 
     public static void stopListViewScrollingAndScrollToTop(ListView listView) {
-        if (listView instanceof AutoScrollListView) {
-            ((AutoScrollListView) listView).requestPositionToScreen(0, true);
-        } else {
-            listView.smoothScrollToPosition(0, 0);
-        }
+        Runnable runnable = JavaReflectionUtility.getValue(listView, "mFlingRunnable");
+        listView.removeCallbacks(runnable);
+        listView.setSelection(Math.min(listView.getFirstVisiblePosition(), 5));
+        listView.smoothScrollToPosition(0);
+
     }
 
     public static int dip2px(int dipValue) {
