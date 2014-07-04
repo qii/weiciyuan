@@ -415,6 +415,10 @@ public class Utility {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
+    public static boolean isL() {
+        return Build.VERSION.SDK_INT >= 20;
+    }
+
     public static int getScreenWidth() {
         Activity activity = GlobalContext.getInstance().getActivity();
         if (activity != null) {

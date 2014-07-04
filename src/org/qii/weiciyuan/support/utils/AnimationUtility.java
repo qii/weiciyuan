@@ -65,19 +65,45 @@ public class AnimationUtility {
     }
 
     public static void forceConvertActivityToTranslucent(Activity activity) {
-        try {
-            Class<?>[] declaredClasses = Activity.class.getDeclaredClasses();
-            Class<?> listener = null;
-            for (Class clazz : declaredClasses) {
-                if (clazz.getSimpleName().contains("TranslucentConversionListener")) {
-                    listener = clazz;
+
+        if (Utility.isL()) {
+            try {
+                //                Class listener = Class
+                //                        .forName("android.app.Activity$TranslucentConversionListener");
+
+                Method[] methods = Activity.class.getDeclaredMethods();
+                Method requireMethod = null;
+                for (Method method : methods) {
+                    if (method.getName().equals("convertToTranslucent")) {
+                        requireMethod = method;
+                    }
                 }
+
+                if (requireMethod != null) {
+                    requireMethod.setAccessible(true);
+                    requireMethod.invoke(activity, new Object[]{null, null});
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
-            Method method = Activity.class.getDeclaredMethod("convertToTranslucent",
-                    listener);
-            method.setAccessible(true);
-            method.invoke(activity, new Object[]{null});
-        } catch (Throwable ignored) {
+        } else {
+
+            try {
+                Class<?>[] declaredClasses = Activity.class.getDeclaredClasses();
+                Class<?> listener = null;
+                for (Class clazz : declaredClasses) {
+                    if (clazz.getSimpleName().contains("TranslucentConversionListener")) {
+                        listener = clazz;
+                    }
+                }
+                Method method = Activity.class.getDeclaredMethod("convertToTranslucent",
+                        listener);
+                method.setAccessible(true);
+                method.invoke(activity, new Object[]{null});
+            } catch (Throwable ignored) {
+                ignored.printStackTrace();
+
+            }
         }
     }
 
