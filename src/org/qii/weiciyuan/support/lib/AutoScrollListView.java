@@ -10,6 +10,7 @@ import android.util.AttributeSet;
  * <p/>
  * ref http://cyrilmottier.com/2013/01/09/back-to-top-android-vs-ios/
  */
+@Deprecated
 public class AutoScrollListView extends HeaderListView {
 
     /**

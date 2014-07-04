@@ -9,9 +9,11 @@ import android.widget.ImageView;
  * User: qii
  * Date: 12-11-15
  */
+@Deprecated
 public class PerformanceImageView extends ImageView {
 
     private boolean mMeasuredExactly = false;
+
     private boolean mBlockMeasurement = false;
 
     public PerformanceImageView(Context context) {
@@ -53,6 +55,7 @@ public class PerformanceImageView extends ImageView {
     private boolean isMeasuredExactly(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMeasureSpecMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMeasureSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-        return widthMeasureSpecMode == MeasureSpec.EXACTLY && heightMeasureSpecMode == MeasureSpec.EXACTLY;
+        return widthMeasureSpecMode == MeasureSpec.EXACTLY
+                && heightMeasureSpecMode == MeasureSpec.EXACTLY;
     }
 }

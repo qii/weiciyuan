@@ -117,6 +117,11 @@ public class UserAvatarDialog extends DialogFragment {
     }
 
     private void animateClose(ImageView avatar, Rect ori) {
+
+        if (ori == null) {
+            return;
+        }
+
         int[] avatarLocation = new int[2];
         avatar.getLocationOnScreen(avatarLocation);
 

@@ -286,6 +286,9 @@ public class BrowserWebFragment extends Fragment {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            if (getActivity() == null) {
+                return;
+            }
             startRefreshAnimation();
         }
 

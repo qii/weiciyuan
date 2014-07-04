@@ -112,7 +112,12 @@ public class TopTipBar extends TextView {
         Iterator iterator = values.iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
-            this.ids.add((Long) object);
+            if (object instanceof Double) {
+                Double value = (Double) object;
+                this.ids.add(value.longValue());
+            } else {
+                this.ids.add((Long) object);
+            }
         }
 
         this.disappear = false;
