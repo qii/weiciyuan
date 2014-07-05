@@ -929,24 +929,24 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             return;
         }
 
-        int size = newValue.getSize();
-
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addMiddleData(position, newValue, towardsBottom);
 
-//            if (towardsBottom) {
-            getAdapter().notifyDataSetChanged();
-//            } else {
+            int finalSize = getList().getSize();
 
-//                int index = getListView().getFirstVisiblePosition();
-//                View v = Utility.getListViewFirstAdapterItemView(getListView());
-//                final int top = (v == null) ? 0 : v.getTop();
-//                getAdapter().notifyDataSetChanged();
-//                final int positionAfterRefresh = index + size;
-//                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
-////            }
+            if (towardsBottom || SettingUtility.isReadStyleEqualWeibo()) {
+                getAdapter().notifyDataSetChanged();
+            } else {
+                int initSize = getList().getSize();
+                int index = getListView().getFirstVisiblePosition();
+                View v = Utility.getListViewFirstAdapterItemView(getListView());
+                final int top = (v == null) ? 0 : v.getTop();
+                getAdapter().notifyDataSetChanged();
+                final int positionAfterRefresh = index + finalSize - initSize;
+                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
+            }
+
         }
-
     }
 
     private void addNewDataWithoutRememberPosition(MessageListBean newValue) {
