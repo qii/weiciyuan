@@ -2,7 +2,7 @@
 <changelog>
     <release version="0.5.0beta7-2014.7"
              versioncode="46">
-        <change>主页的【载入中间数据】固定保证阅读位置，数据填充到下面</change>
+        <change>在【新浪微博阅读模式】下，主页的【载入中间数据】固定保证阅读位置，数据填充到下面</change>
         <change>修复Android L下面页面滑动返回背景花屏问题</change>
         <change>修复某些崩溃</change>
     </release>

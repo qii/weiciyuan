@@ -186,6 +186,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 //        if (hasGpsInfo())
 //            layout.mapView.onSaveInstanceState(outState);
         outState.putParcelable("msg", msg);
+        outState.putParcelable("commentList", commentList);
+        outState.putParcelable("repostList", repostList);
     }
 
     @Override
@@ -226,8 +228,16 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                 buildViewData(true);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                msg = (MessageBean) savedInstanceState.getParcelable("msg");
+                msg = savedInstanceState.getParcelable("msg");
+                commentList.replaceAll(
+                        (CommentListBean) savedInstanceState.getParcelable("commentList"));
+                repostList.replaceAll(
+                        (RepostListBean) savedInstanceState.getParcelable("repostList"));
                 buildViewData(true);
+                adapter.notifyDataSetChanged();
+                if (commentList.getSize() > 0) {
+                    emptyHeader.setVisibility(View.GONE);
+                }
                 break;
         }
 
