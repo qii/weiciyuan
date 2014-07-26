@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 
 /**
  * User: qii
@@ -38,6 +39,14 @@ public class CommonProgressDialogFragment extends DialogFragment {
         Activity activity = getActivity();
         if (activity != null) {
             activity.finish();
+        }
+    }
+
+    public void show(FragmentManager manager, String tag) {
+        try {
+            super.show(manager, tag);
+        } catch (IllegalStateException ignored) {
+            ignored.printStackTrace();
         }
     }
 }

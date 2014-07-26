@@ -615,7 +615,7 @@ public class UserInfoActivity extends AbstractAppActivity {
                             = (CommonProgressDialogFragment) getSupportFragmentManager()
                             .findFragmentByTag(CommonProgressDialogFragment.class.getName());
                     if (dialog != null) {
-                        dialog.dismiss();
+                        dialog.dismissAllowingStateLoss();
                     }
 
                     if (exception != null) {
