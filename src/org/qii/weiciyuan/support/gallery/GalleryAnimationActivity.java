@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -112,6 +113,11 @@ public class GalleryAnimationActivity extends FragmentActivity {
         sum.setText(String.valueOf(urls.size()));
 
         background = AnimationUtility.getAppContentView(this);
+
+        if (savedInstanceState != null) {
+            showBackgroundImmediately();
+        }
+
     }
 
     private HashMap<Integer, ContainerFragment> fragmentMap
@@ -140,6 +146,16 @@ public class GalleryAnimationActivity extends FragmentActivity {
             }
 
             return fragment;
+        }
+
+        //when activity is recycled, ViewPager will reuse fragment by theirs name, so
+        //getItem wont be called, but we need fragmentMap to animate close operation
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            super.setPrimaryItem(container, position, object);
+            if (object instanceof Fragment) {
+                fragmentMap.put(position, (ContainerFragment) object);
+            }
         }
 
         @Override
