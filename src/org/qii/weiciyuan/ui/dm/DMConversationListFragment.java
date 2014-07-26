@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.dm;
 
-import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.Loader;
-import android.text.TextUtils;
-import android.view.*;
-import android.widget.*;
-
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMBean;
 import org.qii.weiciyuan.bean.DMListBean;
@@ -17,16 +8,37 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.dm.SendDMDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.smileypicker.SmileyPicker;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.smileypicker.SmileyPicker;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.adapter.DMConversationAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.loader.DMConversationLoader;
 import org.qii.weiciyuan.ui.common.QuickSendProgressFragment;
+import org.qii.weiciyuan.ui.loader.DMConversationLoader;
+
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.Loader;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,9 +83,19 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         return bean;
     }
 
-    public DMConversationListFragment(UserBean userBean) {
-        this.userBean = userBean;
+
+    public static DMConversationListFragment newInstance(UserBean userBean) {
+        DMConversationListFragment fragment = new DMConversationListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("userBean", userBean);
+        fragment.setArguments(bundle);
+        return fragment;
     }
+
+    public DMConversationListFragment() {
+        //empty
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -88,6 +110,8 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
+        this.userBean = getArguments().getParcelable("userBean");
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
