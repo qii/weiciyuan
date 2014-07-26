@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.HeaderListView;
+import org.qii.weiciyuan.support.lib.LogOnExceptionScheduledExecutor;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
@@ -59,7 +60,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -1018,7 +1018,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     protected void addRefresh() {
 
-        autoRefreshExecutor = Executors.newSingleThreadScheduledExecutor();
+        autoRefreshExecutor = new LogOnExceptionScheduledExecutor(1);
         autoRefreshExecutor
                 .scheduleAtFixedRate(new AutoTask(), AppConfig.AUTO_REFRESH_INITIALDELAY,
                         AppConfig.AUTO_REFRESH_PERIOD, TimeUnit.SECONDS);
