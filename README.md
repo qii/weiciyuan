@@ -12,6 +12,12 @@ Sina Weibo Android App, require Android 4.1+, GPL v3 License
        src="https://raw.github.com/qii/weiciyuan/slidingmenu/qrcode.png" />
 </a>
 
+截图
+--------------
+<img width="30%" height="30%" src="https://lh5.ggpht.com/liao4yraseucSncbq9ZOAspCb7xZZ-E7iHsSv3OBGbFwLi6pSys8G4jap132pUmuYQ=h900-rw"/>
+
+<img width="30%" height="30%" src="https://lh5.ggpht.com/hlf2Hy7nyvGZ2l6WV3LEd2IiXVp_xYh76_bPUSEaQf0epRwxx3XA-7dAFjQBiZy7Tw=h900-rw"/>
+
 文档
 --------------
 https://github.com/qii/weiciyuan/wiki
