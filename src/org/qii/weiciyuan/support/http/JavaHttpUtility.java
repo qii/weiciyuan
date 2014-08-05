@@ -10,6 +10,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
@@ -196,7 +197,7 @@ public class JavaHttpUtility {
             exception.setError_code(errCode);
             exception.setOriError(err);
 
-            if (errCode == ErrorCode.EXPIRED_TOKEN) {
+            if (errCode == ErrorCode.EXPIRED_TOKEN || errCode == ErrorCode.INVALID_TOKEN) {
                 Utility.showExpiredTokenDialogOrNotification();
             }
 
@@ -220,7 +221,7 @@ public class JavaHttpUtility {
 
             String content_encode = urlConnection.getContentEncoding();
 
-            if (null != content_encode && !"".equals(content_encode) && content_encode
+            if (!TextUtils.isEmpty(content_encode) && content_encode
                     .equals("gzip")) {
                 is = new GZIPInputStream(is);
             }
@@ -260,7 +261,7 @@ public class JavaHttpUtility {
 
             String content_encode = urlConnection.getContentEncoding();
 
-            if (null != content_encode && !"".equals(content_encode) && content_encode
+            if (!TextUtils.isEmpty(content_encode) && content_encode
                     .equals("gzip")) {
                 is = new GZIPInputStream(is);
             }
@@ -331,6 +332,8 @@ public class JavaHttpUtility {
             return false;
         }
 
+        boolean result = false;
+
         BufferedOutputStream out = null;
         InputStream in = null;
         HttpURLConnection urlConnection = null;
@@ -368,7 +371,7 @@ public class JavaHttpUtility {
 
             InputStream is = urlConnection.getInputStream();
             String content_encode = urlConnection.getContentEncoding();
-            if (null != content_encode && !"".equals(content_encode) &&
+            if (!TextUtils.isEmpty(content_encode) &&
                     content_encode.equals("gzip")) {
                 is = new GZIPInputStream(is);
             }
@@ -395,7 +398,7 @@ public class JavaHttpUtility {
                 downloadListener.completed();
             }
             AppLogger.v("download request= " + urlStr + " download finished");
-            return true;
+            result = true;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -408,7 +411,8 @@ public class JavaHttpUtility {
             }
         }
 
-        return false;
+        return result && ImageUtility.isThisBitmapCanRead(path);
+
     }
 
     private static String getBoundry() {
