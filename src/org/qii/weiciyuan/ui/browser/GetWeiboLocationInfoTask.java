@@ -1,23 +1,20 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.dao.location.BaiduGeoCoderDao;
+import org.qii.weiciyuan.dao.location.GoogleGeoCoderDao;
 import org.qii.weiciyuan.dao.map.MapDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * User: qii
@@ -26,12 +23,17 @@ import java.util.Locale;
 public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> {
 
     private Activity activity;
+
     private TextView location;
+
     private ImageView mapView;
 
     private GeoBean geoBean;
 
-    public GetWeiboLocationInfoTask(Activity activity, GeoBean geoBean, ImageView mapView, TextView location) {
+    private boolean gpsToLocationSuccess = false;
+
+    public GetWeiboLocationInfoTask(Activity activity, GeoBean geoBean, ImageView mapView,
+            TextView location) {
         this.geoBean = geoBean;
         this.activity = activity;
         this.mapView = mapView;
@@ -49,29 +51,19 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
     @Override
     protected Bitmap doInBackground(Void... params) {
 
-        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+        if (Utility.isGPSLocationCorrect(geoBean)) {
 
-        List<Address> addresses = null;
-        try {
-            if (!Utility.isGPSLocationCorrect(geoBean)) {
-                publishProgress("");
-            }
-            addresses = geocoder.getFromLocation(geoBean.getLat(), geoBean.getLon(), 1);
-        } catch (IOException e) {
-//            cancel(true);
-        }
-        if (addresses != null && addresses.size() > 0) {
-            Address address = addresses.get(0);
+            publishProgress(new GoogleGeoCoderDao(activity, geoBean).get());
 
-            StringBuilder builder = new StringBuilder();
-            int size = address.getMaxAddressLineIndex();
-            for (int i = 0; i < size; i++) {
-                builder.append(address.getAddressLine(i));
+            try {
+                publishProgress(new BaiduGeoCoderDao(geoBean.getLat(), geoBean.getLon()).get());
+            } catch (WeiboException e) {
+                e.printStackTrace();
             }
-            publishProgress(builder.toString());
         }
 
-        MapDao dao = new MapDao(GlobalContext.getInstance().getSpecialToken(), geoBean.getLat(), geoBean.getLon());
+        MapDao dao = new MapDao(GlobalContext.getInstance().getSpecialToken(), geoBean.getLat(),
+                geoBean.getLon());
 
         try {
             return dao.getMap();
@@ -83,7 +75,8 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        if (!TextUtils.isEmpty(values[0])) {
+        if (!TextUtils.isEmpty(values[0]) && !gpsToLocationSuccess) {
+            gpsToLocationSuccess = true;
             location.setVisibility(View.VISIBLE);
             location.setText(values[0]);
         }

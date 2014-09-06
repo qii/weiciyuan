@@ -124,6 +124,9 @@ public class URLHelper {
     //map
     public static final String STATIC_MAP = URL_SINA_WEIBO + "location/base/get_map_image.json";
 
+    public static final String BAIDU_GEO_CODER_MAP
+            = "http://api.map.baidu.com/geocoder/v2/?ak=AAacde37a912803101fe91fb2de38c30&coordtype=wgs84ll&output=json&pois=0&location=%f,%f";
+
     /**
      * black magic
      */
