@@ -20,7 +20,6 @@ import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.internal.EmptyViewMethodAccessor;
 import org.qii.weiciyuan.support.lib.pulltorefresh.internal.LoadingLayout;
 
-import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -261,7 +260,6 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
         public InternalListViewSDK9(Context context, AttributeSet attrs) {
             super(context, attrs);
-            setLayoutTransition(new LayoutTransition());
         }
 
         @Override
