@@ -4,9 +4,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
+import org.qii.weiciyuan.dao.location.BaiduGeoCoderDao;
+import org.qii.weiciyuan.dao.location.GoogleGeoCoderDao;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendWeiboService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imageutility.ImageEditUtility;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
@@ -32,8 +35,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -56,9 +57,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * User: qii
@@ -937,34 +935,34 @@ public class WriteWeiboActivity extends AbstractAppActivity
         @Override
         protected String doInBackground(Void... params) {
 
-            Geocoder geocoder = new Geocoder(WriteWeiboActivity.this, Locale.getDefault());
+            String result = new GoogleGeoCoderDao(WriteWeiboActivity.this, geoBean).get();
 
-            List<Address> addresses = null;
+            if (!TextUtils.isEmpty(result)) {
+                return result;
+            }
+
             try {
-                addresses = geocoder.getFromLocation(geoBean.getLat(), geoBean.getLon(), 1);
-            } catch (IOException e) {
-                cancel(true);
-            }
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
+                result = new BaiduGeoCoderDao(geoBean.getLat(), geoBean.getLon()).get();
 
-                StringBuilder builder = new StringBuilder();
-                int size = address.getMaxAddressLineIndex();
-                for (int i = 0; i < size; i++) {
-                    builder.append(address.getAddressLine(i));
+                if (!TextUtils.isEmpty(result)) {
+                    return result;
                 }
-                return builder.toString();
+
+            } catch (WeiboException e) {
+                e.printStackTrace();
             }
 
-            return "";
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            Toast.makeText(WriteWeiboActivity.this, s, Toast.LENGTH_SHORT).show();
-            location = s;
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (!TextUtils.isEmpty(result)) {
+                Toast.makeText(WriteWeiboActivity.this, result, Toast.LENGTH_SHORT).show();
+                location = result;
+            }
             enableGeo();
-            super.onPostExecute(s);
         }
     }
 

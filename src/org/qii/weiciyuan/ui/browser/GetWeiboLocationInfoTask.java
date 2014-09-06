@@ -30,7 +30,6 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
 
     private GeoBean geoBean;
 
-    private boolean gpsToLocationSuccess = false;
 
     public GetWeiboLocationInfoTask(Activity activity, GeoBean geoBean, ImageView mapView,
             TextView location) {
@@ -53,10 +52,12 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
 
         if (Utility.isGPSLocationCorrect(geoBean)) {
 
-            publishProgress(new GoogleGeoCoderDao(activity, geoBean).get());
+            String gpsLocationString = new GoogleGeoCoderDao(activity, geoBean).get();
 
             try {
-                publishProgress(new BaiduGeoCoderDao(geoBean.getLat(), geoBean.getLon()).get());
+                if (TextUtils.isEmpty(gpsLocationString)) {
+                    publishProgress(new BaiduGeoCoderDao(geoBean.getLat(), geoBean.getLon()).get());
+                }
             } catch (WeiboException e) {
                 e.printStackTrace();
             }
@@ -75,8 +76,7 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        if (!TextUtils.isEmpty(values[0]) && !gpsToLocationSuccess) {
-            gpsToLocationSuccess = true;
+        if (!TextUtils.isEmpty(values[0])) {
             location.setVisibility(View.VISIBLE);
             location.setText(values[0]);
         }
