@@ -22,6 +22,7 @@
     <string name="login_again">重新授权</string>
     <string name="have_account_whose_token_is_expired">有帐号已经过期，无法收取新消息</string>
     <string name="token_has_expired">已过期</string>
+    <string name="account_token_has_expired">%s 的授权已经过期，请重新授权</string>
     <string name="dont_have_other_account">没有多余帐号可供切换</string>
 
     <!--Tip Dialog-->

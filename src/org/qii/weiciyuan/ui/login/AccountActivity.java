@@ -33,6 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,15 +46,20 @@ public class AccountActivity extends AbstractAppActivity
 
     private static final String ACTION_OPEN_FROM_APP_INNER = "org.qii.weiciyuan:accountactivity";
 
+    private static final String ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN
+            = "org.qii.weiciyuan:accountactivity_refresh_token";
+
+    private static final String REFRESH_ACTION_EXTRA = "refresh_account";
+
+    private final int ADD_ACCOUNT_REQUEST_CODE = 0;
+
+    private final int LOADER_ID = 0;
+
     private ListView listView = null;
 
     private AccountAdapter listAdapter = null;
 
     private List<AccountBean> accountList = new ArrayList<AccountBean>();
-
-    private final int ADD_ACCOUNT_REQUEST_CODE = 0;
-
-    private final int LOADER_ID = 0;
 
     public static Intent newIntent() {
         Intent intent = new Intent(GlobalContext.getInstance(), AccountActivity.class);
@@ -61,10 +67,24 @@ public class AccountActivity extends AbstractAppActivity
         return intent;
     }
 
+    public static Intent newIntent(AccountBean refreshAccount) {
+        Intent intent = new Intent(GlobalContext.getInstance(), AccountActivity.class);
+        intent.setAction(ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN);
+        intent.putExtra(REFRESH_ACTION_EXTRA, refreshAccount);
+        return intent;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        if (getIntent() != null && !ACTION_OPEN_FROM_APP_INNER.equals(getIntent().getAction())) {
+        String action = getIntent() != null ? getIntent().getAction() : null;
+
+        if (ACTION_OPEN_FROM_APP_INNER.equals(action)) {
+            //empty
+        } else if (ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN.equals(action)) {
+            //empty
+        } else {
+            //finish current Activity
             jumpToMainTimeLineActivity();
         }
 
@@ -82,6 +102,17 @@ public class AccountActivity extends AbstractAppActivity
 
         if (SettingUtility.firstStart()) {
             showChangeLogDialog();
+        }
+
+        if (ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN.equals(action)) {
+
+            showAddAccountDialog();
+
+            AccountBean accountBean = getIntent().getParcelableExtra(REFRESH_ACTION_EXTRA);
+
+            Toast.makeText(this, String.format(getString(R.string.account_token_has_expired),
+                    accountBean.getUsernick()), Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -120,37 +151,42 @@ public class AccountActivity extends AbstractAppActivity
         return true;
     }
 
+    private void showAddAccountDialog() {
+
+        final ArrayList<Class> activityList = new ArrayList<Class>();
+        ArrayList<String> itemValueList = new ArrayList<String>();
+
+        activityList.add(OAuthActivity.class);
+        itemValueList.add(getString(R.string.oauth_login));
+
+        if (Utility.isCertificateFingerprintCorrect(AccountActivity.this) && Utility
+                .isSinaWeiboSafe(this)) {
+            activityList.add(SSOActivity.class);
+            itemValueList.add(getString(R.string.official_app_login));
+        }
+
+        if (SettingUtility.isBlackMagicEnabled()) {
+            activityList.add(BlackMagicActivity.class);
+            itemValueList.add(getString(R.string.hack_login));
+        }
+
+        new AlertDialog.Builder(this)
+                .setItems(itemValueList.toArray(new String[0]),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(AccountActivity.this,
+                                        activityList.get(which));
+                                startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
+                            }
+                        }).show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_account:
-                final ArrayList<Class> activityList = new ArrayList<Class>();
-                ArrayList<String> itemValueList = new ArrayList<String>();
-
-                activityList.add(OAuthActivity.class);
-                itemValueList.add(getString(R.string.oauth_login));
-
-                if (Utility.isCertificateFingerprintCorrect(AccountActivity.this) && Utility
-                        .isSinaWeiboSafe(this)) {
-                    activityList.add(SSOActivity.class);
-                    itemValueList.add(getString(R.string.official_app_login));
-                }
-
-                if (SettingUtility.isBlackMagicEnabled()) {
-                    activityList.add(BlackMagicActivity.class);
-                    itemValueList.add(getString(R.string.hack_login));
-                }
-
-                new AlertDialog.Builder(this)
-                        .setItems(itemValueList.toArray(new String[0]),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(AccountActivity.this,
-                                                activityList.get(which));
-                                        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
-                                    }
-                                }).show();
+                showAddAccountDialog();
 
                 break;
         }
@@ -205,10 +241,44 @@ public class AccountActivity extends AbstractAppActivity
         listAdapter.notifyDataSetChanged();
     }
 
+    private void remove() {
+        Set<String> set = new HashSet<String>();
+        long[] ids = listView.getCheckedItemIds();
+        for (long id : ids) {
+            set.add(String.valueOf(id));
+        }
+        accountList = AccountDBTask.removeAndGetNewAccountList(set);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    private static class AccountDBLoader extends AsyncTaskLoader<List<AccountBean>> {
+
+        public AccountDBLoader(Context context, Bundle args) {
+            super(context);
+        }
+
+        @Override
+        protected void onStartLoading() {
+            super.onStartLoading();
+            forceLoad();
+        }
+
+        public List<AccountBean> loadInBackground() {
+            return AccountDBTask.getAccountList();
+        }
+    }
+
     private class AccountListItemClickListener implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            if (!Utility.isTokenValid(accountList.get(i))) {
+
+                showAddAccountDialog();
+
+                return;
+            }
 
             Intent intent = MainTimeLineActivity.newIntent(accountList.get(i));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -254,7 +324,6 @@ public class AccountActivity extends AbstractAppActivity
             listAdapter.notifyDataSetChanged();
         }
     }
-
 
     private class AccountAdapter extends BaseAdapter {
 
@@ -324,34 +393,6 @@ public class AccountActivity extends AbstractAppActivity
 
             return mView;
         }
-    }
-
-    private static class AccountDBLoader extends AsyncTaskLoader<List<AccountBean>> {
-
-        public AccountDBLoader(Context context, Bundle args) {
-            super(context);
-        }
-
-        @Override
-        protected void onStartLoading() {
-            super.onStartLoading();
-            forceLoad();
-        }
-
-        public List<AccountBean> loadInBackground() {
-            return AccountDBTask.getAccountList();
-        }
-    }
-
-
-    private void remove() {
-        Set<String> set = new HashSet<String>();
-        long[] ids = listView.getCheckedItemIds();
-        for (long id : ids) {
-            set.add(String.valueOf(id));
-        }
-        accountList = AccountDBTask.removeAndGetNewAccountList(set);
-        listAdapter.notifyDataSetChanged();
     }
 
 

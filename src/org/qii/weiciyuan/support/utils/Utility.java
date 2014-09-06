@@ -866,6 +866,8 @@ public class Utility {
                 return;
             }
 
+            final AccountBean needRefreshTokenAccount = currentAccount;
+
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -876,7 +878,8 @@ public class Utility {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             activity.startActivity(
-                                                    AccountActivity.newIntent());
+                                                    AccountActivity
+                                                            .newIntent(needRefreshTokenAccount));
                                             activity.finish();
                                             GlobalContext.getInstance().tokenExpiredDialogIsShowing
                                                     = false;
