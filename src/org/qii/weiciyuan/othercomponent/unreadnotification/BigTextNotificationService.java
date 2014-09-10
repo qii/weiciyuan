@@ -388,7 +388,8 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                 .putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
                         unreadTabIndex);
         PendingIntent pendingIntent = PendingIntent
-                .getActivity(getBaseContext(), 0, clickToOpenAppPendingIntentInner,
+                .getActivity(getBaseContext(), getMentionsWeiboNotificationId(accountBean),
+                        clickToOpenAppPendingIntentInner,
                         PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
