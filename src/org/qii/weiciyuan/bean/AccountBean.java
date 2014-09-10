@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: Jiang Qi
@@ -119,5 +120,10 @@ public class AccountBean implements Parcelable {
                 && !TextUtils.isEmpty(((AccountBean) o).getUid())
                 && ((AccountBean) o).getUid().equalsIgnoreCase(getUid());
 
+    }
+
+    @Override
+    public int hashCode() {
+        return info.hashCode();
     }
 }
