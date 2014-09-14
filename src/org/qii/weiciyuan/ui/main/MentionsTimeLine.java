@@ -51,6 +51,18 @@ public class MentionsTimeLine extends AbstractAppFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
+
+        ActionBar.Tab mentionsWeiboTab = getWeiboTab();
+        if (mentionsWeiboTab == null) {
+            buildMentionsWeiboTab(tabListener);
+        }
+
+        ActionBar.Tab mentionsCommentTab = getCommentTab();
+        if (mentionsCommentTab == null) {
+            buildMentionsCommentTab(tabListener);
+        }
+
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
                 == LeftMenuFragment.MENTIONS_INDEX) {
             buildActionBarAndViewPagerTitles(
@@ -184,7 +196,7 @@ public class MentionsTimeLine extends AbstractAppFragment
         return tabMap.get(MENTIONS_COMMENT_CHILD_POSITION);
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener
+    private ViewPager.SimpleOnPageChangeListener onPageChangeListener
             = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {

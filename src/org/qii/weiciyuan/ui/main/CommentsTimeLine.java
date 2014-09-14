@@ -51,6 +51,16 @@ public class CommentsTimeLine extends AbstractAppFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
+        ActionBar.Tab commentsToMeTab = getCommentsToMeTab();
+        if (commentsToMeTab == null) {
+            buildCommentsToMeTab(tabListener);
+        }
+        ActionBar.Tab commentsByMeTab = getCommentsByMeTab();
+        if (commentsByMeTab == null) {
+            buildCommentsByMeTab(tabListener);
+        }
+
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
                 == LeftMenuFragment.COMMENTS_INDEX) {
             buildActionBarAndViewPagerTitles(
@@ -177,7 +187,7 @@ public class CommentsTimeLine extends AbstractAppFragment
         return tabMap.get(COMMENTS_BY_ME_CHILD_POSITION);
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener
+    private ViewPager.SimpleOnPageChangeListener onPageChangeListener
             = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
