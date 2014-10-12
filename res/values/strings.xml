@@ -238,6 +238,7 @@
     <string name="fetching_weibo_info">获取微博信息……</string>
     <string name="comment_is_empty">没有评论</string>
     <string name="repost_is_empty">没有转发</string>
+    <string name="your_device_dont_have_any_map_app_to_open_gps_info">你的设备没有可以打开坐标的地图应用</string>
 
     <!--map-->
     <string name="browser_map">查看地图</string>
