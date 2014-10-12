@@ -720,27 +720,21 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
     private View.OnClickListener locationInfoOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (Utility.isGooglePlaySafe(getActivity())) {
-                GeoBean bean = msg.getGeo();
-                Intent intent = new Intent(getActivity(), AppMapActivity.class);
-                intent.putExtra("lat", bean.getLat());
-                intent.putExtra("lon", bean.getLon());
-                if (!String.valueOf(bean.getLat() + "," + bean.getLon())
-                        .equals(layout.location.getText())) {
-                    intent.putExtra("locationStr", layout.location.getText());
-                }
-                startActivity(intent);
-            } else {
-                GeoBean bean = msg.getGeo();
-                String geoUriString = "geo:" + bean.getLat() + "," + bean.getLon() + "?q="
-                        + layout.location.getText();
-                Uri geoUri = Uri.parse(geoUriString);
-                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                if (Utility.isIntentSafe(getActivity(), mapCall)) {
-                    startActivity(mapCall);
-                }
 
+            GeoBean bean = msg.getGeo();
+            String geoUriString = "geo:" + bean.getLat() + "," + bean.getLon() + "?q="
+                    + layout.location.getText();
+            Uri geoUri = Uri.parse(geoUriString);
+            Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+            if (Utility.isIntentSafe(getActivity(), mapCall)) {
+                startActivity(mapCall);
+            } else {
+                Toast.makeText(getActivity(),
+                        R.string.your_device_dont_have_any_map_app_to_open_gps_info,
+                        Toast.LENGTH_SHORT).show();
             }
+
+
         }
     };
 

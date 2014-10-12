@@ -21,7 +21,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.support.utils.ViewUtility;
-import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -475,27 +474,23 @@ public class WriteWeiboActivity extends AbstractAppActivity
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_view:
-                                if (Utility.isGooglePlaySafe(WriteWeiboActivity.this)) {
-                                    Intent intent = new Intent(WriteWeiboActivity.this,
-                                            AppMapActivity.class);
-                                    intent.putExtra("lat", geoBean.getLat());
-                                    intent.putExtra("lon", geoBean.getLon());
-                                    intent.putExtra("locationStr", location);
-                                    startActivity(intent);
-                                } else {
-                                    StringBuilder geoUriString = new StringBuilder()
-                                            .append("geo:" + geoBean.getLat() + "," + geoBean
-                                                    .getLon());
-                                    if (!TextUtils.isEmpty(location)) {
-                                        geoUriString.append("?q=").append(location);
-                                    }
-                                    Uri geoUri = Uri.parse(geoUriString.toString());
-                                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                                    if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
-                                        startActivity(mapCall);
-                                    }
 
+                                StringBuilder geoUriString = new StringBuilder()
+                                        .append("geo:" + geoBean.getLat() + "," + geoBean
+                                                .getLon());
+                                if (!TextUtils.isEmpty(location)) {
+                                    geoUriString.append("?q=").append(location);
                                 }
+                                Uri geoUri = Uri.parse(geoUriString.toString());
+                                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                                if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
+                                    startActivity(mapCall);
+                                } else {
+                                    Toast.makeText(WriteWeiboActivity.this,
+                                            R.string.your_device_dont_have_any_map_app_to_open_gps_info,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+
                                 break;
                             case R.id.menu_delete:
                                 haveGPS.setVisibility(View.GONE);
