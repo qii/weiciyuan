@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.MapsInitializer;
 
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentListBean;
@@ -190,17 +188,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         outState.putParcelable("repostList", repostList);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            if (hasGpsInfo()) {
-                MapsInitializer.initialize(getActivity());
-            }
-        } catch (GooglePlayServicesNotAvailableException impossible) {
-                      /* Impossible */
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
