@@ -35,19 +35,6 @@
         <meta-data android:name="com.crashlytics.ApiKey"
                    android:value="22c3e094e4bf447e9b89eee57143c5cc5df5c641"/>
 
-        <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"/>
-
-        <!--this is debug key-->
-        <!--<meta-data-->
-        <!--android:name="com.google.android.maps.v2.API_KEY"-->
-        <!--android:value="AIzaSyDizhP6l9ekit374ZpPXMNjVYDqurwgfrc"/>-->
-
-        <!-- this is release key-->
-        <meta-data
-                android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyA_Ozn9WNG58ImFlmOFOItHvn1JShWvIpE"/>
 
         <activity
                 android:name=".ui.login.AccountActivity"

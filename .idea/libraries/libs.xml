@@ -1,21 +1,11 @@
 <component name="libraryTable">
   <library name="libs">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/gson-2.2.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/httpclientandroidlib-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/crashlytics.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/gson-2.2.4.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/eclair" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/froyo" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/gingerbread" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/honeycomb" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/honeycomb_mr2" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/ics" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/ics-mr1" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/java" />
-      <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/jellybean" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>
