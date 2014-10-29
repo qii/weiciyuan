@@ -26,19 +26,19 @@ Gradle 构建
 --------------
 - 版本
     - 最新 Android SDK
-    - Gradle 1.8
+    - Gradle
 - 环境变量
     - ANDROID_HOME
     - GRADLE_HOME，同时把bin放入path变量
-- Android SDK 安装
-    - Android SDK Build-tools 19+
-    - Google Repository 4+
-    - Android Support Repository 3+
-    - Android Support Library 19+
+- Android SDK 安装，都更新到最新
+    - Android SDK Build-tools
+    - Google Repository
+    - Android Support Repository
+    - Android Support Library
 - 移除配置
     - 移除AndroidManifest.xml里面`com.crashlytics.ApiKey`和GlobalContext的`Crashlytics.start(this)`，以免影响四次元的崩溃统计数据
 - 编译
-    - `gradle build`，编译好的apk在build/apk下面，没签名，需要签名的修改build.gradle
+    - `./gradlew assembleDebug`，编译好的apk在build/outputs/apk下面，默认用的是 debug.keystore 签名
 
 黄粱一梦二十年
 --------------
