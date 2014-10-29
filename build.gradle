@@ -1,35 +1,38 @@
 buildscript {
-
-
     repositories {
-        mavenCentral()
+        jcenter()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.3+'
+        classpath 'com.android.tools.build:gradle:0.13.2'
     }
 }
 
-apply plugin: 'android'
-
-
-dependencies {
-    compile files('libs/gson-2.2.2.jar')
-    compile project(':libs:slidingmenulibrary')
-    compile project(':libs:showcaseviewlibrary')
+allprojects {
+    repositories {
+        jcenter()
+    }
 }
+
+apply plugin: 'com.android.application'
 
 android {
 
-    buildToolsVersion "19"
-    compileSdkVersion 19
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 19
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    target = 'android-19'
+    buildToolsVersion "21.0.2"
+    compileSdkVersion 21
+
+    defaultConfig {
+        applicationId "org.qii.weiciyuan"
+        minSdkVersion 17
+        targetSdkVersion 19
+        versionCode - 1
+        versionName null
+    }
+
     sourceSets {
         main {
             manifest {
@@ -47,10 +50,55 @@ android {
             resources {
                 srcDir 'src'
             }
-
+            jniLibs {
+                srcDir 'libs'
+            }
             aidl {
                 srcDir 'src/com/sina/sso'
             }
+
+        }
+
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
         }
     }
+
+    buildTypes {
+        debug {
+            debuggable true
+            runProguard false
+            signingConfig signingConfigs.debug
+        }
+
+    }
+
+    dexOptions {
+        preDexLibraries = false
+    }
+
 }
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:21.0.0'
+    compile(project(':libs:slidingmenulibrary')) {
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
+    compile(project(':libs:showcaseviewlibrary')) {
+        exclude group: 'com.google.android', module: 'support-v4'
+
+    }
+}
+
+

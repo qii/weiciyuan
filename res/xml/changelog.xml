@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release
+        version="0.5.0beta8-2014.10"
+        versioncode="49">
+        <change>修复Android 5.0上GIF动画崩溃的bug</change>
+    </release>
     <release version="0.5.0beta7-2014.7"
              versioncode="46">
         <change>在【新浪微博阅读模式】下，主页的【载入中间数据】固定保证阅读位置，数据填充到下面</change>
