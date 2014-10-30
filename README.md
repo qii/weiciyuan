@@ -38,7 +38,7 @@ Gradle 构建
 - 移除配置
     - 移除AndroidManifest.xml里面`com.crashlytics.ApiKey`和GlobalContext的`Crashlytics.start(this)`，以免影响四次元的崩溃统计数据
 - 编译
-    - `./gradlew assembleDebug`，编译好的apk在build/outputs/apk下面，默认用的是 debug.keystore 签名
+    - `./gradlew assembleDebug`，编译好的apk在build/outputs/apk下面，默认用的是 debug.keystore 签名，可与Google Play上的正式版共存
 
 黄粱一梦二十年
 --------------

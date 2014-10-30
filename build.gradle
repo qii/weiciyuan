@@ -59,6 +59,12 @@ android {
 
         }
 
+        debug {
+            res {
+                srcDir 'debug/res'
+            }
+        }
+
     }
 
     lintOptions {
@@ -72,13 +78,29 @@ android {
             keyAlias "androiddebugkey"
             keyPassword "android"
         }
+
+        release {
+            if (System.getenv("KEYSTORE") != null) {
+                storeFile file(System.getenv("KEYSTORE"))
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
             debuggable true
             runProguard false
             signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            runProguard false
+            signingConfig signingConfigs.release
         }
 
     }

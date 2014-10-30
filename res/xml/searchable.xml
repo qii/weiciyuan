@@ -3,6 +3,6 @@
             android:label="@string/app_name"
             android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
             android:hint="@string/search"
-            android:searchSuggestAuthority="org.qii.weiciyuan.ui.search.SearchSuggestionProvider"
+            android:searchSuggestAuthority="${applicationId}.ui.search.SearchSuggestionProvider"
             android:searchSuggestSelection=" ?">>
 </searchable>
