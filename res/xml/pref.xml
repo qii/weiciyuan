@@ -6,13 +6,13 @@
 
         <Preference android:title="@string/pref_appearance_title">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
         </Preference>
 
         <Preference android:title="@string/pref_read_title">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.ReadActivity"/>
         </Preference>
 
@@ -28,21 +28,21 @@
 
         <Preference android:title="@string/notification">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"/>
         </Preference>
         <Preference
             android:title="@string/draft"
             android:key="draft">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"/>
         </Preference>
         <Preference
             android:title="@string/pref_data_control_title"
             android:key="data_control">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.ControlActivity"/>
         </Preference>
 
@@ -51,7 +51,7 @@
             android:title="@string/filter"
             android:key="filter">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
                 />
         </Preference>
@@ -59,7 +59,7 @@
             android:title="@string/pref_performance_title"
             >
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.PerformanceActivity"
                 />
         </Preference>
@@ -67,7 +67,7 @@
             android:title="@string/pref_other_title"
             >
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.OtherActivity"
                 />
         </Preference>
@@ -76,7 +76,7 @@
         android:title="@string/pref_about_title">
         <Preference android:title="@string/pref_about_title">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
+                android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"/>
         </Preference>
     </PreferenceCategory>

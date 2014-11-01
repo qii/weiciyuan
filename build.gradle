@@ -89,21 +89,28 @@ android {
         }
     }
 
+    /*
+     * android:targetPackage cant use ${applicationId}, so define a string source called "applicationId"
+     */
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            resValue "string", "applicationId", "org.qii.weiciyuan" + getApplicationIdSuffix()
             debuggable true
             runProguard false
             signingConfig signingConfigs.debug
         }
         release {
+            resValue "string", "applicationId", "org.qii.weiciyuan" + getApplicationIdSuffix()
             debuggable false
             runProguard false
             signingConfig signingConfigs.release
         }
 
     }
+
 
     dexOptions {
         preDexLibraries = false
