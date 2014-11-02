@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        >
-    <PreferenceCategory
-            android:title="@string/pref_theme_title"
-            >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_theme_title">
         <ListPreference
-                android:key="theme"
-                android:title="@string/pref_theme_title"
-                android:dialogTitle="@string/pref_theme_title"
-                android:entries="@array/theme"
-                android:entryValues="@array/theme_value"
-                android:defaultValue="1"/>
+            android:key="theme"
+            android:title="@string/pref_theme_title"
+            android:dialogTitle="@string/pref_theme_title"
+            android:entries="@array/theme"
+            android:entryValues="@array/theme_value"
+            android:defaultValue="1"
+            android:summary="%s" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-            android:title="@string/pref_listview_title"
-            >
+    <PreferenceCategory android:title="@string/pref_listview_title">
 
         <ListPreference
-                android:key="list_avatar_mode"
-                android:title="@string/pref_list_avatar_mode_title"
-                android:dialogTitle="@string/pref_list_avatar_mode_title"
-                android:entries="@array/list_avatar_mode"
-                android:entryValues="@array/list_avatar_mode_value"
-                android:defaultValue="1"/>
+            android:key="list_avatar_mode"
+            android:title="@string/pref_list_avatar_mode_title"
+            android:dialogTitle="@string/pref_list_avatar_mode_title"
+            android:entries="@array/list_avatar_mode"
+            android:entryValues="@array/list_avatar_mode_value"
+            android:defaultValue="1"
+            android:summary="%s" />
         <ListPreference
-                android:key="list_pic_mode"
-                android:title="@string/pref_list_pic_mode_title"
-                android:dialogTitle="@string/pref_list_pic_mode_title"
-                android:entries="@array/list_pic_mode"
-                android:entryValues="@array/list_pic_mode_value"
-                android:defaultValue="1"/>
+            android:key="list_pic_mode"
+            android:title="@string/pref_list_pic_mode_title"
+            android:dialogTitle="@string/pref_list_pic_mode_title"
+            android:entries="@array/list_pic_mode"
+            android:entryValues="@array/list_pic_mode_value"
+            android:defaultValue="1"
+            android:summary="%s" />
 
         <!--<ListPreference-->
         <!--android:key="list_high_pic_mode"-->
@@ -42,12 +39,13 @@
         <!--android:defaultValue="1"/>-->
 
         <ListPreference
-                android:key="font_size"
-                android:title="@string/pref_font_size_title"
-                android:dialogTitle="@string/pref_font_size_title"
-                android:entries="@array/font"
-                android:entryValues="@array/font_value"
-                android:defaultValue="15"/>
+            android:key="font_size"
+            android:title="@string/pref_font_size_title"
+            android:dialogTitle="@string/pref_font_size_title"
+            android:entries="@array/font"
+            android:entryValues="@array/font_value"
+            android:defaultValue="15"
+            android:summary="%s" />
 
         <!--<CheckBoxPreference-->
         <!--android:key="list_fast_scroll"-->

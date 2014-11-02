@@ -26,7 +26,8 @@
 
     <PreferenceCategory android:title="@string/pref_advanced_title">
 
-        <Preference android:title="@string/notification">
+        <Preference android:title="@string/notification"
+            android:summary="@string/notification_summary">
             <intent
                 android:targetPackage="@string/applicationId"
                 android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"/>

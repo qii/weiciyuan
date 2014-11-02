@@ -431,7 +431,7 @@
     <string name="new_mentions">%s 条@</string>
     <string name="new_mentions_weibo">%s 条@微博</string>
     <string name="new_mentions_comment">%s 条@评论</string>
-    <string name="notification">通知</string>
+    <string name="notification">后台通知</string>
     <string name="silent">静音</string>
     <string name="enable_fetch_new_msg">获取未读的消息</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
@@ -555,6 +555,7 @@
 
 
     <!--notification-->
+    <string name="notification_summary">离开应用后，依然能收取消息</string>
     <string name="comment_sent_to_you">评论了你的微博</string>
     <string name="reply_to_you">回复了你的评论</string>
     <string name="comment_at_to_you">在评论中提到了你</string>
