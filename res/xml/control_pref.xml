@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <PreferenceCategory
-        android:title="@string/pref_pic_category_title"
-        >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_pic_category_title">
 
         <CheckBoxPreference
             android:key="disable_download"
             android:title="@string/pref_disable_download_pic_title"
             android:summary="@string/pref_disable_download_pic_summary"
-            android:defaultValue="false"/>
+            android:defaultValue="false" />
 
 
         <ListPreference
@@ -19,7 +15,8 @@
             android:dialogTitle="@string/pref_comment_repost_list_avatar_title"
             android:entries="@array/comment_repost_list_avatar_mode"
             android:entryValues="@array/comment_repost_list_avatar_value"
-            android:defaultValue="3"/>
+            android:defaultValue="3"
+            android:summary="%s" />
 
 
         <ListPreference
@@ -28,18 +25,17 @@
             android:dialogTitle="@string/pref_upload_pic_quality_title"
             android:entries="@array/upload_pic_quality"
             android:entryValues="@array/upload_pic_quality_value"
-            android:defaultValue="4"/>
+            android:defaultValue="4"
+            android:summary="%s" />
 
         <CheckBoxPreference
             android:key="enable_wifi_auto_download_pic"
             android:title="@string/pref_enable_wifi_auto_download_pic_title"
             android:summary="@string/pref_enable_wifi_auto_download_pic_summary"
-            android:defaultValue="true"/>
+            android:defaultValue="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/pref_data_category_title"
-        >
+    <PreferenceCategory android:title="@string/pref_data_category_title">
 
         <ListPreference
             android:key="msg_count"
@@ -47,13 +43,14 @@
             android:dialogTitle="@string/pref_msg_count_title"
             android:entries="@array/msg_count_title"
             android:entryValues="@array/msg_count_title_value"
-            android:defaultValue="3"/>
+            android:defaultValue="3"
+            android:summary="%s" />
 
         <CheckBoxPreference
             android:key="enable_wifi_unlimited_msg_count"
             android:title="@string/pref_enable_wifi_unlimited_msg_count_title"
             android:summary="@string/pref_enable_wifi_unlimited_msg_count_summary"
-            android:defaultValue="true"/>
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 

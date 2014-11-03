@@ -1,61 +1,37 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
 /**
  * User: qii
  * Date: 12-10-19
  */
-public class ControlFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private Preference msgCount = null;
-    private Preference commentRepostListAvatar = null;
-    private Preference uploadPicQuality = null;
-
+public class ControlFragment extends PreferenceFragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(false);
-
         addPreferencesFromResource(R.xml.control_pref);
-
-        msgCount = findPreference(SettingActivity.MSG_COUNT);
-        commentRepostListAvatar = findPreference(SettingActivity.COMMENT_REPOST_AVATAR);
-        uploadPicQuality = findPreference(SettingActivity.UPLOAD_PIC_QUALITY);
-
-        buildSummary();
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
-
-    }
-
-
-    private void buildSummary() {
-        String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.MSG_COUNT, "3");
-        msgCount.setSummary(getActivity().getResources().getStringArray(R.array.msg_count_title)[Integer.valueOf(value) - 1]);
-
-        value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.COMMENT_REPOST_AVATAR, "3");
-        commentRepostListAvatar.setSummary(getActivity().getResources().getStringArray(R.array.comment_repost_list_avatar_mode)[Integer.valueOf(value) - 1]);
-
-
-        value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.UPLOAD_PIC_QUALITY, "1");
-        uploadPicQuality.setSummary(getActivity().getResources().getStringArray(R.array.upload_pic_quality_hack_bug)[Integer.valueOf(value) - 1]);
-
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .registerOnSharedPreferenceChangeListener(
+                        this);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
-
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .unregisterOnSharedPreferenceChangeListener(
+                        this);
     }
 
     @Override
@@ -79,7 +55,5 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
             }
 
         }
-
-        buildSummary();
     }
 }
