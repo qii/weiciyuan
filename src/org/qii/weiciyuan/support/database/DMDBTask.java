@@ -1,13 +1,15 @@
 package org.qii.weiciyuan.support.database;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.DMUserBean;
 import org.qii.weiciyuan.bean.DMUserListBean;
 import org.qii.weiciyuan.support.database.table.DMTable;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * User: qii
@@ -60,7 +62,8 @@ public class DMDBTask {
     }
 
     public static void clear(String accountId) {
-        String sql = "delete from " + DMTable.TABLE_NAME + " where " + DMTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + DMTable.TABLE_NAME + " where " + DMTable.ACCOUNTID + " in "
+                + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
@@ -77,8 +80,10 @@ public class DMDBTask {
             try {
                 DMUserListBean value = gson.fromJson(json, DMUserListBean.class);
                 for (DMUserBean b : value.getItemList()) {
-                    b.getListViewSpannableString();
-                    b.getListviewItemShowTime();
+                    if (!b.isMiddleUnreadItem()) {
+                        b.getListViewSpannableString();
+                        b.getListviewItemShowTime();
+                    }
                 }
                 return value;
             } catch (JsonSyntaxException ignored) {

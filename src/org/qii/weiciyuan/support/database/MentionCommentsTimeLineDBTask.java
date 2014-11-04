@@ -78,7 +78,10 @@ public class MentionCommentsTimeLineDBTask {
 
         TimeLinePosition position = getPosition(accountId);
 
-        int limit = position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
+        int limit =
+                position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50
+                        ? position.position
+                        + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
 
         CommentListBean result = new CommentListBean();
 
@@ -92,7 +95,9 @@ public class MentionCommentsTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     CommentBean value = gson.fromJson(json, CommentBean.class);
-                    value.getListViewSpannableString();
+                    if (!value.isMiddleUnreadItem()) {
+                        value.getListViewSpannableString();
+                    }
                     msgList.add(value);
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());
@@ -215,6 +220,6 @@ public class MentionCommentsTimeLineDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 }

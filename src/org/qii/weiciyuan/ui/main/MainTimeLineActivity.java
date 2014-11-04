@@ -49,7 +49,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * User: Jiang Qi
@@ -126,7 +125,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("account", accountBean);
+        outState.putParcelable(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
     }
 
     @Override
@@ -134,7 +133,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            accountBean = savedInstanceState.getParcelable("account");
+            accountBean = savedInstanceState.getParcelable(BundleArgsConstants.ACCOUNT_EXTRA);
         } else {
             Intent intent = getIntent();
             accountBean = intent
@@ -151,7 +150,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
 
         buildInterface(savedInstanceState);
 
-    }
+     }
 
 
     private void buildInterface(Bundle savedInstanceState) {
@@ -607,23 +606,23 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         public void onReceive(Context context, Intent intent) {
             AccountBean intentAccount = intent
                     .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-            if (accountBean.equals(intentAccount)) {
-                MessageListBean mentionsWeibo = intent
-                        .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
-                CommentListBean mentionsComment = intent
-                        .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
-                CommentListBean commentsToMe = intent
-                        .getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
-                int unreadCount = (mentionsWeibo != null ? mentionsWeibo.getSize() : 0) + (
-                        mentionsComment != null ? mentionsComment.getSize() : 0) + (
-                        commentsToMe != null ? commentsToMe
-                                .getSize() : 0);
-                String tip = String.format(context.getString(R.string.you_have_new_unread_count),
-                        String.valueOf(unreadCount));
-                Toast.makeText(MainTimeLineActivity.this, tip,
-                        Toast.LENGTH_LONG).show();
-                abortBroadcast();
-            }
+//            if (accountBean.equals(intentAccount)) {
+//                MessageListBean mentionsWeibo = intent
+//                        .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+//                CommentListBean mentionsComment = intent
+//                        .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+//                CommentListBean commentsToMe = intent
+//                        .getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
+//                int unreadCount = (mentionsWeibo != null ? mentionsWeibo.getSize() : 0) + (
+//                        mentionsComment != null ? mentionsComment.getSize() : 0) + (
+//                        commentsToMe != null ? commentsToMe
+//                                .getSize() : 0);
+//                String tip = String.format(context.getString(R.string.you_have_new_unread_count),
+//                        String.valueOf(unreadCount));
+//                Toast.makeText(MainTimeLineActivity.this, tip,
+//                        Toast.LENGTH_LONG).show();
+//                abortBroadcast();
+//            }
         }
     }
 

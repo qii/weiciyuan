@@ -68,6 +68,7 @@ public class MessageBean extends ItemBean implements Parcelable {
 
     private ArrayList<String> pic_ids = new ArrayList<String>();
 
+    private boolean isMiddleUnreadItem=false;
 
     private transient SpannableString listViewSpannableString;
 
@@ -138,6 +139,8 @@ public class MessageBean extends ItemBean implements Parcelable {
         dest.writeTypedList(pic_urls);
         dest.writeStringList(pic_ids);
 
+        dest.writeBooleanArray(new boolean[]{this.isMiddleUnreadItem});
+
     }
 
     public static final Parcelable.Creator<MessageBean> CREATOR =
@@ -179,6 +182,10 @@ public class MessageBean extends ItemBean implements Parcelable {
 
                     messageBean.pic_ids = new ArrayList<String>();
                     in.readStringList(messageBean.pic_ids);
+
+                    in.readBooleanArray(booleans);
+                    messageBean.isMiddleUnreadItem=booleans[0];
+
                     return messageBean;
                 }
 
@@ -213,6 +220,9 @@ public class MessageBean extends ItemBean implements Parcelable {
 
     public void setId(String id) {
         this.idstr = id;
+        if (this.id == 0) {
+            this.id = Long.valueOf(id);
+        }
     }
 
     public String getText() {
@@ -491,6 +501,15 @@ public class MessageBean extends ItemBean implements Parcelable {
 
     public int getPicCount() {
         return pic_urls.size() > 1 ? pic_urls.size() : pic_ids.size();
+    }
+
+    @Override
+    public boolean isMiddleUnreadItem() {
+        return isMiddleUnreadItem;
+    }
+
+    public void setMiddleUnreadItem(boolean isMiddleUnreadItem) {
+        this.isMiddleUnreadItem = isMiddleUnreadItem;
     }
 
     @Override

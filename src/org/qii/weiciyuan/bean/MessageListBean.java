@@ -116,7 +116,10 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         boolean receivedCountEqualRequestCount = newValue.getReceivedCount() >= Integer
                 .valueOf(SettingUtility.getMsgCount());
         if (receivedCountEqualRequestCount && this.getSize() > 0) {
-            newValue.getItemList().add(null);
+            MessageBean middleUnreadItem=new MessageBean();
+            middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
+            middleUnreadItem.setMiddleUnreadItem(true);
+            newValue.getItemList().add(middleUnreadItem);
         }
         this.getItemList().addAll(0, newValue.getItemList());
         this.setTotal_number(newValue.getTotal_number());
@@ -128,7 +131,7 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         boolean isLastItemNull = false;
         while (listIterator.hasNext()) {
             MessageBean msg = listIterator.next();
-            if (msg == null) {
+            if (msg == null || msg.isMiddleUnreadItem()) {
                 if (isLastItemNull) {
                     listIterator.remove();
                 }

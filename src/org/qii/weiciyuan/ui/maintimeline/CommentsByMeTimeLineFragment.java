@@ -254,9 +254,9 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     private void setListViewPositionFromPositionsCache() {
-        Utility.setListViewSelectionFromTop(getListView(),
-                timeLinePosition != null ? timeLinePosition.position : 0,
-                timeLinePosition != null ? timeLinePosition.top : 0);
+        Utility.setListViewAdapterPosition(getListView(),
+                timeLinePosition != null ? timeLinePosition.getPosition(bean) : 0,
+                timeLinePosition != null ? timeLinePosition.top : 0, null);
     }
 
 
@@ -298,24 +298,14 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     protected void middleMsgLoaderSuccessCallback(int position, CommentListBean newValue,
             boolean towardsBottom) {
 
-        if (newValue != null) {
-            int size = newValue.getSize();
+        if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
 
-            if (getActivity() != null && newValue.getSize() > 0) {
-                getList().addMiddleData(position, newValue, towardsBottom);
+            getList().addMiddleData(position, newValue, towardsBottom);
 
-                if (towardsBottom) {
-                    getAdapter().notifyDataSetChanged();
-                } else {
+            getAdapter().notifyDataSetChanged();
 
-                    View v = Utility
-                            .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
-                    int top = (v == null) ? 0 : v.getTop();
-                    getAdapter().notifyDataSetChanged();
-                    int ss = position + 1 + size - 1;
-                    getListView().setSelectionFromTop(ss, top);
-                }
-            }
+            CommentByMeTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
+
         }
     }
 

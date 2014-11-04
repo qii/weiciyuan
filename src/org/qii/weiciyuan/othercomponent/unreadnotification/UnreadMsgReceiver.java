@@ -23,6 +23,7 @@ import java.util.Set;
  * User: Jiang Qi
  * Date: 12-7-31
  */
+@Deprecated
 public class UnreadMsgReceiver extends BroadcastReceiver {
 
 

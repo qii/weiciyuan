@@ -810,9 +810,9 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
 
     private void setListViewPositionFromPositionsCache() {
 
-        Utility.setListViewSelectionFromTop(getListView(),
-                position != null ? position.position : 0,
-                position != null ? position.top : 0);
+        Utility.setListViewAdapterPosition(getListView(),
+                position != null ? position.getPosition(bean) : 0,
+                position != null ? position.top : 0, null);
 
     }
 

@@ -108,7 +108,7 @@ public class FavouriteDBTask {
             String json = c.getString(c.getColumnIndex(FavouriteTable.FavouriteDataTable.JSONDATA));
             try {
                 FavBean value = gson.fromJson(json, FavBean.class);
-                if (value != null) {
+                if (value != null && !value.getStatus().isMiddleUnreadItem()) {
                     value.getStatus().getListViewSpannableString();
                 }
                 msgList.add(value);
@@ -209,7 +209,7 @@ public class FavouriteDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 
     public static void asyncReplace(final FavListBean data, final int page,

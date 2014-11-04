@@ -195,7 +195,7 @@ public class HomeOtherGroupTimeLineDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 
     static MessageTimeLineData getTimeLineData(String accountId, String groupId) {
@@ -223,7 +223,9 @@ public class HomeOtherGroupTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     MessageBean value = gson.fromJson(json, MessageBean.class);
-                    value.getListViewSpannableString();
+                    if (!value.isMiddleUnreadItem()) {
+                        value.getListViewSpannableString();
+                    }
                     msgList.add(value);
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());

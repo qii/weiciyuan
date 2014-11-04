@@ -51,16 +51,13 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                     int totalItemCount) {
-
                 View childView = Utility
                         .getListViewItemViewFromPosition(listView, firstVisibleItem);
 
                 if (childView == null) {
                     return;
                 }
-
                 int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
-
                 if (childView.getTop() == 0 && position <= 0) {
                     topTipBar.clearAndReset();
                 } else {

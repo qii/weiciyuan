@@ -102,7 +102,9 @@ public class MyStatusDBTask {
             String json = c.getString(c.getColumnIndex(MyStatusTable.StatusDataTable.JSONDATA));
             try {
                 MessageBean value = gson.fromJson(json, MessageBean.class);
-                value.getListViewSpannableString();
+                if (!value.isMiddleUnreadItem()) {
+                    value.getListViewSpannableString();
+                }
                 msgList.add(value);
             } catch (JsonSyntaxException ignored) {
 
@@ -162,7 +164,7 @@ public class MyStatusDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 
     public static void asyncReplace(final MessageListBean data, final String accountId) {

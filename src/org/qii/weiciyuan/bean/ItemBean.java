@@ -25,6 +25,8 @@ public abstract class ItemBean {
 
     public abstract UserBean getUser();
 
+    public abstract boolean isMiddleUnreadItem();
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof ItemBean && ((ItemBean) o).getId().equals(getId())) {

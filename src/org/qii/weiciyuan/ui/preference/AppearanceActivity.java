@@ -1,12 +1,13 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii

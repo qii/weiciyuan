@@ -90,7 +90,10 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
         boolean receivedCountBelowRequestCount = newValue.getSize() < Integer.valueOf(SettingUtility.getMsgCount());
         boolean receivedCountEqualRequestCount = newValue.getSize() == Integer.valueOf(SettingUtility.getMsgCount());
         if (receivedCountEqualRequestCount && this.getSize() > 0) {
-            newValue.getItemList().add(null);
+            CommentBean middleUnreadItem=new CommentBean();
+            middleUnreadItem.setMiddleUnreadItem(true);
+            middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
+            newValue.getItemList().add(middleUnreadItem);
         }
         this.getItemList().addAll(0, newValue.getItemList());
         this.setTotal_number(newValue.getTotal_number());
@@ -102,7 +105,7 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
         boolean isLastItemNull = false;
         while (listIterator.hasNext()) {
             CommentBean msg = listIterator.next();
-            if (msg == null) {
+            if (msg == null||msg.isMiddleUnreadItem()) {
                 if (isLastItemNull) {
                     listIterator.remove();
                 }

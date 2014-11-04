@@ -266,9 +266,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     private void setListViewPositionFromPositionsCache() {
         TimeLinePosition p = position;
         if (p != null) {
-            getListView().setSelectionFromTop(p.position + 1, p.top);
+            Utility.setListViewAdapterPosition(getListView(), p.getPosition(bean), p.top, null);
         } else {
-            getListView().setSelectionFromTop(0, 0);
+            Utility.setListViewAdapterPosition(getListView(), 0, 0, null);
         }
 
 

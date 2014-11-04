@@ -105,7 +105,9 @@ public class CommentByMeTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     CommentBean value = gson.fromJson(json, CommentBean.class);
-                    value.getListViewSpannableString();
+                    if (!value.isMiddleUnreadItem()) {
+                        value.getListViewSpannableString();
+                     }
                     msgList.add(value);
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());
@@ -232,7 +234,7 @@ public class CommentByMeTimeLineDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 
     public static void asyncReplace(final CommentListBean data, final String accountId) {

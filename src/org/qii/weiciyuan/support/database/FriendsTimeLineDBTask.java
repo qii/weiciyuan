@@ -132,6 +132,7 @@ public class FriendsTimeLineDBTask {
     //todo may occur ConcurrentModificationException
     public static void asyncReplace(final MessageListBean list, final String accountId,
             final String groupId) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -211,7 +212,7 @@ public class FriendsTimeLineDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 
     public static String getRecentGroupId(String accountId) {
@@ -388,7 +389,9 @@ public class FriendsTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     MessageBean value = gson.fromJson(json, MessageBean.class);
-                    value.getListViewSpannableString();
+                    if (!value.isMiddleUnreadItem() && !TextUtils.isEmpty(value.getText())) {
+                        value.getListViewSpannableString();
+                    }
                     msgList.add(value);
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());

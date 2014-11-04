@@ -3,7 +3,9 @@ package org.qii.weiciyuan.support.utils;
 import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
@@ -69,8 +71,8 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.webkit.WebView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
@@ -91,6 +93,9 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -366,6 +371,7 @@ public class Utility {
     }
 
 
+    @Deprecated
     public static boolean isGooglePlaySafe(Activity activity) {
         Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms");
         Intent mapCall = new Intent(Intent.ACTION_VIEW, uri);
@@ -583,9 +589,44 @@ public class Utility {
 
     //to do getChildAt(0)
     public static TimeLinePosition getCurrentPositionFromListView(ListView listView) {
+        if (listView.getChildCount() == 0) {
+            AppLogger
+                    .i("ListView child count is empty, maybe this ListView have not be visible to user");
+            return TimeLinePosition.empty();
+        }
+        AppLogger.i("ListView child count " + listView.getChildCount());
         View view = listView.getChildAt(0);
         int top = (view != null ? view.getTop() : 0);
-        return new TimeLinePosition(listView.getFirstVisiblePosition(), top);
+        /**
+         * warning: listView.getFirstVisiblePosition() return position include headerview count (HeaderAdapter)
+         *
+         */
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        if (firstVisiblePosition < listView.getHeaderViewsCount()) {
+            AppLogger.i("ListView first visible position is " + firstVisiblePosition
+                    + " it  below header view count " + listView.getHeaderViewsCount()
+                    + " so set header view count to it");
+            firstVisiblePosition = listView.getHeaderViewsCount();
+        }
+        AppLogger.i("ListView first visible position " + firstVisiblePosition);
+        long firstVisibleId = listView.getItemIdAtPosition(firstVisiblePosition);
+        AppLogger.i("ListView first visible id " + firstVisibleId);
+        return new TimeLinePosition(firstVisibleId, top,
+                listView.getFirstVisiblePosition());
+    }
+
+    public static int getAdapterPositionFromItemId(BaseAdapter adapter, long itemId) {
+        if (itemId == -1) {
+            return -1;
+        }
+        for (int i = 0; i < adapter.getCount(); i++) {
+            long id = adapter.getItemId(i);
+            AppLogger.i("Position " + i + " item id " + id);
+            if (id == itemId) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static String getIdFromWeiboAccountLink(String url) {
@@ -731,26 +772,29 @@ public class Utility {
         return listView.getChildAt(position - listView.getFirstVisiblePosition());
     }
 
-    public static void setListViewSelectionFromTop(final ListView listView,
-            final int positionAfterRefresh, final int top, final Runnable runnable) {
-        listView.getViewTreeObserver()
-                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        listView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        listView.setSelectionFromTop(positionAfterRefresh, top);
-                        if (runnable != null) {
-                            runnable.run();
-                        }
-                        return false;
-                    }
-                });
+    //the position include HeadView
+    public static void setListViewItemPosition(final ListView listView,
+            final int itemPosition, final int top, final Runnable runnable) {
+
+        listView.setSelectionFromTop(itemPosition, top);
+        if (runnable != null) {
+            runnable.run();
+        }
+
     }
 
-    public static void setListViewSelectionFromTop(final ListView listView,
-            final int positionAfterRefresh, final int top) {
-        setListViewSelectionFromTop(listView, positionAfterRefresh, top, null);
+    //the position within the adapter's data set
+    public static void setListViewAdapterPosition(final ListView listView,
+            final int adapterItemPosition, final int top, final Runnable runnable) {
+
+        listView.setSelectionFromTop(adapterItemPosition + listView.getHeaderViewsCount(), top);
+        AppLogger.i("ListView scrollTo "+(adapterItemPosition+listView.getHeaderViewsCount())+" offset "+top);
+        if (runnable != null) {
+            runnable.run();
+        }
+
     }
+
 
     public static View getListViewFirstAdapterItemView(ListView listView) {
         if (listView instanceof HeaderListView) {
@@ -1141,5 +1185,32 @@ public class Utility {
         view.draw(c);
         return b;
     }
+
+    public static void removeDuplicateAndSortStatus(List<MessageBean> data) {
+        HashSet<MessageBean> hashSet = new HashSet<>();
+        hashSet.addAll(data);
+        data.clear();
+        data.addAll(hashSet);
+        sortData(data);
+    }
+
+    public static void removeDuplicateAndSortComment(List<CommentBean> data) {
+        HashSet<CommentBean> hashSet = new HashSet<>();
+        hashSet.addAll(data);
+        data.clear();
+        data.addAll(hashSet);
+        sortData(data);
+    }
+
+    public static void sortData(List<? extends ItemBean> data) {
+        Collections.sort(data, mComparator);
+    }
+
+    private static Comparator<ItemBean> mComparator = new Comparator<ItemBean>() {
+        @Override
+        public int compare(ItemBean left, ItemBean right) {
+            return (int) (right.getMills() - left.getMills());
+        }
+    };
 }
 

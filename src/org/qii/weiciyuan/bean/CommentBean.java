@@ -1,13 +1,14 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.TimeUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
-import org.qii.weiciyuan.support.utils.TimeUtility;
 
 /**
  * User: Jiang Qi
@@ -27,6 +28,8 @@ public class CommentBean extends ItemBean implements Parcelable {
     private CommentBean reply_comment;
 
     private String sourceString;
+
+    private boolean isMiddleUnreadItem=false;
 
     private transient SpannableString listViewSpannableString;
 
@@ -54,7 +57,7 @@ public class CommentBean extends ItemBean implements Parcelable {
 
         dest.writeString(sourceString);
 
-
+        dest.writeBooleanArray(new boolean[]{this.isMiddleUnreadItem});
     }
 
     public static final Parcelable.Creator<CommentBean> CREATOR =
@@ -75,6 +78,11 @@ public class CommentBean extends ItemBean implements Parcelable {
                     commentBean.reply_comment = in.readParcelable(CommentBean.class.getClassLoader());
 
                     commentBean.sourceString = in.readString();
+
+                    boolean[] booleans = new boolean[1];
+                    in.readBooleanArray(booleans);
+                    commentBean.isMiddleUnreadItem=booleans[0];
+
                     return commentBean;
                 }
 
@@ -189,6 +197,11 @@ public class CommentBean extends ItemBean implements Parcelable {
         return user;
     }
 
+    @Override
+    public boolean isMiddleUnreadItem() {
+        return false;
+    }
+
     public void setUser(UserBean user) {
         this.user = user;
     }
@@ -199,6 +212,10 @@ public class CommentBean extends ItemBean implements Parcelable {
 
     public void setStatus(MessageBean status) {
         this.status = status;
+    }
+
+    public void setMiddleUnreadItem(boolean isMiddleUnreadItem) {
+        this.isMiddleUnreadItem = isMiddleUnreadItem;
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
+import org.qii.weiciyuan.othercomponent.AppActivityLifecycleCallbacks;
 import org.qii.weiciyuan.support.crashmanager.CrashManager;
 import org.qii.weiciyuan.support.crashmanager.CrashManagerConstants;
 import org.qii.weiciyuan.support.database.AccountDBTask;
@@ -80,6 +81,7 @@ public final class GlobalContext extends Application {
         if (Utility.isCertificateFingerprintCorrect(this)) {
             Crashlytics.start(this);
         }
+        registerActivityLifecycleCallbacks(new AppActivityLifecycleCallbacks());
     }
 
     public static GlobalContext getInstance() {

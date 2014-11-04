@@ -268,7 +268,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             if (isPositionBetweenHeaderViewAndFooterView(position)) {
                 int indexInDataSource = position - headerViewsCount;
                 ItemBean msg = getList().getItem(indexInDataSource);
-                if (!isNullFlag(msg)) {
+                if (!isMiddleUnloadMessage(msg)) {
                     listViewItemClick(parent, view, indexInDataSource, id);
                 } else {
                     String beginId = getList().getItem(indexInDataSource + 1).getId();
@@ -293,6 +293,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             }
         }
 
+        boolean isLastItem(int position) {
+            return position - 1 >= getList().getSize();
+        }
+
+
+        boolean isMiddleUnloadMessage(ItemBean msg) {
+            return msg == null||msg.isMiddleUnreadItem();
+        }
+
         boolean isPositionBetweenHeaderViewAndFooterView(int position) {
             return position - getListView().getHeaderViewsCount() < getList().getSize()
                     && position - getListView().getHeaderViewsCount() >= 0;
@@ -309,13 +318,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             }
         }
 
-        boolean isNullFlag(ItemBean msg) {
-            return msg == null;
-        }
 
-        boolean isLastItem(int position) {
-            return position - 1 >= getList().getSize();
-        }
+
     };
 
     private AbsListView.OnScrollListener listViewOnScrollListener

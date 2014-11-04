@@ -37,7 +37,7 @@ public class AppNewMsgAlarm {
 
         AlarmManager alarm = (AlarmManager) context.getSystemService(
                 Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, FetchNewMsgService.class);
+        Intent intent = FetchNewMsgService.newIntentFromAlarmManager();
         PendingIntent sender = PendingIntent
                 .getService(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, time, sender);
@@ -50,7 +50,7 @@ public class AppNewMsgAlarm {
     public static void stopAlarm(Context context, boolean clearNotification) {
         AlarmManager alarm = (AlarmManager) context.getSystemService(
                 Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, FetchNewMsgService.class);
+        Intent intent =FetchNewMsgService.newIntentFromAlarmManager();
         PendingIntent sender = PendingIntent
                 .getService(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarm.cancel(sender);

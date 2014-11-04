@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.utils;
 
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 
 import java.lang.reflect.Field;
 
@@ -24,5 +25,19 @@ public class JavaReflectionUtility {
         }
 
         return null;
+    }
+
+    public static void setValue(AdapterView view, String name, int value) {
+
+        final Field field;
+        try {
+            field = AdapterView.class.getDeclaredField(name);
+            field.setAccessible(true);
+            field.setInt(view, value);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

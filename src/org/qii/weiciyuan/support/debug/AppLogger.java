@@ -141,7 +141,7 @@ public class AppLogger {
         StackTraceElement caller = new Throwable().fillInStackTrace().getStackTrace()[2];
 
         return new StringBuilder()
-                .append(caller.getClassName())
+                .append(caller.getFileName())
                 .append(".")
                 .append(caller.getMethodName())
                 .append("(): ")

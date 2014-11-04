@@ -106,7 +106,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return bean;
     }
 
-
     public FriendsTimeLineFragment() {
 
     }
@@ -124,7 +123,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -149,7 +147,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     break;
                 }
             }
-
         }
     }
 
@@ -159,12 +156,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         this.token = token;
     }
 
-
     @Override
     protected void onListViewScrollStop() {
         savePositionToPositionsCache();
         startDownloadingOtherPicturesOnWifiNetworkEnvironment();
-
     }
 
     private void startDownloadingOtherPicturesOnWifiNetworkEnvironment() {
@@ -180,7 +175,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             backgroundWifiDownloadPicThread.start();
             AppLogger
                     .i("WifiAutoDownloadPictureRunnable startDownloadingOtherPicturesOnWifiNetworkEnvironment");
-
         }
     }
 
@@ -202,7 +196,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             backgroundWifiDownloadPicThread = null;
             AppLogger
                     .i("WifiAutoDownloadPictureRunnable stopDownloadingOtherPicturesOnWifiNetworkEnvironment");
-
         }
     }
 
@@ -217,13 +210,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void setListViewPositionFromPositionsCache() {
         final TimeLinePosition p = positionCache.get(currentGroupId);
-        Utility.setListViewSelectionFromTop(getListView(), p != null ? p.position : 0,
+        Utility.setListViewItemPosition(getListView(), p != null ? p.getPosition(bean) : 0,
                 p != null ? p.top : 0, new Runnable() {
-            @Override
-            public void run() {
-                setListViewUnreadTipBar(p);
-            }
-        });
+                    @Override
+                    public void run() {
+                        setListViewUnreadTipBar(p);
+                    }
+                });
     }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
@@ -355,10 +348,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         super.onActivityCreated(savedInstanceState);
-
-
     }
-
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -368,7 +358,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 //            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
         }
     }
-
 
     @Override
     protected void buildListAdapter() {
@@ -417,7 +406,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return selectedItemId;
     }
 
-
     private String[] buildListNavData(List<GroupBean> list) {
         List<String> name = new ArrayList<String>();
 
@@ -431,7 +419,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         String[] valueArray = name.toArray(new String[0]);
         return valueArray;
     }
-
 
     public void buildActionBarNav() {
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
@@ -485,7 +472,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 && isVisible()) {
             getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
         }
-
     }
 
     @Override
@@ -499,7 +485,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void scrollToTop() {
         Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
-
 
     private void handleDBCacheOnProgressUpdateData(MessageTimeLineData[] result) {
         if (result != null && result.length > 0) {
@@ -597,19 +582,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onProgressUpdate(MessageTimeLineData... result) {
             super.onProgressUpdate(result);
-
             FriendsTimeLineFragment fragment = fragmentWeakReference.get();
-
             if (fragment == null) {
                 return;
             }
-
             if (fragment.getActivity() == null) {
                 return;
             }
-
             fragment.handleDBCacheOnProgressUpdateData(result);
-
         }
     }
 
@@ -629,8 +609,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 BrowserWeiboMsgActivity.newIntent(getList().getItem(position),
                         GlobalContext.getInstance().getSpecialToken()),
                 MainTimeLineActivity.REQUEST_CODE_UPDATE_FRIENDS_TIMELINE_COMMENT_REPOST_COUNT);
-
-
     }
 
     @Override
@@ -664,11 +642,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return super.onOptionsItemSelected(item);
     }
 
-
     public void setSelected(String selectedItemId) {
         currentGroupId = selectedItemId;
     }
-
 
     @Override
     protected void newMsgLoaderSuccessCallback(MessageListBean newValue, Bundle loaderArgs) {
@@ -706,11 +682,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             if (isFirstViewHeader && !headerListView.isInTouchByUser()) {
 
-//                //Overlay shi Android 4.3 method
+//                //Overlay is Android 4.3 method
                 if (!Utility.isJB2()) {
                     getList().addNewData(newValue);
                     getAdapter().notifyDataSetChanged();
-                    Utility.setListViewSelectionFromTop(getListView(), 0, 0);
+                    Utility.setListViewItemPosition(getListView(), 0, 0, null);
                     return;
                 }
 
@@ -745,8 +721,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     previousViewsTop.put(currentAdapterItemId, childViewTop);
                     childView.setHasTransientState(true);
                     previousViews.put(currentAdapterItemId, childView);
-
-
                 }
 
                 getList().addNewData(newValue);
@@ -800,7 +774,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                                             } else {
                                                 newAddedItemViews.add(childView);
                                             }
-
                                         }
 
                                         if (!somePreviousViewsAreStillInScreen) {
@@ -822,7 +795,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                                                     getActivity());
                                             imageView.setImageBitmap(bitmap);
                                             imageView.measure(View.MeasureSpec.makeMeasureSpec(0,
-                                                    View.MeasureSpec.UNSPECIFIED),
+                                                            View.MeasureSpec.UNSPECIFIED),
                                                     View.MeasureSpec.makeMeasureSpec(0,
                                                             View.MeasureSpec.UNSPECIFIED));
                                             imageView.layout(0, 0, imageView.getMeasuredWidth(),
@@ -873,7 +846,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 final int positionAfterRefresh = index + finalSize - initSize + getListView()
                         .getHeaderViewsCount();
                 //use 1 px to show newMsgTipBar
-                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh,
+                Utility.setListViewItemPosition(getListView(), positionAfterRefresh,
                         1, endAction);
                 return;
             }
@@ -887,12 +860,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getAdapter().notifyDataSetChanged();
             int finalSize = getList().getSize();
             final int positionAfterRefresh = index + finalSize - initSize;
-            Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top,
+            Utility.setListViewItemPosition(getListView(), positionAfterRefresh, top,
                     endAction);
-
-
         }
-
     }
 
     private void addNewDataAndRememberPosition(final MessageListBean newValue) {
@@ -907,7 +877,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             final int positionAfterRefresh = index + finalSize - initSize + getListView()
                     .getHeaderViewsCount();
             //use 1 px to show newMsgTipBar
-            Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, 1,
+            Utility.setListViewItemPosition(getListView(), positionAfterRefresh, 1,
                     new Runnable() {
 
                         @Override
@@ -916,36 +886,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                             newMsgTipBar.setType(TopTipBar.Type.AUTO);
                         }
                     });
-
-
         }
-
     }
 
     protected void middleMsgLoaderSuccessCallback(int position, MessageListBean newValue,
             boolean towardsBottom) {
 
-        if (newValue == null) {
-            return;
-        }
-
-        if (getActivity() != null && newValue.getSize() > 0) {
+        if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
             getList().addMiddleData(position, newValue, towardsBottom);
-
-            int finalSize = getList().getSize();
-
-            if (towardsBottom || SettingUtility.isReadStyleEqualWeibo()) {
-                getAdapter().notifyDataSetChanged();
-            } else {
-                int initSize = getList().getSize();
-                int index = getListView().getFirstVisiblePosition();
-                View v = Utility.getListViewFirstAdapterItemView(getListView());
-                final int top = (v == null) ? 0 : v.getTop();
-                getAdapter().notifyDataSetChanged();
-                final int positionAfterRefresh = index + finalSize - initSize;
-                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
-            }
-
+            getAdapter().notifyDataSetChanged();
+            FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
         }
     }
 
@@ -963,7 +913,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getList().addOldData(oldValue);
             putToGroupDataMemoryCache(currentGroupId, getList());
             FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
-
         } else if (Utility.isAllNotNull(getActivity())) {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty),
                     Toast.LENGTH_SHORT).show();
@@ -992,7 +941,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getAdapter().notifyDataSetChanged();
             getPullToRefreshListView().setRefreshing();
             loadNewMsg();
-
         } else {
             getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
@@ -1002,7 +950,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     .executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
 
     private void putToGroupDataMemoryCache(String groupId, MessageListBean value) {
         MessageListBean copy = new MessageListBean();
@@ -1017,12 +964,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     protected void addRefresh() {
-
         autoRefreshExecutor = new LogOnExceptionScheduledExecutor(1);
         autoRefreshExecutor
                 .scheduleAtFixedRate(new AutoTask(), AppConfig.AUTO_REFRESH_INITIALDELAY,
                         AppConfig.AUTO_REFRESH_PERIOD, TimeUnit.SECONDS);
-
     }
 
     private class AutoTask implements Runnable {
@@ -1032,7 +977,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-
                     if (getActivity() == null) {
                         return;
                     }
@@ -1067,10 +1011,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                             .restartLoader(NEW_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
                 }
             });
-
         }
     }
-
 
     /**
      * refresh timline messages' repost and comment count
@@ -1095,10 +1037,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             }
         }
 
-
         @Override
         protected List<MessageReCmtCountBean> doInBackground(Void... params) {
-
             if (msgIds.size() == 0) {
                 return null;
             }
@@ -1121,9 +1061,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             }
             fragment.updateTimeLineMessageCommentAndRepostData(value);
         }
-
     }
-
 
     private void updateTimeLineMessageCommentAndRepostData(List<MessageReCmtCountBean> value) {
 
@@ -1154,7 +1092,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getAdapter().notifyDataSetChanged();
         FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
     }
-
 
     protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id,
             Bundle args) {

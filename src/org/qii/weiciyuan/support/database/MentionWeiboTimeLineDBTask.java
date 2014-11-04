@@ -49,7 +49,10 @@ public class MentionWeiboTimeLineDBTask {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
-        int limit = position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
+        int limit =
+                position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50
+                        ? position.position
+                        + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ACCOUNTID + "  = "
@@ -60,7 +63,9 @@ public class MentionWeiboTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     MessageBean value = gson.fromJson(json, MessageBean.class);
-                    value.getListViewSpannableString();
+                    if (!value.isMiddleUnreadItem()) {
+                        value.getListViewSpannableString();
+                    }
                     msgList.add(value);
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());
@@ -220,7 +225,7 @@ public class MentionWeiboTimeLineDBTask {
 
         }
         c.close();
-        return new TimeLinePosition(0, 0);
+        return TimeLinePosition.empty();
     }
 
     public static void asyncReplace(final MessageListBean list, final String accountId) {

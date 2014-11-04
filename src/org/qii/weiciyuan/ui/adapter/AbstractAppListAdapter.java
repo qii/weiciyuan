@@ -232,7 +232,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             return -1;
         }
 
-        if (bean.get(position) == null) {
+        if (bean.get(position) == null|| bean.get(position).isMiddleUnreadItem()) {
             return TYPE_MIDDLE;
         }
 

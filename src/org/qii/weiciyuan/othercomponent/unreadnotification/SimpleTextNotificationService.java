@@ -28,6 +28,7 @@ import java.util.HashMap;
  * User: qii
  * Date: 14-3-8
  */
+@Deprecated
 public class SimpleTextNotificationService extends NotificationServiceHelper {
 
     private class ValueWrapper {

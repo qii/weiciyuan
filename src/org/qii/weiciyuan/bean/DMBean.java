@@ -1,12 +1,13 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.TimeUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
-import org.qii.weiciyuan.support.utils.TimeUtility;
 
 /**
  * User: qii
@@ -104,6 +105,11 @@ public class DMBean extends ItemBean implements Parcelable {
     @Override
     public UserBean getUser() {
         return sender;
+    }
+
+    @Override
+    public boolean isMiddleUnreadItem() {
+        return false;
     }
 
     public void setId(String id) {

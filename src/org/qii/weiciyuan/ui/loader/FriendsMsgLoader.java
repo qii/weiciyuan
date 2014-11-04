@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
-import android.text.TextUtils;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
@@ -10,6 +9,9 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
+
+import android.content.Context;
+import android.text.TextUtils;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -54,7 +56,10 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
                 retryCount++;
             }
             if (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount())) {
-                result.getItemList().add(null);
+                MessageBean middleUnreadItem=new MessageBean();
+                middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
+                middleUnreadItem.setMiddleUnreadItem(true);
+                result.getItemList().add(middleUnreadItem);
             }
         } else {
             return result;
