@@ -76,12 +76,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private String token;
 
     private DBCacheTask dbTask;
-
+    private Thread backgroundWifiDownloadPicThread = null;
     private ScheduledExecutorService autoRefreshExecutor = null;
 
     public final static String ALL_GROUP_ID = "0";
     public final static String BILATERAL_GROUP_ID = "1";
-
     private String currentGroupId = ALL_GROUP_ID;
 
     private HashMap<String, MessageListBean> groupDataCache
@@ -91,9 +90,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private MessageListBean bean = new MessageListBean();
     private BaseAdapter navAdapter;
-
-    private Thread backgroundWifiDownloadPicThread = null;
-
+    
     private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
