@@ -17,7 +17,6 @@ public class DMUserListActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -28,7 +27,6 @@ public class DMUserListActivity extends AbstractAppActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -42,6 +40,4 @@ public class DMUserListActivity extends AbstractAppActivity {
         }
         return false;
     }
-
-
 }

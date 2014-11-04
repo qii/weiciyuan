@@ -20,7 +20,6 @@ public class DeleteSelectedPictureDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         String[] items = {getString(R.string.delete)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())

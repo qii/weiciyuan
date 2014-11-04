@@ -45,20 +45,16 @@ public class AccountActivity extends AbstractAppActivity
         implements LoaderManager.LoaderCallbacks<List<AccountBean>> {
 
     private static final String ACTION_OPEN_FROM_APP_INNER = "org.qii.weiciyuan:accountactivity";
-
     private static final String ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN
             = "org.qii.weiciyuan:accountactivity_refresh_token";
 
     private static final String REFRESH_ACTION_EXTRA = "refresh_account";
 
     private final int ADD_ACCOUNT_REQUEST_CODE = 0;
-
     private final int LOADER_ID = 0;
 
     private ListView listView = null;
-
     private AccountAdapter listAdapter = null;
-
     private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
     public static Intent newIntent() {
@@ -76,7 +72,6 @@ public class AccountActivity extends AbstractAppActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         String action = getIntent() != null ? getIntent().getAction() : null;
 
         if (ACTION_OPEN_FROM_APP_INNER.equals(action)) {
@@ -112,11 +107,8 @@ public class AccountActivity extends AbstractAppActivity
 
             Toast.makeText(this, String.format(getString(R.string.account_token_has_expired),
                     accountBean.getUsernick()), Toast.LENGTH_SHORT).show();
-
         }
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -128,9 +120,7 @@ public class AccountActivity extends AbstractAppActivity
         changeLogDialog.show();
     }
 
-
     private void jumpToMainTimeLineActivity() {
-
         String id = SettingUtility.getDefaultAccountId();
 
         if (!TextUtils.isEmpty(id)) {
@@ -141,9 +131,7 @@ public class AccountActivity extends AbstractAppActivity
                 finish();
             }
         }
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,7 +140,6 @@ public class AccountActivity extends AbstractAppActivity
     }
 
     private void showAddAccountDialog() {
-
         final ArrayList<Class> activityList = new ArrayList<Class>();
         ArrayList<String> itemValueList = new ArrayList<String>();
 
@@ -193,7 +180,6 @@ public class AccountActivity extends AbstractAppActivity
         return true;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_ACCOUNT_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -216,7 +202,6 @@ public class AccountActivity extends AbstractAppActivity
                     });
 
             builder.show();
-
         }
     }
 
@@ -272,11 +257,8 @@ public class AccountActivity extends AbstractAppActivity
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
             if (!Utility.isTokenValid(accountList.get(i))) {
-
                 showAddAccountDialog();
-
                 return;
             }
 
@@ -312,7 +294,6 @@ public class AccountActivity extends AbstractAppActivity
             return false;
         }
 
-
         @Override
         public void onDestroyActionMode(ActionMode mode) {
 
@@ -328,14 +309,12 @@ public class AccountActivity extends AbstractAppActivity
     private class AccountAdapter extends BaseAdapter {
 
         int checkedBG;
-
         int defaultBG;
 
         public AccountAdapter() {
             defaultBG = getResources().getColor(R.color.transparent);
             checkedBG = ThemeUtility
                     .getColor(AccountActivity.this, R.attr.listview_checked_color);
-
         }
 
         @Override
@@ -360,9 +339,7 @@ public class AccountActivity extends AbstractAppActivity
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-
             LayoutInflater layoutInflater = getLayoutInflater();
-
             View mView = layoutInflater
                     .inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
             mView.findViewById(R.id.listview_root).setBackgroundColor(defaultBG);
@@ -390,10 +367,7 @@ public class AccountActivity extends AbstractAppActivity
             } else {
                 token.setVisibility(View.GONE);
             }
-
             return mView;
         }
     }
-
-
 }

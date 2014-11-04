@@ -1,5 +1,13 @@
 package org.qii.weiciyuan.ui.browser;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
 import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,19 +17,16 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -32,22 +37,14 @@ public class BrowserCommentFragment extends Fragment {
     private CommentBean msg;
 
     private TextView username;
-
     private TextView content;
-
     private TextView time;
-
     private TextView source;
-
     private ImageView avatar;
-
-
     private ShareActionProvider mShareActionProvider;
-
 
     public BrowserCommentFragment() {
     }
-
 
     public BrowserCommentFragment(CommentBean msg) {
         this.msg = msg;
@@ -68,18 +65,13 @@ public class BrowserCommentFragment extends Fragment {
             msg = (CommentBean) savedInstanceState.getParcelable("msg");
         }
         buildViewData();
-
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
         avatar.setImageDrawable(null);
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,7 +110,6 @@ public class BrowserCommentFragment extends Fragment {
 //                ProfileAvatarReadWorker avatarTask = new ProfileAvatarReadWorker(avatar, FileLocationMethod.avatar_small);
 //                avatarTask.execute(url);
             }
-
         }
         content.setText(msg.getText());
         TimeLineUtility.addLinks(content);
@@ -132,15 +123,12 @@ public class BrowserCommentFragment extends Fragment {
         buildShareActionMenu();
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.actionbar_menu_browserweibocommentactivity, menu);
-
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         buildShareActionMenu();
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -160,17 +148,13 @@ public class BrowserCommentFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-
             case R.id.menu_comment:
                 intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
-
                 break;
-
             case R.id.menu_share:
-
                 buildShareActionMenu();
                 return true;
             case R.id.menu_copy:
@@ -180,12 +164,9 @@ public class BrowserCommentFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.copy_successfully),
                         Toast.LENGTH_SHORT).show();
                 break;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
     }
-
-
 }

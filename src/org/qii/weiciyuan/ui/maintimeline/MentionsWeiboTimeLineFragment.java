@@ -50,13 +50,10 @@ public class MentionsWeiboTimeLineFragment
         extends AbstractMessageTimeLineFragment<MessageListBean> {
 
     private AccountBean accountBean;
-
     private UserBean userBean;
-
     private String token;
 
     private TimeLinePosition timeLinePosition;
-
     private MessageListBean bean = new MessageListBean();
 
     private final int POSITION_IN_PARENT_FRAGMENT = 0;

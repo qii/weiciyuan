@@ -25,13 +25,11 @@ import android.widget.Toast;
  */
 public class LongClickLinkDialog extends DialogFragment {
 
-
     private Uri uri;
 
     public LongClickLinkDialog() {
 
     }
-
 
     public LongClickLinkDialog(Uri uri) {
         this.uri = uri;
@@ -46,8 +44,9 @@ public class LongClickLinkDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             this.uri = savedInstanceState.getParcelable("uri");
+        }
     }
 
     @Override
@@ -66,30 +65,36 @@ public class LongClickLinkDialog extends DialogFragment {
                                     String url = uri.toString();
                                     if (Utility.isWeiboAccountIdLink(url)) {
                                         Intent intent = new Intent(context, UserInfoActivity.class);
-                                        intent.putExtra("id", Utility.getIdFromWeiboAccountLink(url));
+                                        intent.putExtra("id",
+                                                Utility.getIdFromWeiboAccountLink(url));
                                         context.startActivity(intent);
                                     } else if (Utility.isWeiboAccountDomainLink(url)) {
                                         Intent intent = new Intent(context, UserInfoActivity.class);
-                                        intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
+                                        intent.putExtra("domain",
+                                                Utility.getDomainFromWeiboAccountLink(url));
                                         context.startActivity(intent);
                                     } else {
                                         WebBrowserSelector.openLink(context, uri);
                                     }
                                 } else {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                    intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+                                    intent.putExtra(Browser.EXTRA_APPLICATION_ID,
+                                            context.getPackageName());
                                     context.startActivity(intent);
                                 }
                                 break;
                             case 1:
-                                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getStringContent()));
-                                Toast.makeText(GlobalContext.getInstance(), String.format(GlobalContext.getInstance().getString(R.string.have_copied), getStringContent()), Toast.LENGTH_SHORT).show();
+                                ClipboardManager cm = (ClipboardManager) getActivity()
+                                        .getSystemService(Context.CLIPBOARD_SERVICE);
+                                cm.setPrimaryClip(
+                                        ClipData.newPlainText("sinaweibo", getStringContent()));
+                                Toast.makeText(GlobalContext.getInstance(), String.format(
+                                        GlobalContext.getInstance().getString(R.string.have_copied),
+                                        getStringContent()), Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
                 });
-
 
         return builder.create();
     }

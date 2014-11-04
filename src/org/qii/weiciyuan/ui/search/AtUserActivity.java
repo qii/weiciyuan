@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.ui.search;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii
@@ -15,7 +16,6 @@ public class AtUserActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.at_other);

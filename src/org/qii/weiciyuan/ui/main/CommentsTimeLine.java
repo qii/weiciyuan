@@ -34,11 +34,9 @@ public class CommentsTimeLine extends AbstractAppFragment
     private ViewPager viewPager;
 
     private SparseArray<Fragment> childrenFragments = new SparseArray<Fragment>();
-
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     static final int COMMENTS_TO_ME_CHILD_POSITION = 0;
-
     static final int COMMENTS_BY_ME_CHILD_POSITION = 1;
 
     public static CommentsTimeLine newInstance() {
@@ -98,7 +96,6 @@ public class CommentsTimeLine extends AbstractAppFragment
         return view;
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -131,7 +128,6 @@ public class CommentsTimeLine extends AbstractAppFragment
                         UnreadTabIndex.NONE);
                 break;
         }
-
     }
 
     @Override
@@ -140,7 +136,6 @@ public class CommentsTimeLine extends AbstractAppFragment
         if (!hidden) {
             int commentsTabIndex = getArguments().getInt("commentsTabIndex");
             buildActionBarAndViewPagerTitles(commentsTabIndex);
-
         }
     }
 
@@ -174,9 +169,7 @@ public class CommentsTimeLine extends AbstractAppFragment
 
         if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
             viewPager.setCurrentItem(nav, false);
-
         }
-
     }
 
     public ActionBar.Tab getCommentsToMeTab() {
@@ -211,7 +204,6 @@ public class CommentsTimeLine extends AbstractAppFragment
                         @Override
                         public void run() {
                             LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-
                         }
                     }, ViewConfiguration.getLongPressTimeout());
                     break;
@@ -247,7 +239,6 @@ public class CommentsTimeLine extends AbstractAppFragment
 
         return fragment;
     }
-
 
     @Override
     public void scrollToTop() {

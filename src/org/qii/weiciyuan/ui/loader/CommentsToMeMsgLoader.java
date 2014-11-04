@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,14 +22,14 @@ public class CommentsToMeMsgLoader extends AbstractAsyncNetRequestTaskLoader<Com
     private String maxId;
     private String accountId;
 
-    public CommentsToMeMsgLoader(Context context, String accountId, String token, String sinceId, String maxId) {
+    public CommentsToMeMsgLoader(Context context, String accountId, String token, String sinceId,
+            String maxId) {
         super(context);
         this.token = token;
         this.sinceId = sinceId;
         this.maxId = maxId;
         this.accountId = accountId;
     }
-
 
     public CommentListBean loadData() throws WeiboException {
         MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
@@ -45,6 +46,5 @@ public class CommentsToMeMsgLoader extends AbstractAsyncNetRequestTaskLoader<Com
 
         return result;
     }
-
 }
 

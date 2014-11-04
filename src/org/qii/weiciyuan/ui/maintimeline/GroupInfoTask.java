@@ -13,9 +13,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  */
 public class GroupInfoTask extends MyAsyncTask<Void, GroupListBean, GroupListBean> {
 
-
     private WeiboException e;
-
     private String token;
     private String accountId;
 
@@ -35,15 +33,12 @@ public class GroupInfoTask extends MyAsyncTask<Void, GroupListBean, GroupListBea
         return null;
     }
 
-
     @Override
     protected void onPostExecute(GroupListBean groupListBean) {
         super.onPostExecute(groupListBean);
-
         GroupDBTask.update(groupListBean, accountId);
-        if (accountId.equalsIgnoreCase(GlobalContext.getInstance().getCurrentAccountId()))
+        if (accountId.equalsIgnoreCase(GlobalContext.getInstance().getCurrentAccountId())) {
             GlobalContext.getInstance().setGroup(groupListBean);
-
+        }
     }
-
 }

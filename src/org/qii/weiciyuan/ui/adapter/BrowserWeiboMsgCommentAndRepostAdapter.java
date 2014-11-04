@@ -54,15 +54,12 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     private boolean isCommentList = true;
 
     private List<CommentBean> commentListBean;
-
     private List<MessageBean> repostListBean;
 
     private Fragment fragment;
-
     private ListView listView;
 
     private int checkedBG;
-
     private int defaultBG;
 
     private LayoutInflater inflater;
@@ -70,10 +67,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     private Map<BrowserWeiboMsgCommentAndRepostAdapter.ViewHolder, Drawable> bg
             = new WeakHashMap<BrowserWeiboMsgCommentAndRepostAdapter.ViewHolder, Drawable>();
 
-
     public BrowserWeiboMsgCommentAndRepostAdapter(Fragment fragment, ListView listView
             , List<CommentBean> commentListBean, List<MessageBean> repostListBean) {
-
         this.fragment = fragment;
         this.listView = listView;
         this.commentListBean = commentListBean;
@@ -83,7 +78,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         this.defaultBG = fragment.getResources().getColor(R.color.transparent);
         this.checkedBG = ThemeUtility
                 .getColor(fragment.getActivity(), R.attr.listview_checked_color);
-
     }
 
     protected Activity getActivity() {
@@ -139,7 +133,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             convertView = initSimpleLayout(parent);
             holder = buildHolder(convertView);
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -152,7 +145,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         return convertView;
     }
 
-
     public void bindViewData(ViewHolder holder, int position) {
         if (isCommentList) {
             bindCommentData(holder, position);
@@ -161,12 +153,10 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         }
     }
 
-
     private void bindCommentData(ViewHolder holder, int position) {
         Drawable drawable = bg.get(holder);
         if (drawable != null) {
             holder.listview_root.setBackgroundDrawable(drawable);
-
         } else {
             drawable = holder.listview_root.getBackground();
             bg.put(holder, drawable);
@@ -192,18 +182,14 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             } else {
                 buildAvatar(holder.avatar, position, user);
             }
-
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
         }
 
         holder.avatar.checkVerified(user);
-
         holder.content.setText(comment.getListViewSpannableString());
-
         holder.time.setTime(comment.getMills());
-
         holder.reply.setVisibility(View.VISIBLE);
         holder.reply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,7 +206,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         Drawable drawable = bg.get(holder);
         if (drawable != null) {
             holder.listview_root.setBackgroundDrawable(drawable);
-
         } else {
             drawable = holder.listview_root.getBackground();
             bg.put(holder, drawable);
@@ -246,7 +231,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             } else {
                 buildAvatar(holder.avatar, position, user);
             }
-
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
@@ -254,7 +238,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
         if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
             holder.content.setText(msg.getListViewSpannableString());
-
         } else {
             TimeLineUtility.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
@@ -264,8 +247,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
         holder.time.setTime(msg.getMills());
         holder.reply.setVisibility(View.GONE);
-
-
     }
 
     private View initSimpleLayout(ViewGroup parent) {
@@ -285,9 +266,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         if (holder.content != null) {
             holder.content.setOnTouchListener(onTouchListener);
         }
-
     }
-
 
     private ViewHolder buildHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
@@ -303,7 +282,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     }
 
     private void configLayerType(ViewHolder holder) {
-
         boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
         if (!disableHardAccelerated) {
             return;
@@ -320,9 +298,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             if (holder.time != null) {
                 holder.time.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
-
         }
-
     }
 
     private void configViewFont(ViewHolder holder) {
@@ -333,7 +309,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
         if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
             holder.time.setTextSize(prefFontSizeSp - 3);
-
         }
 
         currentWidgetTextSizePx = holder.content.getTextSize();
@@ -341,21 +316,15 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
             holder.content.setTextSize(prefFontSizeSp);
             holder.username.setTextSize(prefFontSizeSp);
-
         }
-
-
     }
-
 
     //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
     //the background then changed
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
 
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             ViewHolder holder = getViewHolderByView(v);
 
             if (holder == null) {
@@ -432,10 +401,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             }
 
             return false;
-
         }
     };
-
 
     //when view is recycled by listview, need to catch exception
     private ViewHolder getViewHolderByView(View view) {
@@ -452,7 +419,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     }
 
     private ViewHolder getViewHolderByView(int position) {
-
         int wantedPosition = position - listView.getHeaderViewsCount();
         int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
         int wantedChild = wantedPosition - firstPosition;
@@ -464,21 +430,14 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         View wantedView = listView.getChildAt(wantedChild);
         ViewHolder holder = (ViewHolder) wantedView.getTag();
         return holder;
-
     }
 
     private static class ViewHolder {
-
         RelativeLayout listview_root;
-
         TextView username;
-
         TextView content;
-
         TimeTextView time;
-
         TimeLineAvatarImageView avatar;
-
         ImageView reply;
     }
 
@@ -515,7 +474,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         }
     }
 
-
     public void removeCommentItem(final int postion) {
         if (postion >= 0 && postion < commentListBean.size()) {
             Animation anim = AnimationUtils.loadAnimation(
@@ -551,7 +509,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
                 commentListBean.remove(postion);
                 BrowserWeiboMsgCommentAndRepostAdapter.this.notifyDataSetChanged();
             }
-
         }
     }
 }

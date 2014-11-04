@@ -1,5 +1,12 @@
 package org.qii.weiciyuan.ui.main;
 
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
+
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -8,11 +15,6 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
-import com.slidingmenu.lib.app.SlidingFragmentActivity;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
@@ -25,12 +27,10 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
 
     private int theme = 0;
 
-
     @Override
     protected void onResume() {
         super.onResume();
         GlobalContext.getInstance().setCurrentRunningActivity(this);
-
 
         if (theme == SettingUtility.getAppTheme()) {
 
@@ -51,7 +51,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("theme", theme);
-
     }
 
     @Override
@@ -69,7 +68,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
         TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
-
     private void forceShowActionBarOverflowMenu() {
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
@@ -86,9 +84,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
-
 
     private void initNFC() {
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -103,12 +99,12 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
 
                 NdefMessage msg = new NdefMessage(
                         new NdefRecord[]{createMimeRecord(
-                                "application/org.qii.weiciyuan.beam", text.getBytes()), NdefRecord.createApplicationRecord(getPackageName())
+                                "application/org.qii.weiciyuan.beam", text.getBytes()),
+                                NdefRecord.createApplicationRecord(getPackageName())
                         });
                 return msg;
             }
         }, this);
-
     }
 
     private NdefRecord createMimeRecord(String mimeType, byte[] payload) {
@@ -119,7 +115,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
     }
 
     public void reload() {
-
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -128,7 +123,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
         overridePendingTransition(0, 0);
         startActivity(intent);
     }
-
 
     protected void dealWithException(WeiboException e) {
         Toast.makeText(this, e.getError(), Toast.LENGTH_SHORT).show();

@@ -52,15 +52,11 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     private UserBean userBean;
 
     private int page = 1;
-
     private DMListBean bean = new DMListBean();
 
     private EditText et;
-
     private SmileyPicker smiley;
-
     private LinearLayout mContainer;
-
     private ProgressBar dmProgressBar;
 
     private Comparator<DMBean> comparator = new Comparator<DMBean>() {
@@ -83,7 +79,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         return bean;
     }
 
-
     public static DMConversationListFragment newInstance(UserBean userBean) {
         DMConversationListFragment fragment = new DMConversationListFragment();
         Bundle bundle = new Bundle();
@@ -95,7 +90,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     public DMConversationListFragment() {
         //empty
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -121,7 +115,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                         if (getActivity() != null) {
                             loadNewMsg();
                         }
-
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
                 break;
@@ -137,14 +130,12 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                 refreshLayout(bean);
                 break;
         }
-
     }
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -214,7 +205,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     private void showSmileyPicker(boolean showAnimation) {
         this.smiley.show(getActivity(), showAnimation);
         lockContainerHeight(SmileyPickerUtility.getAppContentHeight(getActivity()));
-
     }
 
     @Override
@@ -255,7 +245,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                 unlockContainerHeightDelayed();
             }
         }
-
     }
 
     private void lockContainerHeight(int paramInt) {
@@ -266,14 +255,10 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     }
 
     public void unlockContainerHeightDelayed() {
-
         ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
-
     }
 
-
     private void send() {
-
         if (TextUtils.isEmpty(et.getText().toString())) {
             et.setError(getString(R.string.content_cant_be_empty));
             return;
@@ -288,7 +273,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         getListView().setAdapter(timeLineAdapter);
     }
 
-
     @Override
     protected void newMsgLoaderSuccessCallback(DMListBean newValue, Bundle loaderArgs) {
         dmProgressBar.setVisibility(View.INVISIBLE);
@@ -299,7 +283,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
             getAdapter().notifyDataSetChanged();
             getListView().setSelection(bean.getSize() - 1);
         }
-
     }
 
     @Override
@@ -312,11 +295,9 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         }
     }
 
-
     private class QuickCommentTask extends AsyncTask<Void, Void, Boolean> {
 
         WeiboException e;
-
         QuickSendProgressFragment progressFragment = new QuickSendProgressFragment();
 
         @Override
@@ -335,7 +316,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
             });
 
             progressFragment.show(getFragmentManager(), "");
-
         }
 
         @Override
@@ -357,7 +337,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
             progressFragment.dismissAllowingStateLoss();
             if (this.e != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-
             }
         }
 
@@ -372,7 +351,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                         .show();
             }
             super.onPostExecute(s);
-
         }
     }
 
@@ -397,7 +375,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
-
     @Override
     protected void loadOldMsg(View view) {
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
@@ -420,6 +397,4 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         return new DMConversationLoader(getActivity(), token, userBean.getId(),
                 String.valueOf(page + 1));
     }
-
-
 }

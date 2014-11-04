@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.MentionsWeiboTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,14 +22,14 @@ public class MentionsWeiboMsgLoader extends AbstractAsyncNetRequestTaskLoader<Me
     private String maxId;
     private String accountId;
 
-    public MentionsWeiboMsgLoader(Context context, String accountId, String token, String sinceId, String maxId) {
+    public MentionsWeiboMsgLoader(Context context, String accountId, String token, String sinceId,
+            String maxId) {
         super(context);
         this.token = token;
         this.sinceId = sinceId;
         this.maxId = maxId;
         this.accountId = accountId;
     }
-
 
     public MessageListBean loadData() throws WeiboException {
         MentionsWeiboTimeLineDao dao = new MentionsWeiboTimeLineDao(token);
@@ -43,9 +44,7 @@ public class MentionsWeiboMsgLoader extends AbstractAsyncNetRequestTaskLoader<Me
             lock.unlock();
         }
 
-
         return result;
     }
-
 }
 

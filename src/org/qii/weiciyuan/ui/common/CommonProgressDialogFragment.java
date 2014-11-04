@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
  */
 public class CommonProgressDialogFragment extends DialogFragment {
 
-
     public CommonProgressDialogFragment() {
     }
 

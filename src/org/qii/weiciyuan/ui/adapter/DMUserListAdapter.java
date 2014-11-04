@@ -38,15 +38,11 @@ import java.util.List;
 public class DMUserListAdapter extends BaseAdapter {
 
     private List<DMUserBean> bean;
-
     private Fragment fragment;
-
     private LayoutInflater inflater;
-
     private ListView listView;
 
     private TimeLineBitmapDownloader commander;
-
 
     public DMUserListAdapter(Fragment fragment, List<DMUserBean> bean, ListView listView) {
         this.bean = bean;
@@ -54,13 +50,11 @@ public class DMUserListAdapter extends BaseAdapter {
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.fragment = fragment;
-
     }
 
     protected Activity getActivity() {
         return fragment.getActivity();
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -71,8 +65,6 @@ public class DMUserListAdapter extends BaseAdapter {
             convertView = initSimpleLayout(parent);
             holder = buildHolder(convertView);
             convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
-
-
         } else {
             holder = (DMViewHolder) convertView.getTag();
         }
@@ -83,14 +75,12 @@ public class DMUserListAdapter extends BaseAdapter {
         return convertView;
     }
 
-
     private View initSimpleLayout(ViewGroup parent) {
         View convertView;
         convertView = inflater.inflate(R.layout.dm_user_list_listview_item_layout, parent, false);
 
         return convertView;
     }
-
 
     private DMViewHolder buildHolder(View convertView) {
         DMViewHolder holder = new DMViewHolder();
@@ -104,7 +94,6 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
     private void configViewFont(DMViewHolder holder) {
-
         int prefFontSizeSp = SettingUtility.getFontSize();
         float currentWidgetTextSizePx;
 
@@ -119,12 +108,10 @@ public class DMUserListAdapter extends BaseAdapter {
         if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
             holder.content.setTextSize(prefFontSizeSp);
             holder.username.setTextSize(prefFontSizeSp);
-
         }
     }
 
     protected void bindViewData(DMViewHolder holder, int position) {
-
         final DMUserBean msg = bean.get(position);
         UserBean user = msg.getUser();
         if (user != null) {
@@ -132,7 +119,6 @@ public class DMUserListAdapter extends BaseAdapter {
             buildUsername(holder, user);
 
             buildAvatar(holder.avatar, position, user);
-
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
@@ -153,11 +139,9 @@ public class DMUserListAdapter extends BaseAdapter {
             holder.time.setText(time);
         }
         holder.time.setTag(msg.getId());
-
     }
 
     private void buildUsername(DMViewHolder holder, UserBean user) {
-
         if (!TextUtils.isEmpty(user.getRemark())) {
             holder.username.setText(
                     new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark())
@@ -175,7 +159,6 @@ public class DMUserListAdapter extends BaseAdapter {
         if (holder.content != null) {
             holder.content.setOnTouchListener(onTouchListener);
         }
-
     }
 
     protected List<DMUserBean> getList() {
@@ -188,7 +171,6 @@ public class DMUserListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-
         if (getList() != null) {
             return getList().size();
         } else {
@@ -230,25 +212,17 @@ public class DMUserListAdapter extends BaseAdapter {
                     getActivity().startActivity(intent);
                 }
             });
-
         } else {
             view.setVisibility(View.GONE);
         }
     }
 
-
     private static class DMViewHolder {
-
         TextView username;
-
         TextView content;
-
         TextView time;
-
         TimeLineAvatarImageView avatar;
-
     }
-
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
 
@@ -257,7 +231,6 @@ public class DMUserListAdapter extends BaseAdapter {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             DMViewHolder holder = getViewHolderByView(v);
 
             if (holder == null) {
@@ -265,10 +238,7 @@ public class DMUserListAdapter extends BaseAdapter {
             }
 
             boolean hasActionMode = ((AbstractTimeLineFragment) fragment).hasActionMode();
-
             return !hasActionMode && listener.onTouch(v, event);
-
-
         }
     };
 
@@ -286,7 +256,6 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
     private DMViewHolder getViewHolderByView(int position) {
-
         int wantedPosition = position - 1;
         int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
         int wantedChild = wantedPosition - firstPosition;
@@ -299,6 +268,5 @@ public class DMUserListAdapter extends BaseAdapter {
         DMViewHolder holder = (DMViewHolder) wantedView
                 .getTag(R.drawable.ic_launcher + getItemViewType(position));
         return holder;
-
     }
 }

@@ -51,9 +51,7 @@ public class ControlFragment extends PreferenceFragment
                 case 3:
                     SettingUtility.setEnableCommentRepostAvatar(Utility.isWifi(getActivity()));
                     break;
-
             }
-
         }
     }
 }

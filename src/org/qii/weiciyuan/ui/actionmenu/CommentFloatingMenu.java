@@ -31,7 +31,6 @@ public class CommentFloatingMenu extends DialogFragment {
 
     }
 
-
     public CommentFloatingMenu(CommentBean bean) {
         this.bean = bean;
     }
@@ -63,7 +62,6 @@ public class CommentFloatingMenu extends DialogFragment {
                         getActivity().startActivity(intent);
                         break;
                 }
-
             }
         });
 
@@ -73,6 +71,5 @@ public class CommentFloatingMenu extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 }

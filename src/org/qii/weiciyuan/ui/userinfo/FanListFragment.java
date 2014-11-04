@@ -32,7 +32,6 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
         super();
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -44,12 +43,10 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
         return getArguments().getParcelable("userBean");
     }
 
-
     private class FanListOnItemLongClickListener implements AdapterView.OnItemLongClickListener {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
             if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
                 if (actionMode != null) {
                     actionMode.finish();
@@ -89,7 +86,6 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
         }
     }
 
-
     @Override
     protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewUserLoader(int id,
             Bundle args) {
@@ -108,11 +104,8 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
 
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(bean.getNext_cursor());
-
         return new FanUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
     }
-
-
 }
 
 

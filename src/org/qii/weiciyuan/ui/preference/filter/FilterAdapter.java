@@ -19,15 +19,10 @@ import java.util.List;
 public class FilterAdapter extends BaseAdapter {
 
     private int checkedBG;
-
     private int defaultBG;
-
     private Activity activity;
-
     private List<String> list;
-
     private ListView listView;
-
 
     public FilterAdapter(Activity activity, ListView listView, List<String> list) {
         defaultBG = activity.getResources().getColor(R.color.transparent);
@@ -60,7 +55,6 @@ public class FilterAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View view = activity.getLayoutInflater()
                 .inflate(R.layout.simple_listview_item, parent, false);
         TextView tv = (TextView) view.findViewById(R.id.text1);

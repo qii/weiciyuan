@@ -55,7 +55,6 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
-
         }
         return false;
     }
@@ -64,9 +63,7 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             extends AbstractMessageTimeLineFragment<ShareListBean> {
 
         private ShareListBean bean = new ShareListBean();
-
         private String url;
-
 
         public static BrowserShareTimeLineFragment newInstance(String url) {
             BrowserShareTimeLineFragment fragment = new BrowserShareTimeLineFragment();
@@ -115,9 +112,7 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
                     refreshLayout(bean);
                     break;
             }
-
         }
-
 
         @Override
         protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
@@ -143,7 +138,6 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             }
         }
 
-
         @Override
         public void loadNewMsg() {
             getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
@@ -151,7 +145,6 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             dismissFooterView();
             getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
         }
-
 
         @Override
         protected void loadOldMsg(View view) {
@@ -171,7 +164,6 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             return new BrowserShareMsgLoader(getActivity(), token, url, null);
         }
 
-
         protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateOldMsgLoader(int id,
                 Bundle args) {
             String token = GlobalContext.getInstance().getSpecialToken();
@@ -181,6 +173,5 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             }
             return new BrowserShareMsgLoader(getActivity(), token, url, maxId);
         }
-
     }
 }

@@ -17,8 +17,9 @@ public class SimpleTwoTabsListener implements ActionBar.TabListener {
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-        if (viewPager != null && viewPager.getCurrentItem() != tab.getPosition())
+        if (viewPager != null && viewPager.getCurrentItem() != tab.getPosition()) {
             viewPager.setCurrentItem(tab.getPosition());
+        }
     }
 
     @Override

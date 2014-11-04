@@ -17,9 +17,7 @@ import android.widget.TextView;
 public class TextNumLimitWatcher implements TextWatcher {
 
     private TextView tv;
-
     private EditText et;
-
     private Activity activity;
 
     public TextNumLimitWatcher(TextView tv, EditText et, Activity activity) {
@@ -34,7 +32,6 @@ public class TextNumLimitWatcher implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
         int sum = Utility.length(et.getText().toString());
 
         int left = 140 - sum;
@@ -50,7 +47,6 @@ public class TextNumLimitWatcher implements TextWatcher {
             tv.setTextColor(ThemeUtility
                     .getColor(activity, android.R.attr.actionMenuTextColor));
         }
-
     }
 
     @Override

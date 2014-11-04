@@ -50,38 +50,27 @@ import android.widget.TextView;
  */
 public abstract class AbstractTimeLineFragment<T extends ListBean> extends AbstractAppFragment {
 
-
     protected PullToRefreshListView pullToRefreshListView;
-
     protected TextView empty;
-
     protected ProgressBar progressBar;
-
     protected TopTipBar newMsgTipBar;
+    protected View footerView;
 
     protected BaseAdapter timeLineAdapter;
 
-    protected View footerView;
-
-
     protected static final int DB_CACHE_LOADER_ID = 0;
-
     protected static final int NEW_MSG_LOADER_ID = 1;
-
     protected static final int MIDDLE_MSG_LOADER_ID = 2;
-
     protected static final int OLD_MSG_LOADER_ID = 3;
 
     protected ActionMode actionMode;
 
-    protected int savedCurrentLoadingMsgViewPositon = NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
-
     public static final int NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION = -1;
+    protected int savedCurrentLoadingMsgViewPositon = NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
 
     public abstract T getList();
 
     private int listViewScrollState = -1;
-
     private boolean canLoadOldData = true;
 
     public int getListViewScrollState() {
@@ -130,9 +119,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
-
     protected void loadOldMsg(View view) {
-
         if (getLoaderManager().getLoader(OLD_MSG_LOADER_ID) != null || !canLoadOldData) {
             return;
         }
@@ -157,7 +144,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         bundle.putBoolean("towardsBottom",
                 velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
         getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
-
     }
 
     @Override
@@ -210,7 +196,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     }
 
-
     private PullToRefreshBase.OnLastItemVisibleListener listViewOnLastItemVisibleListener
             = new PullToRefreshBase.OnLastItemVisibleListener() {
         @Override
@@ -254,7 +239,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return listener;
     }
 
-
     private AdapterView.OnItemClickListener listViewOnItemClickListener
             = new AdapterView.OnItemClickListener() {
         @Override
@@ -287,7 +271,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                         }
                     }
                 }
-
             } else if (isLastItem(position)) {
                 loadOldMsg(view);
             }
@@ -297,9 +280,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             return position - 1 >= getList().getSize();
         }
 
-
         boolean isMiddleUnloadMessage(ItemBean msg) {
-            return msg == null||msg.isMiddleUnreadItem();
+            return msg == null || msg.isMiddleUnreadItem();
         }
 
         boolean isPositionBetweenHeaderViewAndFooterView(int position) {
@@ -317,9 +299,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 return false;
             }
         }
-
-
-
     };
 
     private AbsListView.OnScrollListener listViewOnScrollListener
@@ -367,7 +346,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         super.onPause();
         TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(false);
         TimeLineBitmapDownloader.getInstance().setPauseReadWork(false);
-
     }
 
     protected void onListViewScrollStop() {
@@ -383,7 +361,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected void onListViewScroll() {
-
         if (hasActionMode()) {
             int position = getListView().getCheckedItemPosition();
             if (getListView().getFirstVisiblePosition() > position
@@ -431,7 +408,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         tv.setVisibility(View.VISIBLE);
     }
 
-
     public void clearActionMode() {
         if (actionMode != null) {
 
@@ -464,12 +440,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected abstract void buildListAdapter();
 
-
     protected boolean allowRefresh() {
         boolean isNewMsgLoaderLoading = getLoaderManager().getLoader(NEW_MSG_LOADER_ID) != null;
         return getPullToRefreshListView().getVisibility() == View.VISIBLE && !isNewMsgLoaderLoading;
     }
-
 
     @Override
     public void onResume() {
@@ -504,11 +478,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return actionMode != null;
     }
 
-
     protected void showListView() {
         progressBar.setVisibility(View.INVISIBLE);
     }
-
 
     private volatile boolean enableRefreshTime = true;
 
@@ -521,7 +493,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected abstract void oldMsgLoaderSuccessCallback(T newValue);
 
     protected void middleMsgLoaderSuccessCallback(int position, T newValue, boolean towardsBottom) {
-
         if (newValue == null) {
             return;
         }
@@ -570,7 +541,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return loader;
     }
 
-
     protected Loader<AsyncTaskLoaderResult<T>> onCreateNewMsgLoader(int id, Bundle args) {
         return null;
     }
@@ -588,11 +558,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<T>>() {
 
         private String middleBeginId = "";
-
         private String middleEndId = "";
-
         private int middlePosition = -1;
-
         private boolean towardsBottom = false;
 
         @Override
@@ -623,7 +590,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         @Override
         public void onLoadFinished(Loader<AsyncTaskLoaderResult<T>> loader,
                 AsyncTaskLoaderResult<T> result) {
-
             T data = result != null ? result.data : null;
             WeiboException exception = result != null ? result.exception : null;
             Bundle args = result != null ? result.args : null;
@@ -684,8 +650,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
         }
     };
-
-
 }
 
 

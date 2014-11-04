@@ -36,14 +36,16 @@ public class FixedOnActivityResultBugFragment extends Fragment {
             ((FixedOnActivityResultBugFragment) getParentFragment()).registerRequestCode(
                     requestCode, hashCode());
             getParentFragment().startActivityForResult(intent, requestCode);
-        } else
+        } else {
             super.startActivityForResult(intent, requestCode);
+        }
     }// startActivityForResult()
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!checkNestedFragmentsForResult(requestCode, resultCode, data))
+        if (!checkNestedFragmentsForResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
+        }
     }// onActivityResult()
 
     /**
@@ -55,19 +57,21 @@ public class FixedOnActivityResultBugFragment extends Fragment {
      * @param resultCode  the code from {@link #onActivityResult(int, int, Intent)}.
      * @param data        the data from {@link #onActivityResult(int, int, Intent)}.
      * @return {@code true} if the results have been handed over to some child
-     *         fragment. {@code false} otherwise.
+     * fragment. {@code false} otherwise.
      */
     protected boolean checkNestedFragmentsForResult(int requestCode,
-                                                    int resultCode, Intent data) {
+            int resultCode, Intent data) {
         final int id = mRequestCodes.get(requestCode);
-        if (id == 0)
+        if (id == 0) {
             return false;
+        }
 
         mRequestCodes.delete(requestCode);
 
         List<Fragment> fragments = getChildFragmentManager().getFragments();
-        if (fragments == null)
+        if (fragments == null) {
             return false;
+        }
 
         for (Fragment fragment : fragments) {
             if (fragment.hashCode() == id) {
@@ -78,5 +82,4 @@ public class FixedOnActivityResultBugFragment extends Fragment {
 
         return false;
     }// checkNestedFragmentsForResult()
-
 }

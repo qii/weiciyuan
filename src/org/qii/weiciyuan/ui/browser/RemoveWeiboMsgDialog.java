@@ -1,11 +1,12 @@
 package org.qii.weiciyuan.ui.browser;
 
+import org.qii.weiciyuan.R;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import org.qii.weiciyuan.R;
 
 /**
  * User: qii
@@ -17,7 +18,6 @@ public class RemoveWeiboMsgDialog extends DialogFragment {
         public void removeMsg(String id);
     }
 
-
     private String id;
 
     public RemoveWeiboMsgDialog() {
@@ -25,14 +25,12 @@ public class RemoveWeiboMsgDialog extends DialogFragment {
     }
 
     public RemoveWeiboMsgDialog(String id) {
-
         this.id = id;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString("id", id);
     }
 
@@ -49,20 +47,22 @@ public class RemoveWeiboMsgDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.askdelete))
                 .setMessage(getString(R.string.askdeletemessage))
-                .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.delete),
+                        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        IRemove IRemove = (IRemove) getActivity();
-                        IRemove.removeMsg(id);
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                IRemove IRemove = (IRemove) getActivity();
+                                IRemove.removeMsg(id);
+                            }
+                        })
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
+                            }
+                        });
 
         return builder.create();
     }

@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FanListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,14 +21,12 @@ public class FanUserLoader extends AbstractAsyncNetRequestTaskLoader<UserListBea
     private String uid;
     private String cursor;
 
-
     public FanUserLoader(Context context, String token, String uid, String cursor) {
         super(context);
         this.token = token;
         this.uid = uid;
         this.cursor = cursor;
     }
-
 
     public UserListBean loadData() throws WeiboException {
         FanListDao dao = new FanListDao(token, uid);
@@ -41,10 +40,7 @@ public class FanUserLoader extends AbstractAsyncNetRequestTaskLoader<UserListBea
         } finally {
             lock.unlock();
         }
-
-
         return result;
     }
-
 }
 

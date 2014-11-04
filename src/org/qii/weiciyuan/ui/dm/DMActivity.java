@@ -17,7 +17,6 @@ public class DMActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -33,7 +32,6 @@ public class DMActivity extends AbstractAppActivity {
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -46,7 +44,6 @@ public class DMActivity extends AbstractAppActivity {
         }
         return false;
     }
-
 
     @Override
     public void onBackPressed() {

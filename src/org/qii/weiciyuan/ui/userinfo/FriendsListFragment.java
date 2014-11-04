@@ -28,17 +28,14 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         return fragment;
     }
 
-
     public FriendsListFragment() {
 
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getListView().setOnItemLongClickListener(new FriendListOnItemLongClickListener());
-
     }
 
     @Override
@@ -46,12 +43,10 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         return getArguments().getParcelable("userBean");
     }
 
-
     private class FriendListOnItemLongClickListener implements AdapterView.OnItemLongClickListener {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
             if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
                 if (actionMode != null) {
                     actionMode.finish();
@@ -93,7 +88,6 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         }
     }
 
-
     @Override
     protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewUserLoader(int id,
             Bundle args) {
@@ -105,16 +99,13 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
     @Override
     protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldUserLoader(int id,
             Bundle args) {
-
         if (getList().getUsers().size() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {
             return null;
         }
 
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(bean.getNext_cursor());
-
         return new FriendUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
     }
-
 }
 

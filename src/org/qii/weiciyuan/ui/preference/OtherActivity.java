@@ -23,7 +23,6 @@ public class OtherActivity extends AbstractAppActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -36,7 +35,6 @@ public class OtherActivity extends AbstractAppActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -55,12 +53,10 @@ public class OtherActivity extends AbstractAppActivity {
 
         private static final String DEBUG_INFO = "pref_debug_info_key";
 
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setRetainInstance(false);
-
             addPreferencesFromResource(R.xml.other_pref);
 
             final Preference cleanCachePre = findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE);
@@ -91,16 +87,13 @@ public class OtherActivity extends AbstractAppActivity {
             detectDebugPreference();
         }
 
-
         private void detectDebugPreference() {
             Preference debugPreferenceCategory = (PreferenceCategory) findPreference(DEBUG_INFO);
-
             if (!SettingUtility.isBlackMagicEnabled()) {
                 PreferenceScreen screen = getPreferenceScreen();
                 screen.removePreference(debugPreferenceCategory);
             }
         }
-
 
         private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
 
@@ -131,9 +124,7 @@ public class OtherActivity extends AbstractAppActivity {
                 preference.setSummary(
                         getString(R.string.pref_max_file_cache_size_is_300mb_current_size_is, s));
             }
-
         }
-
 
         private class CleanCacheTask extends MyAsyncTask<Void, Void, Void> {
 
@@ -171,6 +162,5 @@ public class OtherActivity extends AbstractAppActivity {
                                 MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
-
     }
 }

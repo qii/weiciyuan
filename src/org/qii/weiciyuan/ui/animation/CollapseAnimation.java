@@ -16,9 +16,7 @@ public class CollapseAnimation extends Animation {
     private boolean mIsVisibleAfter = false;
     private boolean mWasEndedAlready = false;
 
-
     public CollapseAnimation(View view, int duration) {
-
         setDuration(duration);
         mAnimatedView = view;
         mViewLayoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
@@ -35,9 +33,7 @@ public class CollapseAnimation extends Animation {
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);
-
         if (interpolatedTime < 1.0f) {
-
             // Calculating the new bottom margin, and setting it
             mViewLayoutParams.bottomMargin = mMarginStart
                     + (int) ((mMarginEnd - mMarginStart) * interpolatedTime);
@@ -56,6 +52,4 @@ public class CollapseAnimation extends Animation {
             mWasEndedAlready = true;
         }
     }
-
-
 }

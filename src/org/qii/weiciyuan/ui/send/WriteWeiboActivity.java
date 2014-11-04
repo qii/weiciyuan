@@ -66,45 +66,31 @@ public class WriteWeiboActivity extends AbstractAppActivity
         ClearContentDialog.IClear, SaveDraftDialog.IDraft {
 
     private static final int CAMERA_RESULT = 0;
-
     private static final int PIC_RESULT = 1;
-
     private static final int PIC_RESULT_KK = 2;
-
-
     public static final int AT_USER = 3;
 
-
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
-
     public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
 
     private AccountBean accountBean;
-
     protected String token = "";
 
     private StatusDraftBean statusDraftBean;
 
     private String picPath = "";
-
     private Uri imageFileUri = null;
 
     private GeoBean geoBean;
-
     private String location;
 
     private ImageView haveGPS = null;
-
     private KeyboardControlEditText content = null;
-
     private ImageView preview = null;
-
     private SmileyPicker smiley = null;
-
     private RelativeLayout container = null;
 
     private String2PicTask string2PicTask;
-
     private GetGoogleLocationInfo locationTask;
 
     public static Intent newIntent(AccountBean accountBean) {
@@ -153,13 +139,10 @@ public class WriteWeiboActivity extends AbstractAppActivity
         statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("statusDraftBean");
     }
 
-
     @Override
     public void onClick(DialogInterface dialog, int which) {
-
         switch (which) {
             case 0:
-
                 Uri lastUri = Utility.getLatestCameraPicture(WriteWeiboActivity.this);
                 if (lastUri != null) {
                     imageFileUri = lastUri;
@@ -172,7 +155,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
                 break;
             case 1:
-
                 imageFileUri = getContentResolver()
                         .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                                 new ContentValues());
@@ -210,7 +192,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         ConvertUriToCachePathAsyncTaskFragment fragment = ConvertUriToCachePathAsyncTaskFragment
                 .newInstance(imageFileUri);
         getSupportFragmentManager().beginTransaction().add(fragment, "").commit();
-
     }
 
     public void picConvertSucceedKK(String path) {
@@ -224,7 +205,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
     }
 
     private void enablePicture() {
-
         Bitmap bitmap = ImageUtility.getWriteWeiboPictureThumblr(picPath);
         if (bitmap != null) {
             ((ImageButton) findViewById(R.id.menu_add_pic)).setImageBitmap(bitmap);
@@ -238,7 +218,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
     }
 
     private void disablePicture() {
-
         if (picPath != null) {
             new File(picPath).delete();
         }
@@ -253,7 +232,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         preview.setVisibility(View.INVISIBLE);
         preview.setImageBitmap(null);
     }
-
 
     private boolean picture() {
         int level = ((ImageButton) findViewById(R.id.menu_add_pic)).getDrawable().getLevel();
@@ -282,21 +260,14 @@ public class WriteWeiboActivity extends AbstractAppActivity
                     content.setSelection(index + name.length());
                     break;
             }
-
         }
-
-
     }
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         Utility.cancelTasks(string2PicTask, locationTask);
-
     }
-
 
     protected boolean canShowSaveDraftDialog() {
         if (statusDraftBean == null) {
@@ -352,14 +323,12 @@ public class WriteWeiboActivity extends AbstractAppActivity
             token = accountBean.getAccess_token();
 
             getActionBar().setSubtitle(getAccount().getUsernick());
-
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (!GlobalContext.getInstance().checkUserIsLogin()) {
             Toast.makeText(this, this.getString(R.string.share_failed_because_of_no_account),
                     Toast.LENGTH_SHORT).show();
@@ -392,7 +361,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
             }
         }
     }
-
 
     private void handleDraftOperation(Intent intent) {
         accountBean = (AccountBean) intent.getParcelableExtra("account");
@@ -428,7 +396,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
             content.setSelection(content.getText().toString().length());
         }
     }
-
 
     private void buildInterface() {
         setContentView(R.layout.writeweiboactivity_layout);
@@ -496,7 +463,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
                                 haveGPS.setVisibility(View.GONE);
                                 geoBean = null;
                                 break;
-
                         }
 
                         return true;
@@ -540,9 +506,7 @@ public class WriteWeiboActivity extends AbstractAppActivity
         });
     }
 
-
     private void getAccountInfo() {
-
         AccountBean account = GlobalContext.getInstance().getAccountBean();
         if (account != null) {
             accountBean = account;
@@ -551,7 +515,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
     }
 
-
     private void handleSendText(Intent intent) {
         getAccountInfo();
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -559,12 +522,9 @@ public class WriteWeiboActivity extends AbstractAppActivity
             content.setText(sharedText);
             content.setSelection(content.getText().toString().length());
         }
-
     }
 
-
     private void handleSendImage(Intent intent) {
-
         handleSendText(intent);
 
         getAccountInfo();
@@ -576,9 +536,7 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
     }
 
-
     private boolean canSend() {
-
         boolean haveContent = !TextUtils.isEmpty(content.getText().toString());
         boolean haveToken = !TextUtils.isEmpty(token);
 
@@ -604,12 +562,9 @@ public class WriteWeiboActivity extends AbstractAppActivity
             if (!contentNumBelow140) {
                 content.setError(getString(R.string.content_words_number_too_many));
             }
-
         }
-
         return false;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -632,7 +587,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
             musicMenu.setVisible(true);
             musicMenu.setTitle(musicInfo.toString());
         }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -679,15 +633,12 @@ public class WriteWeiboActivity extends AbstractAppActivity
                     content.append(musicInfo.toString());
                 }
                 break;
-
         }
         return true;
     }
 
-
     public void saveToDraft() {
         if (!TextUtils.isEmpty(content.getText().toString())) {
-
             boolean haveDraft = statusDraftBean != null;
             boolean isDraftChanged = haveDraft && !statusDraftBean.getContent()
                     .equals(content.getText().toString());
@@ -701,15 +652,12 @@ public class WriteWeiboActivity extends AbstractAppActivity
                 DraftDBManager.getInstance()
                         .insertStatus(content.getText().toString(), geoBean, picPath,
                                 accountBean.getUid());
-
             }
-
         }
         finish();
     }
 
     private void convertStringToBitmap() {
-
         boolean haveContent = !TextUtils.isEmpty(content.getText().toString());
 
         if (!haveContent) {
@@ -758,7 +706,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         finish();
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -787,7 +734,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
                         showPic();
                     }
                     break;
-
                 case R.id.menu_emoticon:
                     if (smiley.isShown()) {
                         hideSmileyPicker(true);
@@ -799,23 +745,19 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
                 case R.id.menu_send:
                     send();
-
                     break;
                 case R.id.menu_at:
                     Intent intent = new Intent(WriteWeiboActivity.this, AtUserActivity.class);
                     intent.putExtra("token", token);
                     startActivityForResult(intent, AT_USER);
                     break;
-
             }
         }
     }
 
-
     private void showSmileyPicker(boolean showAnimation) {
         this.smiley.show(WriteWeiboActivity.this, showAnimation);
         lockContainerHeight(SmileyPickerUtility.getAppContentHeight(WriteWeiboActivity.this));
-
     }
 
     public void hideSmileyPicker(boolean showKeyBoard) {
@@ -840,7 +782,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
                 unlockContainerHeightDelayed();
             }
         }
-
     }
 
     private void lockContainerHeight(int paramInt) {
@@ -851,12 +792,9 @@ public class WriteWeiboActivity extends AbstractAppActivity
     }
 
     public void unlockContainerHeightDelayed() {
-
         ((LinearLayout.LayoutParams) WriteWeiboActivity.this.container.getLayoutParams()).weight
                 = 1.0F;
-
     }
-
 
     private void addLocation() {
         LocationManager locationManager = (LocationManager) WriteWeiboActivity.this
@@ -882,7 +820,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
     }
 
-
     private void updateWithNewLocation(Location result) {
         haveGPS.setVisibility(View.VISIBLE);
         geoBean = new GeoBean();
@@ -894,14 +831,11 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
         ((LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
-
     }
-
 
     private final LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             updateWithNewLocation(location);
-
         }
 
         public void onProviderDisabled(String provider) {
@@ -916,7 +850,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
     };
 
-
     private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
 
         GeoBean geoBean;
@@ -927,7 +860,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
         @Override
         protected String doInBackground(Void... params) {
-
             String result = new GoogleGeoCoderDao(WriteWeiboActivity.this, geoBean).get();
 
             if (!TextUtils.isEmpty(result)) {
@@ -936,15 +868,12 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
             try {
                 result = new BaiduGeoCoderDao(geoBean.getLat(), geoBean.getLon()).get();
-
                 if (!TextUtils.isEmpty(result)) {
                     return result;
                 }
-
             } catch (WeiboException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -980,7 +909,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         @Override
         protected String doInBackground(Void... params) {
             return ImageEditUtility.convertStringToBitmap(WriteWeiboActivity.this, content);
-
         }
 
         @Override
@@ -996,7 +924,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
                         Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     public void deletePicture() {
@@ -1004,5 +931,4 @@ public class WriteWeiboActivity extends AbstractAppActivity
         picPath = null;
         disablePicture();
     }
-
 }

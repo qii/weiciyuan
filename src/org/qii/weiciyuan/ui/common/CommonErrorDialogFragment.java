@@ -14,7 +14,6 @@ import android.support.v4.app.DialogFragment;
  */
 public class CommonErrorDialogFragment extends DialogFragment {
 
-
     public CommonErrorDialogFragment() {
 
     }
@@ -27,10 +26,8 @@ public class CommonErrorDialogFragment extends DialogFragment {
         return fragment;
     }
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle(getString(R.string.something_wrong))
                 .setMessage(getArguments().getString("error"))

@@ -34,11 +34,9 @@ public class MentionsTimeLine extends AbstractAppFragment
     private ViewPager viewPager;
 
     private SparseArray<Fragment> childrenFragments = new SparseArray<Fragment>();
-
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     static final int MENTIONS_WEIBO_CHILD_POSITION = 0;
-
     static final int MENTIONS_COMMENT_CHILD_POSITION = 1;
 
     public static MentionsTimeLine newInstance() {
@@ -52,7 +50,6 @@ public class MentionsTimeLine extends AbstractAppFragment
         super.onActivityCreated(savedInstanceState);
 
         SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
-
         ActionBar.Tab mentionsWeiboTab = getWeiboTab();
         if (mentionsWeiboTab == null) {
             buildMentionsWeiboTab(tabListener);
@@ -118,7 +115,6 @@ public class MentionsTimeLine extends AbstractAppFragment
         if (!hidden) {
             int mentionsTabIndex = getArguments().getInt("mentionsTabIndex");
             buildActionBarAndViewPagerTitles(mentionsTabIndex);
-
         }
     }
 
@@ -150,9 +146,7 @@ public class MentionsTimeLine extends AbstractAppFragment
                         UnreadTabIndex.NONE);
                 break;
         }
-
     }
-
 
     public void buildActionBarAndViewPagerTitles(int nav) {
         ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
@@ -219,7 +213,6 @@ public class MentionsTimeLine extends AbstractAppFragment
                         @Override
                         public void run() {
                             LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-
                         }
                     }, ViewConfiguration.getLongPressTimeout());
                     break;
@@ -229,7 +222,6 @@ public class MentionsTimeLine extends AbstractAppFragment
             }
         }
     };
-
 
     public MentionsCommentTimeLineFragment getMentionsCommentTimeLineFragment() {
         MentionsCommentTimeLineFragment fragment

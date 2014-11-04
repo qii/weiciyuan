@@ -44,28 +44,20 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         implements RemoveWeiboMsgDialog.IRemove {
 
     private static final String ACTION_WITH_ID = "action_with_id";
-
     private static final String ACTION_WITH_DETAIL = "action_with_detail";
 
     private static final int REFRESH_LOADER_ID = 0;
 
-
     private MessageBean msg;
-
     private String msgId;
-
     private String token;
 
     private FavAsyncTask favTask = null;
-
     private UnFavAsyncTask unFavTask = null;
-
-    private ShareActionProvider shareActionProvider;
-
-    private GestureDetector gestureDetector;
-
     private RemoveTask removeTask;
 
+    private ShareActionProvider shareActionProvider;
+    private GestureDetector gestureDetector;
 
     public static Intent newIntent(String weiboId, String token) {
         Intent intent = new Intent(GlobalContext.getInstance(), BrowserWeiboMsgActivity.class);
@@ -82,7 +74,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         intent.setAction(ACTION_WITH_DETAIL);
         return intent;
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -104,8 +95,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                 msgId = getIntent().getStringExtra("weiboId");
                 fetchUserInfoFromServer();
             }
-
-
         } else {
 
             String action = getIntent().getAction();
@@ -125,11 +114,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                         "activity intent action must be " + ACTION_WITH_DETAIL + " or "
                                 + ACTION_WITH_ID);
             }
-
-
         }
-
-
     }
 
     @Override
@@ -138,11 +123,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         Utility.cancelTasks(removeTask);
     }
 
-
     private void fetchUserInfoFromServer() {
-
         getActionBar().setTitle(getString(R.string.fetching_weibo_info));
-
         CommonProgressDialogFragment dialog = CommonProgressDialogFragment
                 .newInstance(getString(R.string.fetching_weibo_info));
         getSupportFragmentManager().beginTransaction()
@@ -155,7 +137,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
     }
-
 
     private void buildContent() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -177,19 +158,15 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         getActionBar().setTitle(getString(R.string.detail));
 
         invalidateOptionsMenu();
-
     }
-
 
     private Fragment getBrowserWeiboMsgFragment() {
         return getSupportFragmentManager()
                 .findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         if (msg == null) {
             return super.onCreateOptionsMenu(menu);
         }
@@ -222,17 +199,13 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                 startActivity(intent);
                 return true;
             case R.id.menu_comment:
-
                 intent = new Intent(this, WriteCommentActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("id", getMsg().getId());
                 intent.putExtra("msg", getMsg());
                 startActivity(intent);
-
                 return true;
-
             case R.id.menu_share:
-
                 buildShareActionMenu();
                 return true;
             case R.id.menu_copy:
@@ -274,7 +247,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         }
     }
 
-
     public void updateCommentCount(int count) {
         msg.setComments_count(count);
         Intent intent = new Intent();
@@ -297,11 +269,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         return msg;
     }
 
-
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String id;
-
         WeiboException e;
 
         public RemoveTask(String id) {
@@ -338,7 +308,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         }
     }
 
-
     private static class RefreshLoader extends AbstractAsyncNetRequestTaskLoader<MessageBean> {
 
         private String msgId;
@@ -351,7 +320,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         @Override
         protected MessageBean loadData() throws WeiboException {
             return new ShowStatusDao(GlobalContext.getInstance().getSpecialToken(), msgId).getMsg();
-
         }
     }
 
@@ -400,6 +368,4 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
 
         }
     };
-
-
 }

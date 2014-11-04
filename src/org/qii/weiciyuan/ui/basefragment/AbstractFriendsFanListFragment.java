@@ -21,11 +21,9 @@ import java.util.List;
  */
 public abstract class AbstractFriendsFanListFragment extends AbstractUserListFragment {
 
-
     public AbstractFriendsFanListFragment() {
 
     }
-
 
     //this api has bug, check cursor before add data
     @Override
@@ -37,7 +35,6 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
             bean.setNext_cursor(newValue.getNext_cursor());
             buildActionBarSubtitle();
         }
-
     }
 
     @Override
@@ -59,11 +56,9 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
         }
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 new Handler().postDelayed(new Runnable() {
@@ -73,7 +68,6 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
                             pullToRefreshListView.setRefreshing();
                             loadNewMsg();
                         }
-
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
 
@@ -102,11 +96,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
                         }
                     }).show();
         }
-
-
     }
 
     protected abstract UserBean getCurrentUser();
-
-
 }

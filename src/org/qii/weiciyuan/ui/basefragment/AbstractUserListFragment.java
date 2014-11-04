@@ -42,23 +42,17 @@ import android.widget.Toast;
 public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     protected View footerView;
-
     protected PullToRefreshListView pullToRefreshListView;
-
     protected TextView empty;
-
     protected ProgressBar progressBar;
 
     private UserListAdapter userListAdapter;
-
     protected UserListBean bean = new UserListBean();
 
     protected static final int NEW_USER_LOADER_ID = 1;
-
     protected static final int OLD_USER_LOADER_ID = 2;
 
     private boolean canLoadOldData = true;
-
 
     public ListView getListView() {
         return pullToRefreshListView.getRefreshableView();
@@ -69,13 +63,11 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
     protected void clearAndReplaceValue(UserListBean value) {
-
         bean.setNext_cursor(value.getNext_cursor());
         bean.getUsers().clear();
         bean.getUsers().addAll(value.getUsers());
         bean.setTotal_number(value.getTotal_number());
         bean.setPrevious_cursor(value.getPrevious_cursor());
-
     }
 
     protected ActionMode actionMode;
@@ -90,16 +82,13 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         getListView().setFastScrollEnabled(SettingUtility.allowFastScroll());
     }
 
-
     public AbstractUserListFragment() {
 
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
         setRetainInstance(false);
     }
@@ -112,7 +101,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("bean", bean);
-
     }
 
     @Override
@@ -156,7 +144,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         Loader<UserListBean> loader = getLoaderManager().getLoader(NEW_USER_LOADER_ID);
         if (loader != null) {
             getLoaderManager().initLoader(NEW_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
@@ -190,7 +177,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 //            listView.setVisibility(View.INVISIBLE);
         }
     }
-
 
     protected void showFooterView() {
         View view = footerView.findViewById(R.id.loading_progressbar);
@@ -228,9 +214,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         getLoaderManager().restartLoader(NEW_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
     }
 
-
     protected void loadOldMsg(View view) {
-
         if (getLoaderManager().getLoader(OLD_USER_LOADER_ID) != null || !canLoadOldData) {
             return;
         }
@@ -240,13 +224,10 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         getLoaderManager().restartLoader(OLD_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_userlistfragment, menu);
-
-
     }
 
     @Override
@@ -260,13 +241,11 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void showListView() {
         empty.setVisibility(View.INVISIBLE);
 //        listView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
-
 
     private PullToRefreshListView getPullToRefreshListView() {
         return this.pullToRefreshListView;
@@ -308,7 +287,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
             if (actionMode != null) {
                 getListView().clearChoices();
                 actionMode.finish();
@@ -323,7 +301,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
                 listViewFooterViewClick(view);
             }
-
         }
     }
 
@@ -363,7 +340,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         return loader;
     }
 
-
     private Loader<AsyncTaskLoaderResult<UserListBean>> createOldUserLoader(int id, Bundle args) {
         Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateOldUserLoader(id, args);
         if (loader == null) {
@@ -372,18 +348,15 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         return loader;
     }
 
-
     protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewUserLoader(int id,
             Bundle args) {
         return null;
     }
 
-
     protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldUserLoader(int id,
             Bundle args) {
         return null;
     }
-
 
     protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>>
             userAsyncTaskLoaderCallback
@@ -410,7 +383,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         @Override
         public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserListBean>> loader,
                 AsyncTaskLoaderResult<UserListBean> result) {
-
             UserListBean data = result != null ? result.data : null;
             WeiboException exception = result != null ? result.exception : null;
 
@@ -454,5 +426,4 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
         }
     };
-
 }

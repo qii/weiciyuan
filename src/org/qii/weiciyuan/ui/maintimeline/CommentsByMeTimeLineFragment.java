@@ -35,19 +35,14 @@ import android.widget.Toast;
 public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<CommentListBean>
         implements IRemoveItem {
 
-
     private AccountBean accountBean;
-
     private UserBean userBean;
-
     private String token;
 
     private RemoveTask removeTask;
 
     private CommentListBean bean = new CommentListBean();
-
     private TimeLinePosition timeLinePosition;
-
 
     @Override
     public CommentListBean getList() {
@@ -64,7 +59,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         this.token = token;
     }
 
-
     protected void clearAndReplaceValue(CommentListBean value) {
         getList().getItemList().clear();
         getList().getItemList().addAll(value.getItemList());
@@ -73,7 +67,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putParcelable("account", accountBean);
         outState.putParcelable("userBean", userBean);
         outState.putString("token", token);
@@ -83,7 +76,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
     }
-
 
     @Override
     public void onDestroy() {
@@ -107,7 +99,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
@@ -173,7 +164,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             }
             return false;
         }
-
     };
 
     @Override
@@ -202,11 +192,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
-
         String id;
-
         int positon;
-
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {
@@ -240,16 +227,13 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             super.onPostExecute(aBoolean);
             if (aBoolean) {
                 ((CommentListAdapter) timeLineAdapter).removeItem(positon);
-
             }
         }
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(false);
     }
 
@@ -259,7 +243,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 timeLinePosition != null ? timeLinePosition.top : 0, null);
     }
 
-
     @Override
     protected void buildListAdapter() {
         timeLineAdapter = new CommentListAdapter(this,
@@ -267,7 +250,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 getListView(), true, false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
-
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         CommentFloatingMenu menu = new CommentFloatingMenu(getList().getItem(position));
@@ -297,15 +279,10 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected void middleMsgLoaderSuccessCallback(int position, CommentListBean newValue,
             boolean towardsBottom) {
-
         if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
-
             getList().addMiddleData(position, newValue, towardsBottom);
-
             getAdapter().notifyDataSetChanged();
-
             CommentByMeTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
-
         }
     }
 
@@ -339,7 +316,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             }
 
             getLoaderManager().destroyLoader(loader.getId());
-
         }
 
         @Override

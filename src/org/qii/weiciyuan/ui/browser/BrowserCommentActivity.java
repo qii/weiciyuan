@@ -24,7 +24,6 @@ public class BrowserCommentActivity extends AbstractAppActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -32,14 +31,14 @@ public class BrowserCommentActivity extends AbstractAppActivity {
         CommentBean bean = (CommentBean) intent.getParcelableExtra("comment");
         token = intent.getStringExtra("token");
 
-        if (getFragmentManager().findFragmentByTag(BrowserCommentActivity.class.getName()) == null) {
+        if (getFragmentManager().findFragmentByTag(BrowserCommentActivity.class.getName())
+                == null) {
             getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new BrowserCommentFragment(bean), BrowserCommentFragment.class.getName())
+                    .replace(android.R.id.content, new BrowserCommentFragment(bean),
+                            BrowserCommentFragment.class.getName())
                     .commit();
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

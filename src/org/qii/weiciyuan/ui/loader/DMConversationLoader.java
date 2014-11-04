@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.DMListBean;
 import org.qii.weiciyuan.dao.dm.DMConversationDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,7 +28,6 @@ public class DMConversationLoader extends AbstractAsyncNetRequestTaskLoader<DMLi
         this.page = page;
     }
 
-
     public DMListBean loadData() throws WeiboException {
         DMConversationDao dao = new DMConversationDao(token);
         dao.setPage(Integer.valueOf(page));
@@ -41,9 +41,6 @@ public class DMConversationLoader extends AbstractAsyncNetRequestTaskLoader<DMLi
         } finally {
             lock.unlock();
         }
-
-
         return result;
     }
-
 }

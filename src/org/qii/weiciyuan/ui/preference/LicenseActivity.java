@@ -62,7 +62,6 @@ public class LicenseActivity extends AbstractAppActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (Utility.isKK()) {
@@ -90,5 +89,4 @@ public class LicenseActivity extends AbstractAppActivity {
         }
         return false;
     }
-
 }

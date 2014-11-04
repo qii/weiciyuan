@@ -40,13 +40,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         implements MainTimeLineActivity.ScrollableListFragment {
 
     private int page = 1;
-
     private FavListBean bean = new FavListBean();
-
     private TimeLinePosition position;
-
     private DBCacheTask dbTask;
-
     private AccountBean account;
 
     @Override
@@ -131,7 +127,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                 BrowserWeiboMsgActivity.newIntent(bean.getItem(position),
                         GlobalContext.getInstance().getSpecialToken()),
                 MainTimeLineActivity.REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT);
-
     }
 
     @Override
@@ -157,7 +152,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             }
         }
     }
-
 
     private void buildActionBarSubtitle() {
         if (bean != null) {
@@ -194,21 +188,17 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         }
     }
 
-
     @Override
     protected void newMsgLoaderSuccessCallback(FavListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             addNewDataWithoutRememberPosition(newValue);
             buildActionBarSubtitle();
             FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
-
         }
-
     }
 
     @Override
     protected void oldMsgLoaderSuccessCallback(FavListBean newValue) {
-
         if (newValue != null && newValue.getSize() > 0) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -223,7 +213,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         getAdapter().notifyDataSetChanged();
         getListView().setSelectionAfterHeaderView();
     }
-
 
     @Override
     protected Loader<AsyncTaskLoaderResult<FavListBean>> onCreateNewMsgLoader(int id, Bundle args) {
@@ -246,7 +235,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     protected void onListViewScrollStop() {
         savePositionToPositionsCache();
-
     }
 
     private void savePositionToDB() {
@@ -257,11 +245,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         FavouriteDBTask.asyncUpdatePosition(position, account.getUid());
     }
 
-
     private void savePositionToPositionsCache() {
         position = Utility.getCurrentPositionFromListView(getListView());
     }
-
 
     private void setListViewPositionFromPositionsCache() {
         TimeLinePosition p = position;
@@ -270,10 +256,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         } else {
             Utility.setListViewAdapterPosition(getListView(), 0, 0, null);
         }
-
-
     }
-
 
     private class DBCacheTask
             extends MyAsyncTask<Void, FavouriteTimeLineData, FavouriteTimeLineData> {
@@ -286,7 +269,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
 
         @Override
         protected FavouriteTimeLineData doInBackground(Void... params) {
-
             return FavouriteDBTask.getFavouriteMsgList(account.getUid());
         }
 
@@ -304,7 +286,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                 position = result.position;
                 getAdapter().notifyDataSetChanged();
                 setListViewPositionFromPositionsCache();
-
             }
 
             refreshLayout(getList());
@@ -317,7 +298,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             }
         }
     }
-
 
     private class RefreshReCmtCountTask
             extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
@@ -364,8 +344,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             }
             FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
             getAdapter().notifyDataSetChanged();
-
         }
-
     }
 }

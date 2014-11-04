@@ -25,11 +25,8 @@ import android.widget.AdapterView;
  */
 public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
 
-
     protected UserBean userBean;
-
     protected String token;
-
     private MessageListBean bean = new MessageListBean();
 
     public static StatusesByIdTimeLineFragment newInstance(UserBean userBean, String token) {
@@ -75,7 +72,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -104,7 +100,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         }
     };
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -113,10 +108,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         outState.putString("token", token);
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 new Handler().postDelayed(new Runnable() {
@@ -126,7 +119,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
                             getPullToRefreshListView().setRefreshing();
                             loadNewMsg();
                         }
-
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
                 break;
@@ -146,14 +138,12 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         super.onActivityCreated(savedInstanceState);
     }
 
-
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         startActivityForResult(
                 BrowserWeiboMsgActivity.newIntent(getList().getItem(position),
                         GlobalContext.getInstance().getSpecialToken()),
                 0);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -167,7 +157,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void newMsgLoaderSuccessCallback(MessageListBean newValue, Bundle loaderArgs) {
         if (getActivity() != null && newValue.getSize() > 0) {
@@ -175,10 +164,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             getActivity().invalidateOptionsMenu();
-
         }
-
-
     }
 
     @Override
@@ -188,7 +174,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
             getActivity().invalidateOptionsMenu();
         }
     }
-
 
     protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id,
             Bundle args) {

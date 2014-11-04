@@ -1,5 +1,17 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
+import org.qii.weiciyuan.ui.send.WriteCommentActivity;
+import org.qii.weiciyuan.ui.send.WriteRepostActivity;
+import org.qii.weiciyuan.ui.task.FavAsyncTask;
+import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
+
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -15,18 +27,6 @@ import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
-import org.qii.weiciyuan.ui.send.WriteCommentActivity;
-import org.qii.weiciyuan.ui.send.WriteRepostActivity;
-import org.qii.weiciyuan.ui.task.FavAsyncTask;
-import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
-
 /**
  * User: qii
  * Date: 12-9-9
@@ -34,19 +34,13 @@ import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     private ListView listView;
-
     private BaseAdapter adapter;
-
     private Fragment fragment;
-
     private ActionMode mode;
-
     private MessageBean bean;
-
     private ShareActionProvider mShareActionProvider;
 
     private FavAsyncTask favTask = null;
-
     private UnFavAsyncTask unFavTask = null;
 
     public void finish() {
@@ -67,7 +61,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         return fragment.getActivity();
     }
 
-
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         if (this.mode == null) {
@@ -75,7 +68,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         }
 
         return true;
-
     }
 
     @Override
@@ -116,8 +108,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                     }
                 });
         return true;
-
-
     }
 
     @Override
@@ -197,7 +187,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 mode.finish();
                 break;
         }
-
         return true;
     }
 
@@ -214,6 +203,4 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             ((BrowserWeiboMsgFragment) fragment).setActionMode(null);
         }
     }
-
-
 }

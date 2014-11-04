@@ -39,16 +39,13 @@ import android.widget.TextView;
 public class SearchMainParentFragment extends AbstractAppFragment
         implements MainTimeLineActivity.ScrollableListFragment {
 
-    private ViewPager viewPager;
-
-    private SparseArray<Fragment> searchFragments = new SparseArray<Fragment>();
-
-    private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
-
     private static final int SEARCH_WEIBO_CHILD_POSITION = 0;
-
     private static final int SEARCH_USER_CHILD_POSITION = 1;
 
+    private SparseArray<Fragment> searchFragments = new SparseArray<Fragment>();
+    private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
+
+    private ViewPager viewPager;
     private SearchView searchView;
 
     public static SearchMainParentFragment newInstance() {
@@ -140,7 +137,6 @@ public class SearchMainParentFragment extends AbstractAppFragment
         }
     }
 
-
     public void buildActionBarAndViewPagerTitles(int nav) {
         ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
 
@@ -174,8 +170,6 @@ public class SearchMainParentFragment extends AbstractAppFragment
         if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
             viewPager.setCurrentItem(nav, false);
         }
-
-
     }
 
     @Override
@@ -272,7 +266,6 @@ public class SearchMainParentFragment extends AbstractAppFragment
                         @Override
                         public void run() {
                             LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-
                         }
                     }, ViewConfiguration.getLongPressTimeout());
                     break;
@@ -282,7 +275,6 @@ public class SearchMainParentFragment extends AbstractAppFragment
             }
         }
     };
-
 
     public SearchUserFragment getSearchUserFragment() {
         SearchUserFragment fragment = ((SearchUserFragment) getChildFragmentManager()
@@ -315,7 +307,6 @@ public class SearchMainParentFragment extends AbstractAppFragment
         } else if (fragment instanceof AbstractUserListFragment) {
             Utility.stopListViewScrollingAndScrollToTop(
                     ((AbstractUserListFragment) fragment).getListView());
-
         }
     }
 

@@ -24,7 +24,6 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
 
     private static Lock lock = new ReentrantLock();
 
-
     private String token;
     private String sinceId;
     private String maxId;
@@ -33,7 +32,8 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
 
     private final int MAX_RETRY_COUNT = 6;  //1*50+6*49=344 new messages count
 
-    public FriendsMsgLoader(Context context, String accountId, String token, String groupId, String sinceId, String maxId) {
+    public FriendsMsgLoader(Context context, String accountId, String token, String groupId,
+            String sinceId, String maxId) {
         super(context);
         this.token = token;
         this.sinceId = sinceId;
@@ -42,21 +42,22 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
         this.currentGroupId = groupId;
     }
 
-
     public MessageListBean loadData() throws WeiboException {
         MessageListBean result = null;
         MessageListBean tmp = get(token, currentGroupId, sinceId, maxId);
         result = tmp;
-        if (isLoadNewData() && Utility.isWifi(getContext()) && SettingUtility.isWifiUnlimitedMsgCount()) {
+        if (isLoadNewData() && Utility.isWifi(getContext()) && SettingUtility
+                .isWifiUnlimitedMsgCount()) {
             int retryCount = 0;
-            while (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount()) && retryCount < MAX_RETRY_COUNT) {
+            while (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount())
+                    && retryCount < MAX_RETRY_COUNT) {
                 String tmpMaxId = tmp.getItemList().get(tmp.getItemList().size() - 1).getId();
                 tmp = get(token, currentGroupId, sinceId, tmpMaxId);
                 result.addOldData(tmp);
                 retryCount++;
             }
             if (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount())) {
-                MessageBean middleUnreadItem=new MessageBean();
+                MessageBean middleUnreadItem = new MessageBean();
                 middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
                 middleUnreadItem.setMiddleUnreadItem(true);
                 result.getItemList().add(middleUnreadItem);
@@ -72,7 +73,8 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
         return !TextUtils.isEmpty(sinceId) && TextUtils.isEmpty(maxId);
     }
 
-    private MessageListBean get(String token, String groupId, String sinceId, String maxId) throws WeiboException {
+    private MessageListBean get(String token, String groupId, String sinceId, String maxId)
+            throws WeiboException {
         MainFriendsTimeLineDao dao;
         if (currentGroupId.equals(FriendsTimeLineFragment.BILATERAL_GROUP_ID)) {
             dao = new BilateralTimeLineDao(token);
@@ -93,10 +95,8 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
         } finally {
             lock.unlock();
         }
-
         return result;
     }
-
 }
 
 

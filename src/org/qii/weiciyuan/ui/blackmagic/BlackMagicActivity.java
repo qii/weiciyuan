@@ -37,13 +37,10 @@ import java.lang.ref.WeakReference;
 public class BlackMagicActivity extends AbstractAppActivity {
 
     private EditText username;
-
     private EditText password;
-
     private Spinner spinner;
 
     private String appkey;
-
     private String appSecret;
 
     private LoginTask loginTask;
@@ -80,8 +77,6 @@ public class BlackMagicActivity extends AbstractAppActivity {
 
             }
         });
-
-
     }
 
     @Override
@@ -120,21 +115,16 @@ public class BlackMagicActivity extends AbstractAppActivity {
         }
     }
 
-
     private static class LoginTask extends MyAsyncTask<Void, Void, String[]> {
 
         private WeiboException e;
-
         private ProgressFragment progressFragment = ProgressFragment.newInstance();
-
         private WeakReference<BlackMagicActivity> mBlackMagicActivityWeakReference;
 
         private String username;
-
         private String password;
 
         private String appkey;
-
         private String appSecret;
 
         private LoginTask(BlackMagicActivity activity, String username, String password,
@@ -145,7 +135,6 @@ public class BlackMagicActivity extends AbstractAppActivity {
             this.appkey = appkey;
             this.appSecret = appSecret;
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -219,7 +208,6 @@ public class BlackMagicActivity extends AbstractAppActivity {
         }
     }
 
-
     public static class ProgressFragment extends DialogFragment {
 
         private MyAsyncTask asyncTask = null;
@@ -234,22 +222,18 @@ public class BlackMagicActivity extends AbstractAppActivity {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
             ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getString(R.string.logining));
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
-
             return dialog;
         }
 
         @Override
         public void onCancel(DialogInterface dialog) {
-
             if (asyncTask != null) {
                 asyncTask.cancel(true);
             }
-
             super.onCancel(dialog);
         }
 

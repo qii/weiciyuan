@@ -43,13 +43,9 @@ import java.util.Set;
 public class DraftFragment extends ListFragment {
 
     private DraftAdapter adapter;
-
     private List<DraftListViewItemBean> list = new ArrayList<DraftListViewItemBean>();
-
     private DBTask task;
-
     private RemoveDraftDBTask removeTask;
-
 
     @Override
     public void onDetach() {
@@ -69,7 +65,6 @@ public class DraftFragment extends ListFragment {
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
         }
     }
 
@@ -131,12 +126,11 @@ public class DraftFragment extends ListFragment {
                         startActivity(intent);
                         break;
                 }
-
             }
         });
     }
 
-    class DraftMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+    private class DraftMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -163,7 +157,6 @@ public class DraftFragment extends ListFragment {
             }
             return false;
         }
-
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
@@ -206,7 +199,7 @@ public class DraftFragment extends ListFragment {
         }
     }
 
-    class DBTask
+    private class DBTask
             extends MyAsyncTask<Void, List<DraftListViewItemBean>, List<DraftListViewItemBean>> {
 
         @Override
@@ -226,7 +219,7 @@ public class DraftFragment extends ListFragment {
         }
     }
 
-    class DraftAdapter extends BaseAdapter {
+    private class DraftAdapter extends BaseAdapter {
 
         int checkedBG;
 

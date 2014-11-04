@@ -18,7 +18,6 @@ public class FriendListActivity extends AbstractAppActivity {
 
     private UserBean bean;
 
-
     public UserBean getUser() {
         return bean;
     }
@@ -44,8 +43,6 @@ public class FriendListActivity extends AbstractAppActivity {
                             FriendsListFragment.class.getName())
                     .commit();
         }
-
-
     }
 
     @Override

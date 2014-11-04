@@ -6,6 +6,5 @@ package org.qii.weiciyuan.ui.interfaces;
  */
 public interface IRemoveItem {
     public void removeItem(int position);
-
     public void removeCancel();
 }

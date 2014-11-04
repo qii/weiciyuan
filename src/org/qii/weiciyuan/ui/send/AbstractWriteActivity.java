@@ -38,24 +38,17 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
         implements View.OnClickListener, ClearContentDialog.IClear
         , SaveDraftDialog.IDraft {
 
-
-    protected abstract boolean canSend();
-
-    private AutoCompleteTextView et;
-
-    private SmileyPicker smiley = null;
-
-    private RelativeLayout container = null;
-
     public static final int AT_USER = 3;
 
-    protected String token;
+    private AutoCompleteTextView et;
+    private SmileyPicker smiley = null;
+    private RelativeLayout container = null;
 
+    protected String token;
 
     protected EditText getEditTextView() {
         return et;
     }
-
 
     @Override
     public void clear() {
@@ -63,6 +56,8 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
     }
 
     protected abstract void send();
+
+    protected abstract boolean canSend();
 
     public void insertEmotion(String emotionChar) {
         String ori = getEditTextView().getText().toString();
@@ -73,13 +68,10 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
         getEditTextView().setSelection(index + emotionChar.length());
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +138,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
     private void showSmileyPicker(boolean showAnimation) {
         this.smiley.show(AbstractWriteActivity.this, showAnimation);
         lockContainerHeight(SmileyPickerUtility.getAppContentHeight(AbstractWriteActivity.this));
-
     }
 
     public void hideSmileyPicker(boolean showKeyBoard) {
@@ -171,7 +162,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
                 unlockContainerHeightDelayed();
             }
         }
-
     }
 
     private void lockContainerHeight(int paramInt) {
@@ -182,10 +172,8 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
     }
 
     public void unlockContainerHeightDelayed() {
-
         ((LinearLayout.LayoutParams) AbstractWriteActivity.this.container.getLayoutParams()).weight
                 = 1.0F;
-
     }
 
     @Override
@@ -248,7 +236,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
-
         }
     }
 
@@ -277,9 +264,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
                     getEditTextView().setSelection(index + name.length());
                     break;
             }
-
         }
     }
-
-
 }

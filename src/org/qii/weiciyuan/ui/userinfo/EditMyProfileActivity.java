@@ -44,23 +44,18 @@ public class EditMyProfileActivity extends AbstractAppActivity
         implements DialogInterface.OnClickListener {
 
     private static final int CAMERA_RESULT = 0;
-
     private static final int PIC_RESULT = 1;
 
     private UserBean userBean;
 
     private Layout layout;
-
     private MenuItem save;
 
     private ProfileAvatarReadWorker avatarTask;
-
     private SaveAsyncTask saveAsyncTask;
-
     private NewProfileAvatarReaderWorker newProfileAvatarReaderWorker;
 
     private Uri imageFileUri;
-
     private String picPath;
 
     @Override
@@ -80,7 +75,6 @@ public class EditMyProfileActivity extends AbstractAppActivity
         initLayout();
         userBean = (UserBean) getIntent().getParcelableExtra("userBean");
         initValue(savedInstanceState);
-
     }
 
     private void initLayout() {
@@ -90,7 +84,6 @@ public class EditMyProfileActivity extends AbstractAppActivity
         layout.nickname = (EditText) findViewById(R.id.nickname);
         layout.website = (EditText) findViewById(R.id.website);
         layout.info = (EditText) findViewById(R.id.info);
-
     }
 
     private View.OnClickListener avatarOnClickListener = new View.OnClickListener() {
@@ -103,7 +96,6 @@ public class EditMyProfileActivity extends AbstractAppActivity
     };
 
     private void initValue(Bundle savedInstanceState) {
-
         if (savedInstanceState == null || TextUtils
                 .isEmpty(savedInstanceState.getString("picPath"))) {
             String avatarUrl = userBean.getAvatar_large();
@@ -208,7 +200,6 @@ public class EditMyProfileActivity extends AbstractAppActivity
         }
     }
 
-
     private void displayPic() {
         if (Utility.isTaskStopped(newProfileAvatarReaderWorker)) {
             newProfileAvatarReaderWorker = new NewProfileAvatarReaderWorker();
@@ -238,18 +229,12 @@ public class EditMyProfileActivity extends AbstractAppActivity
         layout.website.setEnabled(true);
         layout.info.setEnabled(true);
         layout.avatar.setOnClickListener(avatarOnClickListener);
-
     }
 
-
     private class SaveAsyncTask extends MyAsyncTask<Void, UserBean, UserBean> {
-
         String screenName;
-
         String url;
-
         String description;
-
         WeiboException e;
 
         @Override
@@ -304,7 +289,6 @@ public class EditMyProfileActivity extends AbstractAppActivity
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_editmyprofileactivity, menu);
@@ -328,19 +312,12 @@ public class EditMyProfileActivity extends AbstractAppActivity
         return false;
     }
 
-
     private class Layout {
-
         ImageView avatar;
-
         EditText nickname;
-
         EditText website;
-
         EditText info;
-
     }
-
 
     private class NewProfileAvatarReaderWorker extends MyAsyncTask<String, Integer, Bitmap> {
 
@@ -352,24 +329,18 @@ public class EditMyProfileActivity extends AbstractAppActivity
 
             int avatarWidth = getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
             int avatarHeight = getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
-
             return ImageUtility.getRoundedCornerPic(picPath, avatarWidth, avatarHeight);
-
         }
-
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-
             if (bitmap != null) {
                 layout.avatar.setImageBitmap(bitmap);
             } else {
                 layout.avatar.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
-
         }
     }
-
 
     private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
 
@@ -399,7 +370,6 @@ public class EditMyProfileActivity extends AbstractAppActivity
             super.onCancelled(userBean);
             Toast.makeText(EditMyProfileActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
             stopSaveAnimation();
-
         }
 
         @Override

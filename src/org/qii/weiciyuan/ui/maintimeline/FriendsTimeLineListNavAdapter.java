@@ -1,14 +1,15 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
  * User: qii
@@ -63,10 +64,10 @@ public class FriendsTimeLineListNavAdapter extends BaseAdapter {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
         if (convertView == null || convertView.getTag() == null) {
             LayoutInflater inflater = activity.getLayoutInflater();
-            convertView = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+            convertView = inflater
+                    .inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
             holder = new ViewHolder();
             holder.textView = (TextView) convertView;
         } else {
@@ -75,7 +76,6 @@ public class FriendsTimeLineListNavAdapter extends BaseAdapter {
 
         holder.textView.setText(valueArray[position]);
         return convertView;
-
     }
 
     private static class ViewHolder {

@@ -41,7 +41,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -54,7 +53,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -69,13 +67,10 @@ public class ManageGroupActivity extends AbstractAppActivity {
         return false;
     }
 
-
     public static class ManageGroupFragment extends ListFragment {
 
         private GroupAdapter adapter;
-
         private GroupListBean group;
-
         private List<String> name;
 
         @Override
@@ -129,7 +124,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
                     dialog.setTargetFragment(ManageGroupFragment.this, 0);
                     dialog.show(getFragmentManager(), "");
                     break;
-
             }
 
             return true;
@@ -153,15 +147,12 @@ public class ManageGroupActivity extends AbstractAppActivity {
         class GroupAdapter extends BaseAdapter {
 
             int checkedBG;
-
             int defaultBG;
 
             public GroupAdapter() {
                 defaultBG = getResources().getColor(R.color.transparent);
                 checkedBG = ThemeUtility
                         .getColor(getActivity(), R.attr.listview_checked_color);
-
-
             }
 
             @Override
@@ -186,7 +177,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-
                 View view = getActivity().getLayoutInflater()
                         .inflate(R.layout.managegroupactivity_list_item_layout, parent, false);
                 TextView tv = (TextView) view;
@@ -199,7 +189,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
             }
         }
 
-
         class GroupMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
             MenuItem modify;
@@ -208,13 +197,11 @@ public class ManageGroupActivity extends AbstractAppActivity {
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mode.getMenuInflater().inflate(R.menu.contextual_menu_managegroupfragment, menu);
                 modify = menu.findItem(R.id.menu_modify_group_name);
-
                 return true;
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-
                 return false;
             }
 
@@ -258,7 +245,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
                 return false;
             }
 
-
             @Override
             public void onDestroyActionMode(ActionMode mode) {
 
@@ -278,13 +264,10 @@ public class ManageGroupActivity extends AbstractAppActivity {
             }
         }
 
-
         class CreateGroupTask extends MyAsyncTask<Void, Void, GroupBean> {
 
             String token;
-
             String name;
-
             WeiboException e;
 
             public CreateGroupTask(String token, String name) {
@@ -317,9 +300,7 @@ public class ManageGroupActivity extends AbstractAppActivity {
 
         class RefreshGroupTask extends MyAsyncTask<Void, GroupListBean, GroupListBean> {
 
-
             private WeiboException e;
-
             private String token;
 
             public RefreshGroupTask(String token) {
@@ -335,7 +316,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
                 }
                 return null;
             }
-
 
             @Override
             protected void onPostExecute(GroupListBean groupListBean) {
@@ -354,9 +334,7 @@ public class ManageGroupActivity extends AbstractAppActivity {
         class RemoveGroupTask extends MyAsyncTask<Void, Void, Boolean> {
 
             String token;
-
             List<String> groupNames;
-
             WeiboException e;
 
             public RemoveGroupTask(String token, List<String> groupNames) {
@@ -396,11 +374,8 @@ public class ManageGroupActivity extends AbstractAppActivity {
         class ModifyGroupNameTask extends MyAsyncTask<Void, Void, GroupBean> {
 
             String token;
-
             String groupIdstr;
-
             String name;
-
             WeiboException e;
 
             public ModifyGroupNameTask(String token, String groupIdstr, String name) {
@@ -414,7 +389,6 @@ public class ManageGroupActivity extends AbstractAppActivity {
                 try {
 
                     return new UpdateGroupNameDao(token, groupIdstr, name).update();
-
                 } catch (WeiboException e) {
                     e.printStackTrace();
                     cancel(true);

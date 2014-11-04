@@ -1,16 +1,18 @@
 package org.qii.weiciyuan.ui.loader;
 
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.support.error.WeiboException;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
-import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
-import org.qii.weiciyuan.support.error.WeiboException;
 
 /**
  * User: qii
  * Date: 13-5-15
  */
-public abstract class AbstractAsyncNetRequestTaskLoader<T> extends AsyncTaskLoader<AsyncTaskLoaderResult<T>> {
+public abstract class AbstractAsyncNetRequestTaskLoader<T>
+        extends AsyncTaskLoader<AsyncTaskLoaderResult<T>> {
 
     private AsyncTaskLoaderResult<T> result;
     private Bundle args;
@@ -31,10 +33,8 @@ public abstract class AbstractAsyncNetRequestTaskLoader<T> extends AsyncTaskLoad
 
     @Override
     public AsyncTaskLoaderResult<T> loadInBackground() {
-
         T data = null;
         WeiboException exception = null;
-
 
         try {
             data = loadData();
@@ -58,5 +58,4 @@ public abstract class AbstractAsyncNetRequestTaskLoader<T> extends AsyncTaskLoad
         }
         this.args = args;
     }
-
 }

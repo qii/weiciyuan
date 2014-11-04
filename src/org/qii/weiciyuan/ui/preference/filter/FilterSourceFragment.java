@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.ui.preference.filter;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.database.FilterDBTask;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.database.FilterDBTask;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.Set;
  * Date: 13-6-16
  */
 public class FilterSourceFragment extends AbstractFilterFragment {
-
 
     @Override
     protected List<String> getDBDataImpl() {
@@ -45,9 +45,7 @@ public class FilterSourceFragment extends AbstractFilterFragment {
                 words.removeAll(list);
                 addFilter(words);
                 return true;
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

@@ -1,5 +1,13 @@
 package org.qii.weiciyuan.ui.browser;
 
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.dao.show.ShowStatusDao;
+import org.qii.weiciyuan.support.error.ErrorCode;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.text.SpannableString;
@@ -8,13 +16,6 @@ import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.dao.show.ShowStatusDao;
-import org.qii.weiciyuan.support.error.ErrorCode;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -28,7 +29,8 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
     private WeiboException e;
     private boolean refreshPic;
 
-    public UpdateMessageTask(BrowserWeiboMsgFragment fragment, TextView content, TextView recontent, MessageBean msg, boolean refreshPic) {
+    public UpdateMessageTask(BrowserWeiboMsgFragment fragment, TextView content, TextView recontent,
+            MessageBean msg, boolean refreshPic) {
         this.fragment = fragment;
         this.content = content;
         this.recontent = recontent;
@@ -43,14 +45,13 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-
     }
 
     @Override
     protected MessageBean doInBackground(Void... params) {
         try {
-            return new ShowStatusDao(GlobalContext.getInstance().getSpecialToken(), msg.getId()).getMsg();
+            return new ShowStatusDao(GlobalContext.getInstance().getSpecialToken(), msg.getId())
+                    .getMsg();
         } catch (WeiboException e) {
             this.e = e;
             cancel(true);
@@ -73,8 +74,9 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
     //you must check activity status
     @Override
     protected void onPostExecute(MessageBean newValue) {
-        if (fragment.getActivity() == null)
+        if (fragment.getActivity() == null) {
             return;
+        }
 
         if (newValue != null && e == null) {
             if (isStatusDeleted(newValue)) {
@@ -97,31 +99,27 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
 
     //sometime status is deleted
     private boolean isStatusDeleted(MessageBean newValue) {
-
         //status is deleted
-        if ((msg != null))
+        if ((msg != null)) {
             if ((msg.getUser() != null) && (newValue.getUser() == null)) {
-                return true;
-            }
-
-        return false;
-
-    }
-
-
-    //sometime the ori status is deleted
-    private boolean isRepostDeleted(MessageBean newValue) {
-
-        if (msg.getRetweeted_status() != null && msg.getRetweeted_status().getUser() != null) {
-
-            //ori status is deleted
-            if (newValue.getRetweeted_status() != null && newValue.getRetweeted_status().getUser() == null) {
                 return true;
             }
         }
 
         return false;
+    }
 
+    //sometime the ori status is deleted
+    private boolean isRepostDeleted(MessageBean newValue) {
+        if (msg.getRetweeted_status() != null && msg.getRetweeted_status().getUser() != null) {
+
+            //ori status is deleted
+            if (newValue.getRetweeted_status() != null
+                    && newValue.getRetweeted_status().getUser() == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setTextViewDeleted() {

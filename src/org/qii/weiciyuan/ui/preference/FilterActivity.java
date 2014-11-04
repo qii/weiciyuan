@@ -1,5 +1,14 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.preference.filter.FilterKeywordFragment;
+import org.qii.weiciyuan.ui.preference.filter.FilterSourceFragment;
+import org.qii.weiciyuan.ui.preference.filter.FilterTopicFragment;
+import org.qii.weiciyuan.ui.preference.filter.FilterUserFragment;
+
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,14 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.preference.filter.FilterKeywordFragment;
-import org.qii.weiciyuan.ui.preference.filter.FilterSourceFragment;
-import org.qii.weiciyuan.ui.preference.filter.FilterTopicFragment;
-import org.qii.weiciyuan.ui.preference.filter.FilterUserFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +38,13 @@ public class FilterActivity extends AbstractAppActivity {
 
     private ViewPager viewPager = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         initLayout();
-
     }
 
     private void initLayout() {
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setTitle(getString(R.string.filter));
@@ -94,44 +91,39 @@ public class FilterActivity extends AbstractAppActivity {
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-
-
     }
 
-    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+    private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
         public void onTabSelected(ActionBar.Tab tab,
-                                  FragmentTransaction ft) {
-            if (viewPager != null && viewPager.getCurrentItem() != tab.getPosition())
+                FragmentTransaction ft) {
+            if (viewPager != null && viewPager.getCurrentItem() != tab.getPosition()) {
                 viewPager.setCurrentItem(tab.getPosition());
-
-
+            }
         }
 
         public void onTabUnselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
+                FragmentTransaction ft) {
 
         }
 
         public void onTabReselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
+                FragmentTransaction ft) {
 
         }
     };
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    private ViewPager.SimpleOnPageChangeListener onPageChangeListener
+            = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
             getActionBar().setSelectedNavigationItem(position);
         }
     };
 
-
-    class TimeLinePagerAdapter extends
-            AppFragmentPagerAdapter {
+    private class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
         List<Fragment> list = new ArrayList<Fragment>();
-
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -218,7 +210,6 @@ public class FilterActivity extends AbstractAppActivity {
             case R.id.filter_rule:
                 new FilterRuleDialog().show(getSupportFragmentManager(), "");
                 break;
-
         }
         return false;
     }
@@ -226,7 +217,8 @@ public class FilterActivity extends AbstractAppActivity {
     public static class FilterRuleDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.filter_rule_content))
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(getString(R.string.filter_rule_content))
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

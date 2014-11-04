@@ -30,27 +30,19 @@ import android.widget.Toast;
 public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
-
     private static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
-
     private static final String ACTION_NOTIFICATION_COMMENT
             = "org.qii.weiciyuan.NOTIFICATION_COMMENT";
 
-
     private String token;
-
     private MessageBean msg;
-
     private CommentDraftBean commentDraftBean;
 
     private MenuItem enableCommentOri;
-
     private MenuItem enableRepost;
 
     private boolean savedEnableCommentOri;
-
     private boolean savedEnableRepost;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +67,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
                 handleNormalOperation(intent);
             }
         }
-
     }
 
     public static Intent startBecauseSendFailed(Context context,
@@ -106,7 +97,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         return intent;
     }
 
-
     private void handleNotificationCommentOperation(Intent intent) {
         AccountBean accountBean = intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
@@ -124,11 +114,9 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
 
         savedEnableRepost = intent.getBooleanExtra("comment_ori", false);
-
     }
 
     private void handleNormalOperation(Intent intent) {
-
         token = getIntent().getStringExtra("token");
         if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
@@ -139,7 +127,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     }
 
     private void handleDraftOperation(Intent intent) {
-
         token = getIntent().getStringExtra("token");
         if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
@@ -228,7 +215,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     @Override
     protected boolean canSend() {
-
         boolean haveContent = !TextUtils.isEmpty(getEditTextView().getText().toString());
         boolean haveToken = !TextUtils.isEmpty(token);
         int sum = Utility.length(getEditTextView().getText().toString());
@@ -253,12 +239,10 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             if (!contentNumBelow140) {
                 getEditTextView().setError(getString(R.string.content_words_number_too_many));
             }
-
         }
 
         return false;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -308,14 +292,10 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
                     .newIntent(getCurrentAccountBean(), msg, content, enableCommentOri.isChecked());
             startService(intent);
             finish();
-
         } else {
             repost();
         }
-
-
     }
-
 
     /**
      * 1. this message has repost's message
@@ -326,7 +306,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
      */
 
     private void repost() {
-
         String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
 
         if (msg.getRetweeted_status() != null) {
@@ -356,7 +335,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
         startService(intent);
         finish();
-
     }
 
     @Override

@@ -48,27 +48,21 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
         outState.putParcelable("bean", bean);
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
             clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getParcelable("bean"));
             timeLineAdapter.notifyDataSetChanged();
-
         }
 
         refreshLayout(bean);
-
-
     }
-
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         startActivity(BrowserWeiboMsgActivity.newIntent(bean.getItem(position),
                 GlobalContext.getInstance().getSpecialToken()));
     }
-
 
     @Override
     protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateNewMsgLoader(int id,
@@ -87,7 +81,6 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
         return new SearchStatusLoader(getActivity(), token, word, String.valueOf(page + 1));
     }
 
-
     @Override
     protected void newMsgLoaderSuccessCallback(SearchStatusListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
@@ -96,12 +89,10 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
             getListView().setSelectionAfterHeaderView();
             getActivity().invalidateOptionsMenu();
         }
-
     }
 
     @Override
     protected void oldMsgLoaderSuccessCallback(SearchStatusListBean newValue) {
-
         if (newValue != null && newValue.getSize() > 0) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();

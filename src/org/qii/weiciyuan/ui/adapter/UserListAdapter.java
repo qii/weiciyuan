@@ -29,17 +29,13 @@ import java.util.List;
 public class UserListAdapter extends BaseAdapter {
 
     protected List<UserBean> bean;
-
     protected Fragment activity;
-
     protected LayoutInflater inflater;
-
     protected ListView listView;
 
     protected TimeLineBitmapDownloader commander;
 
     protected int checkedBG;
-
     protected int defaultBG;
 
     public UserListAdapter(Fragment activity, List<UserBean> bean, ListView listView) {
@@ -90,7 +86,6 @@ public class UserListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ViewHolder holder;
         if (convertView == null || convertView.getTag() == null) {
             holder = new ViewHolder();
@@ -111,7 +106,6 @@ public class UserListAdapter extends BaseAdapter {
     }
 
     private void bindViewData(ViewHolder holder, int position) {
-
         holder.listview_root.setBackgroundColor(defaultBG);
 
         if (listView.getCheckedItemPosition() == position + 1) {
@@ -127,11 +121,9 @@ public class UserListAdapter extends BaseAdapter {
             commander.downloadAvatar(holder.avatar.getImageView(), user, false);
         }
         holder.content.setText(user.getDescription());
-
     }
 
     private void configLayerType(ViewHolder holder) {
-
         boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
         if (!disableHardAccelerated) {
             return;
@@ -144,9 +136,7 @@ public class UserListAdapter extends BaseAdapter {
             if (holder.content != null) {
                 holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
-
         }
-
     }
 
     private void configViewFont(ViewHolder holder) {
@@ -162,13 +152,9 @@ public class UserListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-
         TextView username;
-
         TextView content;
-
         TimeLineAvatarImageView avatar;
-
         RelativeLayout listview_root;
     }
 

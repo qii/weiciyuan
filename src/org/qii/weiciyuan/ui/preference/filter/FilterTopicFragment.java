@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class FilterTopicFragment extends AbstractFilterFragment {
 
-
     @Override
     protected List<String> getDBDataImpl() {
         return FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_TOPIC);
@@ -26,5 +25,4 @@ public class FilterTopicFragment extends AbstractFilterFragment {
     protected List<String> removeAndGetFilterListImpl(Collection<String> set) {
         return FilterDBTask.removeAndGetNewFilterKeywordList(FilterDBTask.TYPE_TOPIC, set);
     }
-
 }

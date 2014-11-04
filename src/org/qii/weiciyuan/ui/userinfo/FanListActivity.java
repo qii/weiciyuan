@@ -17,9 +17,7 @@ import android.view.MenuItem;
 public class FanListActivity extends AbstractAppActivity {
 
     private String token;
-
     private UserBean bean;
-
 
     public UserBean getUser() {
         return bean;
@@ -49,7 +47,6 @@ public class FanListActivity extends AbstractAppActivity {
                             FanListFragment.class.getName())
                     .commit();
         }
-
     }
 
     @Override

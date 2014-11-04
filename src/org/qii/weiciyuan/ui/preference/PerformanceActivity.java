@@ -1,11 +1,12 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii
@@ -14,7 +15,6 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 public class PerformanceActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -27,7 +27,6 @@ public class PerformanceActivity extends AbstractAppActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -43,15 +42,11 @@ public class PerformanceActivity extends AbstractAppActivity {
     }
 
     public static class PerformanceFragment extends PreferenceFragment {
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setRetainInstance(false);
-
             addPreferencesFromResource(R.xml.performance_pref);
         }
-
-
     }
 }

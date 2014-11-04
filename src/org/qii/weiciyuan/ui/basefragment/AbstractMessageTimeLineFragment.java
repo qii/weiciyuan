@@ -1,11 +1,5 @@
 package org.qii.weiciyuan.ui.basefragment;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Toast;
-
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -17,6 +11,12 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 /**
  * User: qii
@@ -46,7 +46,6 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         getList().setTotal_number(value.getTotal_number());
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -58,7 +57,6 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
             = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
             if (position - getListView().getHeaderViewsCount() < getList().getSize()
                     && position - getListView().getHeaderViewsCount() >= 0
                     && timeLineAdapter.getItem(position - getListView().getHeaderViewsCount())
@@ -78,7 +76,6 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
                 getAdapter().notifyDataSetChanged();
                 actionMode = getActivity().startActionMode(choiceModeListener);
                 return true;
-
             }
             return false;
         }
@@ -107,7 +104,6 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         getListView().setAdapter(timeLineAdapter);
     }
 
-
     @Override
     public void removeItem(int position) {
         clearActionMode();
@@ -123,15 +119,11 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         clearActionMode();
     }
 
-
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
-
         String id;
-
         int positon;
-
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {

@@ -31,7 +31,6 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         implements MainTimeLineActivity.ScrollableListFragment {
 
     private DMUserListBean bean = new DMUserListBean();
-
     private DBCacheTask dbTask;
 
     public static DMUserListFragment newInstance() {
@@ -77,7 +76,6 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
                 == LeftMenuFragment.DM_INDEX) {
             buildActionBarAndViewPagerTitles();
         }
-
     }
 
     @Override
@@ -194,9 +192,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             DMDBTask.asyncReplace(getList(), GlobalContext.getInstance().getCurrentAccountId());
-
         }
-
     }
 
     @Override
@@ -207,14 +203,12 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         }
     }
 
-
     protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateNewMsgLoader(int id,
             Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(0);
         return new DMUserLoader(getActivity(), token, cursor);
     }
-
 
     protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateOldMsgLoader(int id,
             Bundle args) {

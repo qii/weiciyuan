@@ -1,5 +1,10 @@
 package org.qii.weiciyuan.ui.interfaces;
 
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -9,10 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
@@ -47,7 +48,6 @@ public class AbstractAppActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("theme", theme);
-
     }
 
     @Override
@@ -64,7 +64,6 @@ public class AbstractAppActivity extends FragmentActivity {
         GlobalContext.getInstance().setActivity(this);
     }
 
-
     private void forceShowActionBarOverflowMenu() {
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
@@ -77,7 +76,6 @@ public class AbstractAppActivity extends FragmentActivity {
 
         }
     }
-
 
     private void initNFC() {
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -92,12 +90,12 @@ public class AbstractAppActivity extends FragmentActivity {
 
                 NdefMessage msg = new NdefMessage(
                         new NdefRecord[]{createMimeRecord(
-                                "application/org.qii.weiciyuan.beam", text.getBytes()), NdefRecord.createApplicationRecord(getPackageName())
+                                "application/org.qii.weiciyuan.beam", text.getBytes()),
+                                NdefRecord.createApplicationRecord(getPackageName())
                         });
                 return msg;
             }
         }, this);
-
     }
 
     private NdefRecord createMimeRecord(String mimeType, byte[] payload) {
@@ -108,7 +106,6 @@ public class AbstractAppActivity extends FragmentActivity {
     }
 
     private void reload() {
-
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

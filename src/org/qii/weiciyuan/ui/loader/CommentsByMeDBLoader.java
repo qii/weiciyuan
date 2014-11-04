@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.support.database.CommentByMeTimeLineDBTask;
+
+import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 
 /**
  * User: qii
@@ -33,5 +34,4 @@ public class CommentsByMeDBLoader extends AsyncTaskLoader<CommentTimeLineData> {
         result = CommentByMeTimeLineDBTask.getCommentLineMsgList(accountId);
         return result;
     }
-
 }

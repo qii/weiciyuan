@@ -30,13 +30,11 @@ import java.util.WeakHashMap;
 public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
-
     private TopTipBar topTipBar;
 
     public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView,
             boolean showOriStatus, boolean pref) {
         super(fragment, bean, listView, showOriStatus, pref);
-
     }
 
     public void setTopTipBar(TopTipBar bar) {
@@ -77,18 +75,15 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                         topTipBar.handle(next.getIdLong(), helperId);
                     }
                 }
-
             }
         });
     }
 
     @Override
     protected void bindViewData(final ViewHolder holder, int position) {
-
         Drawable drawable = bg.get(holder);
         if (drawable != null) {
             holder.listview_root.setBackgroundDrawable(drawable);
-
         } else {
             drawable = holder.listview_root.getBackground();
             bg.put(holder, drawable);
@@ -114,7 +109,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 buildAvatar(holder.avatar, position, user);
             }
-
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
@@ -167,23 +161,16 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                     });
                 }
             }
-
         }
-
-
     }
 
     protected void buildOriWeiboContent(final MessageBean oriWeibo, ViewHolder holder,
             int position) {
-
         holder.repost_content.setVisibility(View.VISIBLE);
-
         holder.repost_content_pic.setVisibility(View.GONE);
         holder.repost_content_pic_multi.setVisibility(View.GONE);
-
         holder.content_pic.setVisibility(View.GONE);
         holder.content_pic_multi.setVisibility(View.GONE);
-
         holder.repost_content.setText(oriWeibo.getListViewSpannableString());
 
         if (oriWeibo.havePicture()) {
@@ -192,12 +179,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 buildPic(oriWeibo, holder.repost_content_pic, position);
             }
-
         }
-
     }
-
-
 }
 
 

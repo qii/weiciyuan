@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.dao.fav.FavListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +26,6 @@ public class MyFavMsgLoader extends AbstractAsyncNetRequestTaskLoader<FavListBea
         this.page = page;
     }
 
-
     public FavListBean loadData() throws WeiboException {
         FavListDao dao = new FavListDao(token);
         dao.setPage(page);
@@ -38,9 +38,7 @@ public class MyFavMsgLoader extends AbstractAsyncNetRequestTaskLoader<FavListBea
             lock.unlock();
         }
 
-
         return result;
     }
-
 }
 

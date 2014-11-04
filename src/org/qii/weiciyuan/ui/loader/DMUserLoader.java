@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.DMUserListBean;
 import org.qii.weiciyuan.dao.dm.DMDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +26,6 @@ public class DMUserLoader extends AbstractAsyncNetRequestTaskLoader<DMUserListBe
         this.cursor = cursor;
     }
 
-
     public DMUserListBean loadData() throws WeiboException {
         DMDao dao = new DMDao(token);
         dao.setCursor(cursor);
@@ -38,9 +38,7 @@ public class DMUserLoader extends AbstractAsyncNetRequestTaskLoader<DMUserListBe
         } finally {
             lock.unlock();
         }
-
         return result;
     }
-
 }
 

@@ -33,20 +33,16 @@ public class SearchTopicByNameActivity extends AbstractAppActivity {
                     .replace(android.R.id.content, new SearchTopicByNameFragment(q))
                     .commit();
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-
                 Intent intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
-
         }
         return false;
     }

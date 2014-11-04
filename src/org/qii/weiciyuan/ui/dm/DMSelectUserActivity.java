@@ -39,7 +39,6 @@ import java.util.List;
 public class DMSelectUserActivity extends AbstractAppActivity {
 
     private List<UserBean> data;
-
     private ProgressBar suggestProgressBar;
 
     @Override
@@ -76,8 +75,6 @@ public class DMSelectUserActivity extends AbstractAppActivity {
                 finish();
             }
         });
-
-
     }
 
     public UserBean getUser() {
@@ -104,7 +101,6 @@ public class DMSelectUserActivity extends AbstractAppActivity {
     private class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filterable {
 
         private DMSelectUserActivity activity;
-
         private ProgressBar suggestProgressBar;
 
         public AutoCompleteAdapter(DMSelectUserActivity context, int textViewResourceId) {
@@ -200,7 +196,6 @@ public class DMSelectUserActivity extends AbstractAppActivity {
 
     public static class SelectFriendsListFragment extends AbstractFriendsFanListFragment {
 
-
         public static SelectFriendsListFragment newInstance(UserBean userBean) {
             SelectFriendsListFragment fragment = new SelectFriendsListFragment();
             Bundle bundle = new Bundle();
@@ -213,11 +208,9 @@ public class DMSelectUserActivity extends AbstractAppActivity {
 
         }
 
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
             setHasOptionsMenu(false);
             setRetainInstance(false);
         }
@@ -225,7 +218,6 @@ public class DMSelectUserActivity extends AbstractAppActivity {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-
         }
 
         @Override
@@ -256,15 +248,12 @@ public class DMSelectUserActivity extends AbstractAppActivity {
         @Override
         protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldUserLoader(int id,
                 Bundle args) {
-
             if (getList().getUsers().size() > 0
                     && Integer.valueOf(getList().getNext_cursor()) == 0) {
                 return null;
             }
-
             String token = GlobalContext.getInstance().getSpecialToken();
             String cursor = String.valueOf(bean.getNext_cursor());
-
             return new FriendUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
         }
     }

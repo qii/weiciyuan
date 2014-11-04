@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
 import org.qii.weiciyuan.dao.search.SearchDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,7 +28,6 @@ public class SearchStatusLoader extends AbstractAsyncNetRequestTaskLoader<Search
         this.page = page;
     }
 
-
     public SearchStatusListBean loadData() throws WeiboException {
         SearchDao dao = new SearchDao(token, searchWord);
         dao.setPage(page);
@@ -41,10 +41,8 @@ public class SearchStatusLoader extends AbstractAsyncNetRequestTaskLoader<Search
             lock.unlock();
         }
 
-
         return result;
     }
-
 }
 
 

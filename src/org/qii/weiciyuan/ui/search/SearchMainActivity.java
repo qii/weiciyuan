@@ -86,7 +86,6 @@ public class SearchMainActivity extends AbstractAppActivity {
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.user))
                 .setTabListener(tabListener));
-
     }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -97,8 +96,6 @@ public class SearchMainActivity extends AbstractAppActivity {
             if (mViewPager.getCurrentItem() != tab.getPosition()) {
                 mViewPager.setCurrentItem(tab.getPosition());
             }
-
-
         }
 
         public void onTabUnselected(ActionBar.Tab tab,
@@ -112,7 +109,6 @@ public class SearchMainActivity extends AbstractAppActivity {
         }
     };
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_searchmainactivity, menu);
@@ -125,7 +121,6 @@ public class SearchMainActivity extends AbstractAppActivity {
         searchView.setSubmitButtonEnabled(false);
         searchView.requestFocus();
         return super.onCreateOptionsMenu(menu);
-
     }
 
     public String getSearchWord() {
@@ -189,12 +184,9 @@ public class SearchMainActivity extends AbstractAppActivity {
         }
     };
 
-
     private class SearchTabPagerAdapter extends AppFragmentPagerAdapter {
 
-
         List<Fragment> list = new ArrayList<Fragment>();
-
 
         public SearchTabPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -209,10 +201,7 @@ public class SearchMainActivity extends AbstractAppActivity {
             } else {
                 list.add(getSearchUserFragment());
             }
-
-
         }
-
 
         public Fragment getItem(int position) {
             return list.get(position);
@@ -226,12 +215,9 @@ public class SearchMainActivity extends AbstractAppActivity {
             return tagList.get(position);
         }
 
-
         @Override
         public int getCount() {
             return list.size();
         }
-
-
     }
 }

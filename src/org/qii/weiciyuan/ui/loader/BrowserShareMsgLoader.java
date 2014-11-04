@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.ShareListBean;
 import org.qii.weiciyuan.dao.shorturl.ShareShortUrlTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -16,18 +17,15 @@ public class BrowserShareMsgLoader extends AbstractAsyncNetRequestTaskLoader<Sha
 
     private static Lock lock = new ReentrantLock();
 
-
     private String token;
     private String maxId;
     private String url;
-
 
     public BrowserShareMsgLoader(Context context, String token, String url, String maxId) {
         super(context);
         this.token = token;
         this.maxId = maxId;
         this.url = url;
-
     }
 
     public ShareListBean loadData() throws WeiboException {
@@ -45,7 +43,6 @@ public class BrowserShareMsgLoader extends AbstractAsyncNetRequestTaskLoader<Sha
 
         return result;
     }
-
 }
 
 

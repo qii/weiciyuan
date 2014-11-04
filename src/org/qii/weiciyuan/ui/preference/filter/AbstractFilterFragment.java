@@ -1,17 +1,5 @@
 package org.qii.weiciyuan.ui.preference.filter;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.ListFragment;
-import android.util.SparseBooleanArray;
-import android.view.*;
-import android.view.animation.Animation;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -19,7 +7,29 @@ import org.qii.weiciyuan.ui.animation.CollapseAnimation;
 import org.qii.weiciyuan.ui.preference.AddFilterDialog;
 import org.qii.weiciyuan.ui.preference.ModifyFilterDialog;
 
-import java.util.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.ListFragment;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: qii
@@ -28,22 +38,20 @@ import java.util.*;
 public abstract class AbstractFilterFragment extends ListFragment {
 
     private BaseAdapter adapter;
-
     private DBTask task;
-
     protected List<String> list = new ArrayList<String>();
-
     private RemoveFilterDBTask removeTask;
-
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (task != null)
+        if (task != null) {
             task.cancel(true);
+        }
 
-        if (removeTask != null)
+        if (removeTask != null) {
             removeTask.cancel(true);
+        }
     }
 
     @Override
@@ -62,21 +70,18 @@ public abstract class AbstractFilterFragment extends ListFragment {
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
         }
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         getListView().setMultiChoiceModeListener(new FilterMultiChoiceModeListener());
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ModifyFilterDialog dialog = new ModifyFilterDialog(list.get(position));
+                ModifyFilterDialog dialog = ModifyFilterDialog.newInstance(list.get(position));
                 dialog.setTargetFragment(AbstractFilterFragment.this, 1);
                 dialog.show(getFragmentManager(), "");
             }
         });
-
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -87,12 +92,12 @@ public abstract class AbstractFilterFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add:
-                AddFilterDialog dialog = new AddFilterDialog();
+                AddFilterDialog dialog = AddFilterDialog.newInstance();
                 dialog.setTargetFragment(AbstractFilterFragment.this, 0);
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.filter_clear:
-                ClearFilterDialog clearFilterDialog = new ClearFilterDialog();
+                ClearFilterDialog clearFilterDialog = ClearFilterDialog.newInstance();
                 clearFilterDialog.setTargetFragment(this, 0);
                 clearFilterDialog.show(getFragmentManager(), "");
 
@@ -101,7 +106,6 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
         return true;
     }
-
 
     public void addFilter(String word) {
         Set<String> words = new HashSet<String>();
@@ -124,14 +128,10 @@ public abstract class AbstractFilterFragment extends ListFragment {
                 if (Utility.isTaskStopped(task)) {
                     task = new DBTask();
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
                 }
             }
         }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
-
     }
-
 
     class FilterMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
@@ -158,15 +158,16 @@ public abstract class AbstractFilterFragment extends ListFragment {
             return false;
         }
 
-
         @Override
         public void onDestroyActionMode(ActionMode mode) {
 
         }
 
         @Override
-        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            mode.setTitle(String.format(getString(R.string.have_selected), String.valueOf(getListView().getCheckedItemCount())));
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id,
+                boolean checked) {
+            mode.setTitle(String.format(getString(R.string.have_selected),
+                    String.valueOf(getListView().getCheckedItemCount())));
             adapter.notifyDataSetChanged();
         }
     }
@@ -220,7 +221,6 @@ public abstract class AbstractFilterFragment extends ListFragment {
                     }
                 }
 
-
                 mode.finish();
 
                 if (Utility.isTaskStopped(removeTask)) {
@@ -245,8 +245,6 @@ public abstract class AbstractFilterFragment extends ListFragment {
         for (int i = 0; i < views.size(); i++) {
             views.get(i).startAnimation(animations.get(i));
         }
-
-
     }
 
     private class RemoveFilterDBTask extends MyAsyncTask<Void, List<String>, List<String>> {
@@ -297,7 +295,6 @@ public abstract class AbstractFilterFragment extends ListFragment {
         set.add(oldWord);
         removeAndGetFilterListImpl(set);
         addFilter(newWord);
-
     }
 
     public void clear() {
@@ -313,24 +310,29 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
     public static class ClearFilterDialog extends DialogFragment {
 
+        public static ClearFilterDialog newInstance() {
+            return new ClearFilterDialog();
+        }
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.ask_clear_filter_list))
-                    .setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            AbstractFilterFragment fragment = (AbstractFilterFragment) getTargetFragment();
-                            fragment.clear();
-                        }
-                    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(getString(R.string.ask_clear_filter_list))
+                    .setPositiveButton(getString(R.string.clear),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AbstractFilterFragment fragment
+                                            = (AbstractFilterFragment) getTargetFragment();
+                                    fragment.clear();
+                                }
+                            }).setNegativeButton(getString(R.string.cancel),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    }).create();
-
+                                }
+                            }).create();
         }
     }
-
-
 }

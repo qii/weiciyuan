@@ -17,7 +17,6 @@ public class MyFavActivity extends AbstractAppActivity {
 
     private UserBean bean;
 
-
     public UserBean getUser() {
         return bean;
     }
@@ -36,7 +35,6 @@ public class MyFavActivity extends AbstractAppActivity {
                             MyFavListFragment.class.getName())
                     .commit();
         }
-
     }
 
     @Override

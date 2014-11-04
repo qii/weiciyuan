@@ -40,15 +40,11 @@ import java.io.File;
  */
 public class AboutFragment extends PreferenceFragment {
 
-    private BroadcastReceiver sdCardReceiver;
-
-    private MediaPlayer mp;
-
-    private boolean playing;
-
-    private int blackMagicCount = 0;
-
     private static final String DEBUG_INFO = "pref_debug_info_key";
+    private BroadcastReceiver sdCardReceiver;
+    private MediaPlayer mp;
+    private boolean playing;
+    private int blackMagicCount = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +52,6 @@ public class AboutFragment extends PreferenceFragment {
         setRetainInstance(false);
 
         addPreferencesFromResource(R.xml.about_pref);
-
         findPreference(SettingActivity.SUGGEST)
                 .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
@@ -69,19 +64,6 @@ public class AboutFragment extends PreferenceFragment {
                         return true;
                     }
                 });
-
-//        findPreference(SettingActivity.RECOMMEND)
-//                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//                    @Override
-//                    public boolean onPreferenceClick(Preference preference) {
-//                        Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-//                        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-//                        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-//                        intent.putExtra("content", getString(R.string.recommend_content));
-//                        startActivity(intent);
-//                        return true;
-//                    }
-//                });
 
         findPreference(SettingActivity.VERSION).setSummary(buildVersionInfo());
 
@@ -142,9 +124,7 @@ public class AboutFragment extends PreferenceFragment {
         findPreference(SettingActivity.SAVED_PIC_PATH)
                 .setSummary(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES).getAbsolutePath());
-
     }
-
 
     private void detectDebugPreference() {
         Preference debugPreferenceCategory = (PreferenceCategory) findPreference(DEBUG_INFO);
@@ -255,7 +235,6 @@ public class AboutFragment extends PreferenceFragment {
     }
 
     private String buildContent() {
-
         String network = "";
 
         ConnectivityManager cm = (ConnectivityManager)

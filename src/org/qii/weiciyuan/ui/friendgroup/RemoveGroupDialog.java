@@ -1,11 +1,12 @@
 package org.qii.weiciyuan.ui.friendgroup;
 
+import org.qii.weiciyuan.R;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import org.qii.weiciyuan.R;
 
 import java.util.ArrayList;
 
@@ -38,20 +39,23 @@ public class RemoveGroupDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.remove_group))
                 .setMessage(getString(R.string.remove_group_content))
-                .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.delete),
+                        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ManageGroupActivity.ManageGroupFragment fragment = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
-                        fragment.removeGroup(checkedNames);
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ManageGroupActivity.ManageGroupFragment fragment
+                                        = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
+                                fragment.removeGroup(checkedNames);
+                            }
+                        })
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
+                            }
+                        });
 
         return builder.create();
     }

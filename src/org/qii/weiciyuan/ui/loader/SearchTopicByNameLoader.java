@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.topic.SearchTopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,7 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * User: qii
  * Date: 13-5-12
  */
-public class SearchTopicByNameLoader extends AbstractAsyncNetRequestTaskLoader<TopicResultListBean> {
+public class SearchTopicByNameLoader
+        extends AbstractAsyncNetRequestTaskLoader<TopicResultListBean> {
 
     private static Lock lock = new ReentrantLock();
 
@@ -27,7 +29,6 @@ public class SearchTopicByNameLoader extends AbstractAsyncNetRequestTaskLoader<T
         this.page = page;
     }
 
-
     public TopicResultListBean loadData() throws WeiboException {
         SearchTopicDao dao = new SearchTopicDao(token, searchWord);
         dao.setPage(page);
@@ -41,8 +42,6 @@ public class SearchTopicByNameLoader extends AbstractAsyncNetRequestTaskLoader<T
             lock.unlock();
         }
 
-
         return result;
     }
-
 }

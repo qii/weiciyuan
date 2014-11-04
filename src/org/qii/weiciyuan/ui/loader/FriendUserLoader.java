@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,14 +22,12 @@ public class FriendUserLoader extends AbstractAsyncNetRequestTaskLoader<UserList
     private String page;
     private String cursor;
 
-
     public FriendUserLoader(Context context, String token, String uid, String cursor) {
         super(context);
         this.token = token;
         this.uid = uid;
         this.cursor = cursor;
     }
-
 
     public UserListBean loadData() throws WeiboException {
         FriendListDao dao = new FriendListDao(token, uid);
@@ -42,9 +41,7 @@ public class FriendUserLoader extends AbstractAsyncNetRequestTaskLoader<UserList
         } finally {
             lock.unlock();
         }
-
         return result;
     }
-
 }
 

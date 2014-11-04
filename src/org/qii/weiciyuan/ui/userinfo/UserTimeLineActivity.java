@@ -15,7 +15,6 @@ import android.view.MenuItem;
  */
 public class UserTimeLineActivity extends AbstractAppActivity {
 
-
     public static Intent newIntent(String token, UserBean userBean) {
         Intent intent = new Intent(GlobalContext.getInstance(), UserTimeLineActivity.class);
         intent.putExtra("token", token);
@@ -40,7 +39,6 @@ public class UserTimeLineActivity extends AbstractAppActivity {
                             StatusesByIdTimeLineFragment.class.getName())
                     .commit();
         }
-
     }
 
     @Override

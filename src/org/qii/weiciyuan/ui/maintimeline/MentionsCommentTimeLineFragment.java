@@ -53,15 +53,12 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         implements IRemoveItem {
 
     private AccountBean accountBean;
-
     private UserBean userBean;
-
     private String token;
 
     private RemoveTask removeTask;
 
     private CommentListBean bean = new CommentListBean();
-
     private TimeLinePosition timeLinePosition;
 
     private final int POSITION_IN_PARENT_FRAGMENT = 1;
@@ -229,7 +226,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
             if (position - 1 < getList().getSize() && position - 1 >= 0) {
                 if (actionMode != null) {
                     actionMode.finish();
@@ -273,11 +269,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
-
         String id;
-
         int positon;
-
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {
@@ -311,11 +304,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             super.onPostExecute(aBoolean);
             if (aBoolean) {
                 ((CommentListAdapter) timeLineAdapter).removeItem(positon);
-
             }
         }
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -332,7 +323,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                         setListViewUnreadTipBar(timeLinePosition);
                     }
                 });
-
     }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {

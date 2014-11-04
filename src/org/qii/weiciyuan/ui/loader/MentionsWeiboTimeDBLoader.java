@@ -1,9 +1,10 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
+
+import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 
 /**
  * User: qii
@@ -33,5 +34,4 @@ public class MentionsWeiboTimeDBLoader extends AsyncTaskLoader<MentionTimeLineDa
         result = MentionWeiboTimeLineDBTask.getRepostLineMsgList(accountId);
         return result;
     }
-
 }

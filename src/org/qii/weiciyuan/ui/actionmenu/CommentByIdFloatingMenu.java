@@ -1,21 +1,23 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.browser.BrowserCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+
 /**
  * User: qii
  * Date: 12-12-6
  */
+@Deprecated
 public class CommentByIdFloatingMenu extends DialogFragment {
 
     private CommentBean bean;
@@ -30,14 +32,12 @@ public class CommentByIdFloatingMenu extends DialogFragment {
 
     }
 
-
     public CommentByIdFloatingMenu(CommentBean bean) {
         this.bean = bean;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         if (savedInstanceState != null) {
             bean = (CommentBean) savedInstanceState.getParcelable("bean");
         }
@@ -63,7 +63,6 @@ public class CommentByIdFloatingMenu extends DialogFragment {
                         getActivity().startActivity(intent);
                         break;
                 }
-
             }
         });
 
@@ -73,7 +72,6 @@ public class CommentByIdFloatingMenu extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 }
 

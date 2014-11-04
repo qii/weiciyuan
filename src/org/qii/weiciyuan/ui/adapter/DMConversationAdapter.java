@@ -40,14 +40,12 @@ public class DMConversationAdapter extends BaseAdapter {
     private final int TYPE_NORMAL = 0;
     private final int TYPE_MYSELF = 1;
 
-
     public DMConversationAdapter(Fragment fragment, List<DMBean> bean, ListView listView) {
         this.bean = bean;
         this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.fragment = fragment;
-
     }
 
     protected Activity getActivity() {
@@ -69,14 +67,14 @@ public class DMConversationAdapter extends BaseAdapter {
         }
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         int showPosition = bean.size() - 1 - position;
 
         DMViewHolder holder = null;
-        if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(showPosition)) == null) {
+        if (convertView == null
+                || convertView.getTag(R.drawable.ic_launcher + getItemViewType(showPosition))
+                == null) {
             switch (getItemViewType(showPosition)) {
                 case TYPE_NORMAL:
                     convertView = initNormalSimpleLayout(parent);
@@ -89,10 +87,11 @@ public class DMConversationAdapter extends BaseAdapter {
             }
             holder = buildHolder(convertView);
             convertView.setTag(R.drawable.ic_launcher + getItemViewType(showPosition), holder);
-            convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(showPosition));
-
+            convertView.setTag(R.string.listview_index_tag,
+                    R.drawable.ic_launcher + getItemViewType(showPosition));
         } else {
-            holder = (DMViewHolder) convertView.getTag(R.drawable.ic_launcher + getItemViewType(showPosition));
+            holder = (DMViewHolder) convertView
+                    .getTag(R.drawable.ic_launcher + getItemViewType(showPosition));
         }
 
         configViewFont(holder);
@@ -102,37 +101,38 @@ public class DMConversationAdapter extends BaseAdapter {
     }
 
     private void configLayerType(DMViewHolder holder) {
-
         boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
-        if (!disableHardAccelerated)
+        if (!disableHardAccelerated) {
             return;
+        }
 
         int currentWidgetLayerType = holder.content.getLayerType();
 
         if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
-            if (holder.content != null)
+            if (holder.content != null) {
                 holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
 
-            if (holder.time != null)
+            if (holder.time != null) {
                 holder.time.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
         }
-
     }
-
 
     private View initNormalSimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.dmconversationadapter_item_normal_layout, parent, false);
+        convertView = inflater
+                .inflate(R.layout.dmconversationadapter_item_normal_layout, parent, false);
 
         return convertView;
     }
 
     private View initMySimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.dmconversationadapter_item_myself_layout, parent, false);
+        convertView = inflater
+                .inflate(R.layout.dmconversationadapter_item_myself_layout, parent, false);
         return convertView;
     }
-
 
     private DMViewHolder buildHolder(View convertView) {
         DMViewHolder holder = new DMViewHolder();
@@ -148,7 +148,6 @@ public class DMConversationAdapter extends BaseAdapter {
     }
 
     protected void bindViewData(DMViewHolder holder, int position) {
-
         final DMBean msg = bean.get(position);
         UserBean user = msg.getUser();
         if (user != null) {
@@ -169,9 +168,7 @@ public class DMConversationAdapter extends BaseAdapter {
             holder.time.setText(time);
         }
         holder.time.setTag(msg.getId());
-
     }
-
 
     protected List<DMBean> getList() {
         return bean;
@@ -183,7 +180,6 @@ public class DMConversationAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-
         if (getList() != null) {
             return getList().size();
         } else {
@@ -193,17 +189,21 @@ public class DMConversationAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList().size())
+        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList()
+                .size()) {
             return getList().get(position);
+        }
         return null;
     }
 
     @Override
     public long getItemId(int position) {
-        if (getList() != null && getList().get(position) != null && getList().size() > 0 && position < getList().size())
+        if (getList() != null && getList().get(position) != null && getList().size() > 0
+                && position < getList().size()) {
             return Long.valueOf(getList().get(position).getId());
-        else
+        } else {
             return -1;
+        }
     }
 
     protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {
@@ -211,7 +211,8 @@ public class DMConversationAdapter extends BaseAdapter {
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
-            commander.downloadAvatar(view.getImageView(), user, (AbstractTimeLineFragment) fragment);
+            commander
+                    .downloadAvatar(view.getImageView(), user, (AbstractTimeLineFragment) fragment);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -221,18 +222,14 @@ public class DMConversationAdapter extends BaseAdapter {
                     getActivity().startActivity(intent);
                 }
             });
-
         } else {
             view.setVisibility(View.GONE);
         }
     }
 
-
     private static class DMViewHolder {
         TextView content;
         TextView time;
         TimeLineAvatarImageView avatar;
-
     }
-
 }

@@ -23,13 +23,10 @@ import android.widget.TextView;
 public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> {
 
     private Activity activity;
-
     private TextView location;
-
     private ImageView mapView;
 
     private GeoBean geoBean;
-
 
     public GetWeiboLocationInfoTask(Activity activity, GeoBean geoBean, ImageView mapView,
             TextView location) {
@@ -44,14 +41,11 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
         super.onPreExecute();
         location.setVisibility(View.VISIBLE);
         location.setText(String.valueOf(geoBean.getLat() + "," + geoBean.getLon()));
-
     }
 
     @Override
     protected Bitmap doInBackground(Void... params) {
-
         if (Utility.isGPSLocationCorrect(geoBean)) {
-
             String gpsLocationString = new GoogleGeoCoderDao(activity, geoBean).get();
 
             try {
@@ -65,7 +59,6 @@ public class GetWeiboLocationInfoTask extends MyAsyncTask<Void, String, Bitmap> 
 
         MapDao dao = new MapDao(GlobalContext.getInstance().getSpecialToken(), geoBean.getLat(),
                 geoBean.getLon());
-
         try {
             return dao.getMap();
         } catch (WeiboException e) {

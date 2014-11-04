@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.ui.loader;
 
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 
 /**
  * User: qii

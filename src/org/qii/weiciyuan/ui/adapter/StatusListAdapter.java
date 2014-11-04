@@ -32,15 +32,11 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private WeakHashMap<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
     private LongSparseArray<Integer> msgHeights = new LongSparseArray<Integer>();
-
     private LongSparseArray<Integer> msgWidths = new LongSparseArray<Integer>();
-
     private LongSparseArray<Integer> oriMsgHeights = new LongSparseArray<Integer>();
-
     private LongSparseArray<Integer> oriMsgWidths = new LongSparseArray<Integer>();
 
     private TopTipBar topTipBar;
-
     private Handler handler = new Handler();
 
     public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView,
@@ -102,18 +98,15 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                         topTipBar.handle(next.getIdLong(), helperId);
                     }
                 }
-
             }
         });
     }
 
     @Override
     protected void bindViewData(final ViewHolder holder, int position) {
-
         Drawable drawable = bg.get(holder);
         if (drawable != null) {
             holder.listview_root.setBackgroundDrawable(drawable);
-
         } else {
             drawable = holder.listview_root.getBackground();
             bg.put(holder, drawable);
@@ -139,7 +132,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             } else {
                 buildAvatar(holder.avatar, position, user);
             }
-
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
@@ -290,7 +282,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 } else {
                     interruptRepostMultiPic = true;
                 }
-
             }
         }
 
@@ -328,7 +319,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
         }
     }
-
 
     private void buildRepostContent(MessageBean msg, final MessageBean repost_msg,
             ViewHolder holder, int position) {
@@ -370,9 +360,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             } else {
                 buildPic(repost_msg, holder.repost_content_pic, position);
             }
-
         }
     }
-
-
 }

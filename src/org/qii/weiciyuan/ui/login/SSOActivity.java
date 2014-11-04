@@ -47,16 +47,11 @@ public class SSOActivity extends AbstractAppActivity {
     private static class SSOTask extends MyAsyncTask<String, UserBean, OAuthActivity.DBResult> {
 
         private WeakReference<SSOActivity> sSOActivityWeakReference;
-
         private WeiboException e;
-
         private OAuthActivity.ProgressFragment progressFragment = OAuthActivity.ProgressFragment
                 .newInstance();
-
         private String token;
-
         private String expiresIn;
-
 
         public SSOTask(SSOActivity ssoActivity, String token, String expiresIn) {
             this.sSOActivityWeakReference = new WeakReference<SSOActivity>(ssoActivity);
@@ -72,12 +67,10 @@ public class SSOActivity extends AbstractAppActivity {
             if (activity != null) {
                 progressFragment.show(activity.getSupportFragmentManager(), "");
             }
-
         }
 
         @Override
         protected OAuthActivity.DBResult doInBackground(String... params) {
-
             try {
                 UserBean user = new OAuthDao(token).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
@@ -94,7 +87,6 @@ public class SSOActivity extends AbstractAppActivity {
                 cancel(true);
                 return null;
             }
-
         }
 
         @Override
@@ -115,7 +107,6 @@ public class SSOActivity extends AbstractAppActivity {
                 Toast.makeText(activity, R.string.you_cancel_login, Toast.LENGTH_SHORT).show();
             }
             activity.finish();
-
         }
 
         @Override
@@ -146,10 +137,8 @@ public class SSOActivity extends AbstractAppActivity {
                     break;
             }
             activity.finish();
-
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -183,10 +172,8 @@ public class SSOActivity extends AbstractAppActivity {
                 Toast.makeText(this, getString(R.string.login_failed) + error, Toast.LENGTH_SHORT)
                         .show();
                 finish();
-
             }
             return;
-
         }
 
         final String KEY_TOKEN = "access_token";
@@ -203,5 +190,4 @@ public class SSOActivity extends AbstractAppActivity {
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
 }

@@ -27,17 +27,13 @@ import android.widget.Toast;
 public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBean> {
 
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
-
     private static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
-
     private static final String ACTION_NOTIFICATION_REPLY = "org.qii.weiciyuan.NOTIFICATION_REPLY";
 
     private CommentBean bean;
-
     private ReplyDraftBean replyDraftBean;
 
     private MenuItem enableRepost;
-
     private boolean savedEnableRepost;
 
     @Override
@@ -100,7 +96,6 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         return intent;
     }
 
-
     public static Intent newIntentFromNotification(Context context,
             AccountBean account,
             CommentBean oriMsg) {
@@ -132,9 +127,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         }
     }
 
-
     private void handleNormalOperation(Intent intent) {
-
         token = intent.getStringExtra("token");
         if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
@@ -194,7 +187,6 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         String contentStr = getEditTextView().getText().toString();
         if (!TextUtils.isEmpty(contentStr)) {
             menu.findItem(R.id.menu_clear).setVisible(true);
@@ -203,7 +195,6 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         }
         return super.onPrepareOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -241,7 +232,6 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         if (canSend()) {
             String content = ((EditText) findViewById(R.id.status_new_content)).getText()
                     .toString();
-
             Intent intent = SendReplyToCommentService
                     .newIntent(getCurrentAccountBean(), bean, content,
                             enableRepost.isChecked() ? repost() : null);
@@ -250,9 +240,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         }
     }
 
-
     private String repost() {
-
         String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
         String msgContent = "//@" + bean.getUser().getScreen_name() + ": " + bean.getText();
         String total = content + msgContent;
@@ -263,10 +251,8 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         return content;
     }
 
-
     @Override
     protected boolean canSend() {
-
         boolean haveContent = !TextUtils.isEmpty(getEditTextView().getText().toString());
         boolean haveToken = !TextUtils.isEmpty(token);
         int sum = Utility.length(getEditTextView().getText().toString());
@@ -291,12 +277,10 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
             if (!contentNumBelow140) {
                 getEditTextView().setError(getString(R.string.content_words_number_too_many));
             }
-
         }
 
         return false;
     }
-
 
     @Override
     protected AccountBean getCurrentAccountBean() {

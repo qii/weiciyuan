@@ -38,7 +38,6 @@ public class SearchTopicByNameFragment
     private TopicResultListBean bean = new TopicResultListBean();
 
     private FollowTopicTask followTopicTask;
-
     private UnFollowTopicTask unFollowTopicTask;
 
     @Override
@@ -53,7 +52,6 @@ public class SearchTopicByNameFragment
     public SearchTopicByNameFragment(String q) {
         this.q = q;
     }
-
 
     @Override
     public void onDetach() {
@@ -112,7 +110,6 @@ public class SearchTopicByNameFragment
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -150,20 +147,17 @@ public class SearchTopicByNameFragment
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         startActivity(BrowserWeiboMsgActivity.newIntent(bean.getItemList().get(position),
                 GlobalContext.getInstance().getSpecialToken()));
     }
 
-
     private void buildActionBatSubtitle() {
         int newSize = bean.getTotal_number();
         String number = bean.getSize() + "/" + newSize;
         getActivity().getActionBar().setSubtitle(number);
     }
-
 
     private class FollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
 
@@ -241,9 +235,7 @@ public class SearchTopicByNameFragment
                         Toast.LENGTH_SHORT).show();
             }
         }
-
     }
-
 
     @Override
     protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateNewMsgLoader(int id,

@@ -24,9 +24,7 @@ import android.widget.Button;
 public class BrowserWebActivity extends AbstractAppActivity {
 
     private Button shareCountBtn;
-
     private int shareCountInt;
-
     private String url;
 
     @Override
@@ -71,9 +69,7 @@ public class BrowserWebActivity extends AbstractAppActivity {
             shareCountInt = savedInstanceState.getInt("shareCountInt");
             shareCountBtn.setText(String.valueOf(shareCountInt));
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

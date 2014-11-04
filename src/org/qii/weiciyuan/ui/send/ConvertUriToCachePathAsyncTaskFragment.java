@@ -45,11 +45,9 @@ public class ConvertUriToCachePathAsyncTaskFragment extends Fragment {
         }
     }
 
-
     private class ConvertTask extends MyAsyncTask<Void, Void, String> {
 
         ContentResolver mContentResolver;
-
         Uri uri;
 
         public ConvertTask(Uri uri) {

@@ -31,19 +31,15 @@ import java.util.List;
 public class ManageGroupDialog extends DialogFragment {
 
     private GroupListBean group;
-
     private String uid;
 
     private String[] valueArray;
-
     private boolean[] selectedArray;
 
     private MyAsyncTask<Void, Void, List<String>> task;
 
     private ArrayList<String> currentList = new ArrayList<String>();
-
     private ArrayList<String> addList = new ArrayList<String>();
-
     private ArrayList<String> removeList = new ArrayList<String>();
 
     @Override
@@ -70,7 +66,6 @@ public class ManageGroupDialog extends DialogFragment {
 
     }
 
-
     public ManageGroupDialog(GroupListBean group, String uid) {
         this.group = group;
         this.uid = uid;
@@ -92,7 +87,6 @@ public class ManageGroupDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         if (savedInstanceState != null) {
             group = (GroupListBean) savedInstanceState.getParcelable("group");
             uid = savedInstanceState.getString("uid");
@@ -146,7 +140,6 @@ public class ManageGroupDialog extends DialogFragment {
 
         task = new Task();
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
         return builder.create();
     }
 
@@ -159,14 +152,12 @@ public class ManageGroupDialog extends DialogFragment {
                 if (!currentList.contains(id)) {
                     addList.add(id);
                 }
-
             } else {
                 if (currentList.contains(id)) {
                     removeList.add(group.getLists().get(which).getIdstr());
                 }
             }
         }
-
     }
 
     class Task extends MyAsyncTask<Void, Void, List<String>> {
@@ -202,13 +193,10 @@ public class ManageGroupDialog extends DialogFragment {
         }
     }
 
-
     private static class ModifyGroupMemberTask extends MyAsyncTask<Void, Void, Void> {
 
         private List<String> add;
-
         private List<String> remove;
-
         private String uid;
 
         public ModifyGroupMemberTask(String uid, List<String> add, List<String> remove) {

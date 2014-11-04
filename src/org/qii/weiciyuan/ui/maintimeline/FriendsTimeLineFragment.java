@@ -72,9 +72,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         MainTimeLineActivity.ScrollableListFragment {
 
     private AccountBean accountBean;
-
     private UserBean userBean;
-
     private String token;
 
     private DBCacheTask dbTask;
@@ -82,19 +80,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private ScheduledExecutorService autoRefreshExecutor = null;
 
     public final static String ALL_GROUP_ID = "0";
-
     public final static String BILATERAL_GROUP_ID = "1";
 
     private String currentGroupId = ALL_GROUP_ID;
 
     private HashMap<String, MessageListBean> groupDataCache
             = new HashMap<String, MessageListBean>();
-
     private HashMap<String, TimeLinePosition> positionCache
             = new HashMap<String, TimeLinePosition>();
 
     private MessageListBean bean = new MessageListBean();
-
     private BaseAdapter navAdapter;
 
     private Thread backgroundWifiDownloadPicThread = null;
@@ -289,7 +284,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
@@ -371,7 +365,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private int getIndexFromGroupId(String id, List<GroupBean> list) {
-
         if (list == null || list.size() == 0) {
             return 0;
         }
@@ -534,7 +527,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
 
         private WeakReference<FriendsTimeLineFragment> fragmentWeakReference;
-
         private String accountId;
 
         private DBCacheTask(FriendsTimeLineFragment friendsTimeLineFragment, String accountId) {
@@ -666,7 +658,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void addNewDataAndRememberPositionAutoRefresh(final MessageListBean newValue) {
-
         int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
@@ -866,7 +857,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void addNewDataAndRememberPosition(final MessageListBean newValue) {
-
         int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
@@ -891,7 +881,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     protected void middleMsgLoaderSuccessCallback(int position, MessageListBean newValue,
             boolean towardsBottom) {
-
         if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
             getList().addMiddleData(position, newValue, towardsBottom);
             getAdapter().notifyDataSetChanged();
@@ -901,7 +890,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void addNewDataWithoutRememberPosition(MessageListBean newValue) {
         newMsgTipBar.setValue(newValue, true);
-
         getList().addNewData(newValue);
         getAdapter().notifyDataSetChanged();
         getListView().setSelectionAfterHeaderView();
@@ -1021,7 +1009,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
 
         private List<String> msgIds;
-
         private WeakReference<FriendsTimeLineFragment> fragmentWeakReference;
 
         private RefreshReCmtCountTask(FriendsTimeLineFragment friendsTimeLineFragment,
@@ -1064,7 +1051,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void updateTimeLineMessageCommentAndRepostData(List<MessageReCmtCountBean> value) {
-
         if (value == null) {
             return;
         }

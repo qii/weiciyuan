@@ -1,5 +1,9 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,9 +20,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +28,12 @@ import java.util.List;
  * User: qii
  * Date: 12-10-24
  */
-public class NotificationFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class NotificationFragment extends PreferenceFragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference frequency;
     private Preference ringtone;
     private List<Preference> preferenceList = new ArrayList<Preference>(9);
-
     private Uri uri;
 
     @Override
@@ -51,9 +52,11 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         preferenceList.add(findPreference(SettingActivity.ENABLE_LED));
         preferenceList.add(findPreference(SettingActivity.ENABLE_RINGTONE));
 
-        View title = getActivity().getLayoutInflater().inflate(R.layout.filteractivity_title_layout, null);
+        View title = getActivity().getLayoutInflater()
+                .inflate(R.layout.filteractivity_title_layout, null);
         Switch switchBtn = (Switch) title.findViewById(R.id.switchBtn);
-        getActivity().getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
+        getActivity().getActionBar()
+                .setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         getActivity().getActionBar().setDisplayShowCustomEnabled(true);
 
         switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -67,7 +70,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         switchBtn.setChecked(SettingUtility.getEnableFetchMSG());
         switchPre(SettingUtility.getEnableFetchMSG());
 
-
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         frequency = findPreference(SettingActivity.FREQUENCY);
@@ -76,10 +78,12 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_ringtone_title));
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE,
+                        getString(R.string.pref_ringtone_title));
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
+                        RingtoneManager.TYPE_NOTIFICATION);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, uri);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, uri);
                 startActivityForResult(intent, 1);
@@ -91,7 +95,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         if (!TextUtils.isEmpty(SettingUtility.getRingtone())) {
             uri = Uri.parse(path);
         }
-
     }
 
     //confirm getActivity() is not null
@@ -110,7 +113,8 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
                 ringTonePath = uri.toString();
             }
 
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences sharedPref = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
             sharedPref.edit().putString(SettingActivity.ENABLE_RINGTONE, ringTonePath).commit();
             buildSummary();
         }
@@ -149,11 +153,12 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
 
     private void buildSummary() {
         if (SettingUtility.getEnableFetchMSG()) {
-            String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FREQUENCY, "1");
-            frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[Integer.valueOf(value) - 1]);
+            String value = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(SettingActivity.FREQUENCY, "1");
+            frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[
+                    Integer.valueOf(value) - 1]);
         } else {
             frequency.setSummary(getString(R.string.stopped));
-
         }
 
         if (uri != null) {
@@ -162,15 +167,11 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         } else {
             ringtone.setSummary(getString(R.string.silent));
         }
-
-
     }
 
     private void switchPre(boolean value) {
         for (Preference p : preferenceList) {
             p.setEnabled(value);
         }
-
     }
-
 }

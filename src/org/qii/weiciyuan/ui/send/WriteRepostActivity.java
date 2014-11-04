@@ -1,13 +1,5 @@
 package org.qii.weiciyuan.ui.send;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -18,6 +10,15 @@ import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 /**
  * User: Jiang Qi
@@ -70,18 +71,20 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         msg = repostDraftBean.getMessageBean();
 
         if (msg.getRetweeted_status() != null) {
-            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+            getEditTextView().setHint(
+                    "//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg
+                            .getRetweeted_status().getText());
         } else {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
     }
 
     public static Intent startBecauseSendFailed(Context context,
-                                                AccountBean accountBean,
-                                                String content,
-                                                MessageBean oriMsg,
-                                                RepostDraftBean repostDraftBean,
-                                                String failedReason) {
+            AccountBean accountBean,
+            String content,
+            MessageBean oriMsg,
+            RepostDraftBean repostDraftBean,
+            String failedReason) {
         Intent intent = new Intent(context, WriteRepostActivity.class);
         intent.setAction(WriteRepostActivity.ACTION_SEND_FAILED);
         intent.putExtra("account", accountBean);
@@ -94,12 +97,13 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
     private void handleFailedOperation(Intent intent) {
         token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
-
         msg = (MessageBean) intent.getParcelableExtra("oriMsg");
         getEditTextView().setText(intent.getStringExtra("content"));
 
         if (msg.getRetweeted_status() != null) {
-            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+            getEditTextView().setHint(
+                    "//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg
+                            .getRetweeted_status().getText());
         } else {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
@@ -108,22 +112,24 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     }
 
     private void handleNormalOperation(Intent intent) {
-
         token = intent.getStringExtra("token");
-        if (TextUtils.isEmpty(token))
+        if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
+        }
 
         msg = (MessageBean) intent.getParcelableExtra("msg");
 
         if (msg.getRetweeted_status() != null) {
-            getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
-            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+            getEditTextView()
+                    .setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+            getEditTextView().setHint(
+                    "//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg
+                            .getRetweeted_status().getText());
         } else {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
         getEditTextView().setSelection(0);
     }
-
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -167,22 +173,22 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         stringBuilder.insert(index, "##");
         getEditTextView().setText(stringBuilder.toString());
         getEditTextView().setSelection(index + "##".length() - 1);
-
     }
-
 
     @Override
     public void saveToDraft() {
         if (!TextUtils.isEmpty(getEditTextView().getText().toString())) {
-            DraftDBManager.getInstance().insertRepost(getEditTextView().getText().toString(), msg, GlobalContext.getInstance().getCurrentAccountId());
+            DraftDBManager.getInstance().insertRepost(getEditTextView().getText().toString(), msg,
+                    GlobalContext.getInstance().getCurrentAccountId());
         }
         finish();
     }
 
     @Override
     protected void removeDraft() {
-        if (repostDraftBean != null)
+        if (repostDraftBean != null) {
             DraftDBManager.getInstance().remove(repostDraftBean.getId());
+        }
     }
 
     @Override
@@ -197,10 +203,8 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         return true;
     }
 
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         if (msg.getRetweeted_status() != null) {
             menuEnableOriComment.setVisible(true);
         }
@@ -227,9 +231,12 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm.isActive())
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive()) {
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 finish();
                 break;
             case R.id.menu_enable_comment:
@@ -271,8 +278,9 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         if (last >= 0) {
             String result = content.substring(0, last);
             getEditTextView().setText(result);
-            if (index <= result.length())
+            if (index <= result.length()) {
                 getEditTextView().setSelection(index);
+            }
         }
     }
 
@@ -287,8 +295,9 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
                 String startPart = content.substring(0, b);
                 String endPart = content.substring(a);
                 getEditTextView().setText(startPart + endPart);
-                if (index <= result.length())
+                if (index <= result.length()) {
                     getEditTextView().setSelection(index);
+                }
             }
         }
     }
@@ -296,7 +305,6 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     @Override
     protected void send() {
         if (canSend()) {
-
             boolean comment = menuEnableComment.isChecked();
             boolean oriComment = (menuEnableOriComment != null && menuEnableOriComment.isChecked());
             String is_comment = "";
@@ -319,10 +327,8 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         }
     }
 
-
     @Override
     protected boolean canSend() {
-
         boolean haveToken = !TextUtils.isEmpty(token);
         int sum = Utility.length(getEditTextView().getText().toString());
         int num = 140 - sum;
@@ -333,17 +339,14 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             return true;
         } else {
             if (!haveToken) {
-                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT)
+                        .show();
             }
 
             if (!contentNumBelow140) {
                 getEditTextView().setError(getString(R.string.content_words_number_too_many));
             }
-
         }
-
         return false;
     }
-
-
 }

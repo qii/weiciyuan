@@ -34,15 +34,10 @@ import java.util.List;
 public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
     private ListView listView;
-
     private BaseAdapter adapter;
-
     private Fragment fragment;
-
     private ActionMode mode;
-
     private CommentBean bean;
-
     private ShareActionProvider mShareActionProvider;
 
     public void finish() {
@@ -63,7 +58,6 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         return fragment.getActivity();
     }
 
-
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         if (this.mode == null) {
@@ -71,15 +65,12 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         }
 
         return true;
-
     }
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         buildMenu(mode, menu);
         return true;
-
-
     }
 
     protected void buildMenu(ActionMode mode, Menu menu) {
@@ -133,9 +124,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
-
                 break;
-
             case R.id.menu_comment:
                 intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
@@ -143,7 +132,6 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
-
                 break;
             case R.id.menu_share:
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -176,14 +164,11 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 mode.finish();
                 break;
             case R.id.menu_remove:
-
                 int position = listView.getCheckedItemPosition() - listView.getHeaderViewsCount();
                 RemoveDialog dialog = new RemoveDialog(position);
                 dialog.setTargetFragment(fragment, 0);
                 dialog.show(fragment.getFragmentManager(), "");
-
                 break;
-
         }
 
         return true;
@@ -201,6 +186,5 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         if (fragment instanceof BrowserWeiboMsgFragment) {
             ((BrowserWeiboMsgFragment) fragment).setActionMode(null);
         }
-
     }
 }

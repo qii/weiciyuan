@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
  * User: qii
  * Date: 12-10-6
  */
+@Deprecated
 public class FriendsGroupDialog extends DialogFragment {
 
 //    private GroupListBean group;

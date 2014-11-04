@@ -1,5 +1,13 @@
 package org.qii.weiciyuan.ui.search;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AtUserBean;
+import org.qii.weiciyuan.dao.search.AtUserDao;
+import org.qii.weiciyuan.support.database.AtUsersDBTask;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.SearchManager;
@@ -13,13 +21,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AtUserBean;
-import org.qii.weiciyuan.dao.search.AtUserDao;
-import org.qii.weiciyuan.support.database.AtUsersDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,7 @@ public class AtUserFragment extends ListFragment {
     private List<AtUserBean> atList = new ArrayList<AtUserBean>();
 
     private String token;
-
     private AtUserTask task;
-
 
     public AtUserFragment() {
 
@@ -48,14 +47,13 @@ public class AtUserFragment extends ListFragment {
         this.token = token;
     }
 
-
     @Override
     public void onDetach() {
         super.onDetach();
-        if (task != null)
+        if (task != null) {
             task.cancel(true);
+        }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -76,7 +74,8 @@ public class AtUserFragment extends ListFragment {
         if (savedInstanceState != null) {
             token = savedInstanceState.getString("token");
         }
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, result);
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
+                result);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,7 +83,8 @@ public class AtUserFragment extends ListFragment {
                 Intent intent = new Intent();
                 intent.putExtra("name", "@" + atList.get(position).getNickname() + " ");
                 getActivity().setResult(Activity.RESULT_OK, intent);
-                AtUsersDBTask.add(atList.get(position), GlobalContext.getInstance().getCurrentAccountId());
+                AtUsersDBTask.add(atList.get(position),
+                        GlobalContext.getInstance().getCurrentAccountId());
                 getActivity().finish();
             }
         });
@@ -96,13 +96,14 @@ public class AtUserFragment extends ListFragment {
         adapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.actionbar_menu_atuserfragment, menu);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) getActivity()
+                .getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint(getString(R.string.at_other));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -137,8 +138,7 @@ public class AtUserFragment extends ListFragment {
         searchView.requestFocus();
     }
 
-
-    class AtUserTask extends MyAsyncTask<Void, List<AtUserBean>, List<AtUserBean>> {
+    private class AtUserTask extends MyAsyncTask<Void, List<AtUserBean>, List<AtUserBean>> {
         WeiboException e;
         String q;
 
@@ -161,8 +161,9 @@ public class AtUserFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<AtUserBean> atUserBeans) {
             super.onPostExecute(atUserBeans);
-            if (isCancelled())
+            if (isCancelled()) {
                 return;
+            }
             if (atUserBeans == null || atUserBeans.size() == 0) {
                 result.clear();
                 atList.clear();

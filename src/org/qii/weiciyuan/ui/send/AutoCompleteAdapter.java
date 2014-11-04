@@ -1,5 +1,11 @@
 package org.qii.weiciyuan.ui.send;
 
+import org.qii.weiciyuan.bean.AtUserBean;
+import org.qii.weiciyuan.dao.search.AtUserDao;
+import org.qii.weiciyuan.support.lib.WeiboPatterns;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.R;
 import android.app.Activity;
 import android.os.SystemClock;
@@ -7,12 +13,13 @@ import android.text.Layout;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import org.qii.weiciyuan.bean.AtUserBean;
-import org.qii.weiciyuan.dao.search.AtUserDao;
-import org.qii.weiciyuan.support.lib.WeiboPatterns;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +75,6 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-
         View view;
         TextView text;
 
@@ -90,7 +96,6 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-
             activity.runOnUiThread(new Runnable() {
 
                 @Override
@@ -142,7 +147,6 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
                 return filterResults;
             }
 
-
             SystemClock.sleep(500);
 
             if (!contentStr.equals(content.getText().toString())) {
@@ -176,7 +180,6 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
             filterResults.values = data;
             filterResults.count = data.size();
 
-
             if (!contentStr.equals(content.getText().toString())) {
                 activity.runOnUiThread(new Runnable() {
 
@@ -204,10 +207,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
                     content.setDropDownVerticalOffset(-(int) (height - y) + Utility.dip2px(24));
                     content.setDropDownHorizontalOffset((int) x);
                     content.setDropDownWidth((Utility.getScreenWidth() * 2) / 3);
-
                 }
             });
-
 
             return filterResults;
         }
@@ -218,8 +219,9 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
             String result = ((AtUserBean) resultValue).getNickname();
             String left = ori.substring(0, atSignPosition + 1);
             String right = "";
-            if (selectPosition <= ori.length() - 1)
+            if (selectPosition <= ori.length() - 1) {
                 right = ori.substring(selectPosition);
+            }
             ori = left + result + " " + right;
             return ori;
         }

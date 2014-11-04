@@ -50,13 +50,10 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         implements IRemoveItem {
 
     private AccountBean accountBean;
-
     private UserBean userBean;
-
     private String token;
 
     private CommentListBean bean = new CommentListBean();
-
     private TimeLinePosition timeLinePosition;
 
     private RemoveTask removeTask;
@@ -88,7 +85,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putParcelable("account", accountBean);
         outState.putParcelable("userBean", userBean);
         outState.putString("token", token);
@@ -188,7 +184,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
@@ -276,11 +271,8 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
-
         String id;
-
         int positon;
-
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {
@@ -443,13 +435,9 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected void middleMsgLoaderSuccessCallback(int position, CommentListBean newValue,
             boolean towardsBottom) {
-
         if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
-
             getList().addMiddleData(position, newValue, towardsBottom);
-
             getAdapter().notifyDataSetChanged();
-
             CommentToMeTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
     }
@@ -528,7 +516,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         @Override
         public void unreadCommentsChanged(AccountBean account, CommentListBean data) {
             super.unreadCommentsChanged(account, data);
-
             if (!accountBean.equals(account)) {
                 return;
             }

@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.ui.loader;
 
-import android.content.Context;
-import android.text.TextUtils;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.content.Context;
+import android.text.TextUtils;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,7 +18,6 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
 
     private static Lock lock = new ReentrantLock();
 
-
     private String token;
     private String sinceId;
     private String maxId;
@@ -25,22 +25,21 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
     private String uid;
     private String count;
 
-    public StatusesByIdLoader(Context context, String uid, String screenName, String token, String sinceId, String maxId) {
+    public StatusesByIdLoader(Context context, String uid, String screenName, String token,
+            String sinceId, String maxId) {
         super(context);
         this.token = token;
         this.sinceId = sinceId;
         this.maxId = maxId;
         this.uid = uid;
         this.screenName = screenName;
-
     }
 
-    public StatusesByIdLoader(Context context, String uid, String screenName, String token, String sinceId, String maxId, String count) {
+    public StatusesByIdLoader(Context context, String uid, String screenName, String token,
+            String sinceId, String maxId, String count) {
         this(context, uid, screenName, token, sinceId, maxId);
         this.count = count;
-
     }
-
 
     public MessageListBean loadData() throws WeiboException {
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
@@ -65,10 +64,8 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
             lock.unlock();
         }
 
-
         return result;
     }
-
 }
 
 

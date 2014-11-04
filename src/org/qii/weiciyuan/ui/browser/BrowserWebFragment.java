@@ -51,7 +51,6 @@ import java.lang.ref.WeakReference;
 public class BrowserWebFragment extends Fragment {
 
     private WebView mWebView;
-
     private ProgressBar mProgressBar;
 
     private boolean mIsWebViewAvailable;
@@ -59,7 +58,6 @@ public class BrowserWebFragment extends Fragment {
     private String mUrl = null;
 
     private ShareActionProvider mShareActionProvider;
-
     private MenuItem refreshItem;
 
     public BrowserWebFragment() {
@@ -76,7 +74,6 @@ public class BrowserWebFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString("mUrl", mUrl);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +96,6 @@ public class BrowserWebFragment extends Fragment {
         if (savedInstanceState != null) {
             mUrl = savedInstanceState.getString("mUrl");
         }
-
     }
 
     @Override
@@ -113,7 +109,6 @@ public class BrowserWebFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         mWebView.setOnKeyListener(new View.OnKeyListener() {
 
-
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
@@ -122,7 +117,6 @@ public class BrowserWebFragment extends Fragment {
                 }
                 return false;
             }
-
         });
         mWebView.setWebViewClient(new InnerWebViewClient());
         mWebView.setWebChromeClient(new InnerWebChromeClient());
@@ -133,7 +127,6 @@ public class BrowserWebFragment extends Fragment {
         settings.setDisplayZoomControls(false);
         return view;
     }
-
 
     public void loadUrl(String url) {
         if (mIsWebViewAvailable) {
@@ -150,20 +143,17 @@ public class BrowserWebFragment extends Fragment {
         mWebView.onPause();
     }
 
-
     @Override
     public void onResume() {
         mWebView.onResume();
         super.onResume();
     }
 
-
     @Override
     public void onDestroyView() {
         mIsWebViewAvailable = false;
         super.onDestroyView();
     }
-
 
     @Override
     public void onDestroy() {
@@ -173,7 +163,6 @@ public class BrowserWebFragment extends Fragment {
         }
         super.onDestroy();
     }
-
 
     public WebView getWebView() {
         return mIsWebViewAvailable ? mWebView : null;
@@ -193,7 +182,6 @@ public class BrowserWebFragment extends Fragment {
             intent.putExtra("domain", result);
             getActivity().startActivity(intent);
             getActivity().finish();
-
         } else if (Utility.isWeiboMid(mUrl)) {
             String mid = Utility.getMidFromUrl(mUrl);
             RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(
@@ -337,7 +325,6 @@ public class BrowserWebFragment extends Fragment {
 //            getActivity().getActionBar().setIcon(new BitmapDrawable(getActivity().getResources(), icon));
         }
 
-
         public void onProgressChanged(WebView view, int progress) {
             if (getActivity() == null) {
                 return;
@@ -355,13 +342,9 @@ public class BrowserWebFragment extends Fragment {
     private static class RedirectLinkToWeiboIdTask extends MyAsyncTask<Void, Void, String> {
 
         private String mid;
-
         private String oriUrl;
-
         private WeakReference<BrowserWebFragment> webFragmentWeakReference;
-
         private CommonProgressDialogFragment commonProgressDialogFragment;
-
         private String progressStr;
 
         public RedirectLinkToWeiboIdTask(BrowserWebFragment webFragment, String oriUrl,
@@ -404,7 +387,6 @@ public class BrowserWebFragment extends Fragment {
         @Override
         protected void onPostExecute(String id) {
             super.onPostExecute(id);
-
             BrowserWebFragment webFragment = webFragmentWeakReference.get();
 
             if (webFragment == null) {
@@ -412,7 +394,6 @@ public class BrowserWebFragment extends Fragment {
             }
 
             Activity activity = webFragment.getActivity();
-
             if (activity == null) {
                 return;
             }
@@ -428,8 +409,6 @@ public class BrowserWebFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
                 webFragment.mWebView.loadUrl(oriUrl);
             }
-
         }
     }
-
 }

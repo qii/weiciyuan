@@ -46,9 +46,7 @@ import java.util.Map;
 public class OAuthActivity extends AbstractAppActivity {
 
     private WebView webView;
-
     private MenuItem refreshItem;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +68,6 @@ public class OAuthActivity extends AbstractAppActivity {
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
-
     }
 
     @Override
@@ -87,7 +84,6 @@ public class OAuthActivity extends AbstractAppActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -103,7 +99,6 @@ public class OAuthActivity extends AbstractAppActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     public void refresh() {
         webView.clearView();
@@ -126,9 +121,7 @@ public class OAuthActivity extends AbstractAppActivity {
         }
     }
 
-
     private String getWeiboOAuthUrl() {
-
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("client_id", URLHelper.APP_KEY);
         parameters.put("response_type", "token");
@@ -146,18 +139,14 @@ public class OAuthActivity extends AbstractAppActivity {
             return true;
         }
 
-
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-
             if (url.startsWith(URLHelper.DIRECT_URL)) {
-
                 handleRedirectUrl(view, url);
                 view.stopLoading();
                 return;
             }
             super.onPageStarted(view, url, favicon);
-
         }
 
         @Override
@@ -178,7 +167,6 @@ public class OAuthActivity extends AbstractAppActivity {
 
     private void handleRedirectUrl(WebView view, String url) {
         Bundle values = Utility.parseUrl(url);
-
         String error = values.getString("error");
         String error_code = values.getString("error_code");
 
@@ -196,7 +184,6 @@ public class OAuthActivity extends AbstractAppActivity {
                     Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
 
     @Override
@@ -214,9 +201,7 @@ public class OAuthActivity extends AbstractAppActivity {
     private static class OAuthTask extends MyAsyncTask<String, UserBean, DBResult> {
 
         private WeiboException e;
-
         private ProgressFragment progressFragment = ProgressFragment.newInstance();
-
         private WeakReference<OAuthActivity> oAuthActivityWeakReference;
 
         private OAuthTask(OAuthActivity activity) {
@@ -226,17 +211,14 @@ public class OAuthActivity extends AbstractAppActivity {
         @Override
         protected void onPreExecute() {
             progressFragment.setAsyncTask(this);
-
             OAuthActivity activity = oAuthActivityWeakReference.get();
             if (activity != null) {
                 progressFragment.show(activity.getSupportFragmentManager(), "");
             }
-
         }
 
         @Override
         protected DBResult doInBackground(String... params) {
-
             String token = params[0];
             long expiresInSeconds = Long.valueOf(params[1]);
 
@@ -255,8 +237,6 @@ public class OAuthActivity extends AbstractAppActivity {
                 cancel(true);
                 return null;
             }
-
-
         }
 
         @Override
@@ -297,7 +277,6 @@ public class OAuthActivity extends AbstractAppActivity {
                     break;
             }
             activity.finish();
-
         }
     }
 
@@ -323,22 +302,18 @@ public class OAuthActivity extends AbstractAppActivity {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
             ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getString(R.string.oauthing));
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
-
             return dialog;
         }
 
         @Override
         public void onCancel(DialogInterface dialog) {
-
             if (asyncTask != null) {
                 asyncTask.cancel(true);
             }
-
             super.onCancel(dialog);
         }
 
@@ -346,7 +321,6 @@ public class OAuthActivity extends AbstractAppActivity {
             asyncTask = task;
         }
     }
-
 
     public static class SinaWeiboErrorDialog extends DialogFragment {
 

@@ -20,7 +20,6 @@ public class SelectPictureDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         String[] items = {getString(R.string.get_the_last_picture), getString(R.string.take_camera),
                 getString(R.string.select_pic)};
 

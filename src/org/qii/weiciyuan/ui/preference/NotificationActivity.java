@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii
@@ -13,7 +14,6 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 public class NotificationActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -27,7 +27,6 @@ public class NotificationActivity extends AbstractAppActivity {
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -40,5 +39,4 @@ public class NotificationActivity extends AbstractAppActivity {
         }
         return false;
     }
-
 }

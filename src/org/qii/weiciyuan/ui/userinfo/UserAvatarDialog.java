@@ -30,10 +30,8 @@ public class UserAvatarDialog extends DialogFragment {
         return dialog;
     }
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         String path = getArguments().getString("path");
         final Rect ori = getArguments().getParcelable("rect");
 
@@ -63,7 +61,6 @@ public class UserAvatarDialog extends DialogFragment {
                 }
                 return super.onKeyDown(keyCode, event);
             }
-
         };
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -74,7 +71,6 @@ public class UserAvatarDialog extends DialogFragment {
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-
                         content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                         if (ori == null) {
@@ -107,7 +103,6 @@ public class UserAvatarDialog extends DialogFragment {
 
                                     }
                                 });
-
                     }
                 });
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -117,7 +112,6 @@ public class UserAvatarDialog extends DialogFragment {
     }
 
     private void animateClose(ImageView avatar, Rect ori) {
-
         if (ori == null) {
             return;
         }

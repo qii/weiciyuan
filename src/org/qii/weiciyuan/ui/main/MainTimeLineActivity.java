@@ -57,25 +57,19 @@ import android.widget.TextView;
 public class MainTimeLineActivity extends MainTimeLineParentActivity {
 
     public static final int REQUEST_CODE_UPDATE_FRIENDS_TIMELINE_COMMENT_REPOST_COUNT = 0;
-
     public static final int REQUEST_CODE_UPDATE_MENTIONS_WEIBO_TIMELINE_COMMENT_REPOST_COUNT = 1;
-
     public static final int REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT = 2;
 
     private AccountBean accountBean;
 
     private NewMsgInterruptBroadcastReceiver newMsgInterruptBroadcastReceiver;
-
     private MusicReceiver musicReceiver;
 
     private ScrollableListFragment currentFragment;
-
     private TextView titleText;
-
     private View clickToTop;
 
     public static interface ScrollableListFragment {
-
         public void scrollToTop();
     }
 
@@ -107,7 +101,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
     public String getToken() {
         return accountBean.getAccess_token();
     }
-
 
     public void setTitle(String title) {
         if (TextUtils.isEmpty(title)) {
@@ -149,9 +142,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
         buildInterface(savedInstanceState);
-
-     }
-
+    }
 
     private void buildInterface(Bundle savedInstanceState) {
         getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
@@ -195,12 +186,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         if (!mentions.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
             fragmentTransaction.hide(mentions);
-
         }
         if (!comments.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, comments, CommentsTimeLine.class.getName());
             fragmentTransaction.hide(comments);
-
         }
 
         if (!fav.isAdded()) {
@@ -222,13 +211,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
                 fragmentTransaction
                         .add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
                 fragmentTransaction.hide(search);
-
             }
 
             if (!dm.isAdded()) {
                 fragmentTransaction.add(R.id.menu_right_fl, dm, DMUserListFragment.class.getName());
                 fragmentTransaction.hide(dm);
-
             }
         }
 
@@ -318,7 +305,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
     }
 
-
     private void scrollCurrentListViewToTop() {
         if (this.currentFragment != null) {
             this.currentFragment.scrollToTop();
@@ -368,9 +354,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
             startActivity(intent);
             overridePendingTransition(0, 0);
         }
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -389,17 +373,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     public UserBean getUser() {
         return accountBean.getInfo();
-
     }
-
 
     public AccountBean getAccount() {
         return accountBean;
     }
-
 
     private void readClipboard() {
         ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(
@@ -515,7 +495,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
                 .updateNavigationPosition(GlobalContext.getInstance().getAccountBean(), result);
     }
 
-
     public LeftMenuFragment getMenuFragment() {
         LeftMenuFragment fragment = ((LeftMenuFragment) getSupportFragmentManager()
                 .findFragmentByTag(
@@ -525,7 +504,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         }
         return fragment;
     }
-
 
     public FriendsTimeLineFragment getFriendsTimeLineFragment() {
         FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager()
@@ -625,7 +603,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
 //            }
         }
     }
-
 
     public void setMentionsWeiboCount(int count) {
         LeftMenuFragment fragment = getMenuFragment();

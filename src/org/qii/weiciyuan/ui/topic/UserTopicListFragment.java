@@ -1,5 +1,14 @@
 package org.qii.weiciyuan.ui.topic;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.topic.TopicDao;
+import org.qii.weiciyuan.dao.topic.UserTopicListDao;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.topic.TopicDao;
-import org.qii.weiciyuan.dao.topic.UserTopicListDao;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +30,12 @@ import java.util.List;
 public class UserTopicListFragment extends ListFragment {
 
     private ArrayAdapter<String> adapter;
-
     private ArrayList<String> result = new ArrayList<String>();
 
     private UserBean userBean;
 
     private TopicListTask task;
-
     private FollowTopicTask followTopicTask;
-
 
     public UserTopicListFragment() {
 
@@ -47,19 +45,16 @@ public class UserTopicListFragment extends ListFragment {
         this.userBean = userBean;
     }
 
-
     public UserTopicListFragment(UserBean userBean, ArrayList<String> topicList) {
         this.userBean = userBean;
         this.result = topicList;
     }
-
 
     @Override
     public void onDetach() {
         super.onDetach();
         Utility.cancelTasks(task, followTopicTask);
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -82,7 +77,8 @@ public class UserTopicListFragment extends ListFragment {
             userBean = (UserBean) savedInstanceState.getParcelable("userBean");
             result = (ArrayList<String>) savedInstanceState.getStringArrayList("topicList");
         }
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, result);
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
+                result);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -112,30 +108,30 @@ public class UserTopicListFragment extends ListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId()))
+        if (userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
             inflater.inflate(R.menu.actionbar_menu_usertopiclistfragment, menu);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_topic:
-                FollowTopicDialog dialog = new FollowTopicDialog();
+                FollowTopicDialog dialog = FollowTopicDialog.newInstance();
                 dialog.setTargetFragment(this, 1);
                 dialog.show(getFragmentManager(), "");
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     class TopicListTask extends MyAsyncTask<Void, List<String>, List<String>> {
         WeiboException e;
 
         @Override
         protected List<String> doInBackground(Void... params) {
-            UserTopicListDao dao = new UserTopicListDao(GlobalContext.getInstance().getSpecialToken(), userBean.getId());
+            UserTopicListDao dao = new UserTopicListDao(
+                    GlobalContext.getInstance().getSpecialToken(), userBean.getId());
             try {
                 return dao.getGSONMsgList();
             } catch (WeiboException e) {
@@ -148,8 +144,9 @@ public class UserTopicListFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<String> atUserBeans) {
             super.onPostExecute(atUserBeans);
-            if (isCancelled())
+            if (isCancelled()) {
                 return;
+            }
             if (atUserBeans == null || atUserBeans.size() == 0) {
                 return;
             }
@@ -197,14 +194,17 @@ public class UserTopicListFragment extends ListFragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
             if (aBoolean) {
-                Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully),
+                        Toast.LENGTH_SHORT).show();
                 refresh();
-            } else
-                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
-
 }
