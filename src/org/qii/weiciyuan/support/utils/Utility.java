@@ -598,7 +598,9 @@ public class Utility {
         View view = listView.getChildAt(0);
         int top = (view != null ? view.getTop() : 0);
         /**
-         * warning: listView.getFirstVisiblePosition() return position include headerview count (HeaderAdapter)
+         * warning: listView.getFirstVisiblePosition() return position include headerview count (HeaderAdapter) and use java
+         * reflection to set mFirstPosition when call setSelectionFromTop/setSelectionAfterHeaderView/setSelection
+         * see HeaderListView.java
          *
          */
         int firstVisiblePosition = listView.getFirstVisiblePosition();
