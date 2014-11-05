@@ -383,6 +383,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         return accountBean;
     }
 
+    //read clipboard to know whether there are any string link can be opened
     private void readClipboard() {
         ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(
                 Context.CLIPBOARD_SERVICE);
