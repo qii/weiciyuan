@@ -587,7 +587,6 @@ public class Utility {
 //        }
     }
 
-    //to do getChildAt(0)
     public static TimeLinePosition getCurrentPositionFromListView(ListView listView) {
         if (listView.getChildCount() == 0) {
             AppLogger
@@ -605,6 +604,11 @@ public class Utility {
          */
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         if (firstVisiblePosition < listView.getHeaderViewsCount()) {
+            /**
+             * for example, if header view count is 2, firstVisiblePosition is 1, then listView getItemIdAtPosition(1)
+             * will return the second header view id -1, so we have to set firstVisiblePosition to 2 to get your
+             * actual adapter's first item id
+             */
             AppLogger.i("ListView first visible position is " + firstVisiblePosition
                     + " it  below header view count " + listView.getHeaderViewsCount()
                     + " so set header view count to it");
@@ -785,7 +789,7 @@ public class Utility {
 
     }
 
-    //the position within the adapter's data set
+    //the position within the adapter's data set, will plus header view count
     public static void setListViewAdapterPosition(final ListView listView,
             final int adapterItemPosition, final int top, final Runnable runnable) {
 
