@@ -90,7 +90,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private MessageListBean bean = new MessageListBean();
     private BaseAdapter navAdapter;
-    
+
     private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -192,7 +192,15 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void savePositionToPositionsCache() {
-        positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
+        TimeLinePosition current = Utility.getCurrentPositionFromListView(getListView());
+        if (!current.isEmpty()) {
+            positionCache.put(currentGroupId, current);
+            AppLogger.i("Current ListView position first visible item id " + current.firstItemId
+                    + " , save to memory cache");
+        } else {
+            AppLogger
+                    .i("Cant get correct current ListView position, so use previous database data");
+        }
     }
 
     private void saveNewMsgCountToPositionsCache() {
@@ -201,14 +209,20 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void setListViewPositionFromPositionsCache() {
-        final TimeLinePosition p = positionCache.get(currentGroupId);
-        Utility.setListViewItemPosition(getListView(), p != null ? p.getPosition(bean) : 0,
-                p != null ? p.top : 0, new Runnable() {
-                    @Override
-                    public void run() {
-                        setListViewUnreadTipBar(p);
-                    }
-                });
+        final TimeLinePosition timeLinePosition = positionCache.get(currentGroupId);
+        AppLogger.i("Memory cached position first visible item id " + (timeLinePosition != null
+                ? timeLinePosition.firstItemId : 0));
+        int position =
+                timeLinePosition != null ? timeLinePosition.getPosition(bean) : 0;
+        int top = timeLinePosition != null ? timeLinePosition.top : 0;
+        AppLogger.i("Set ListView position from memory cached position position " + position
+                + " top " + top);
+        Utility.setListViewAdapterPosition(getListView(), position, top, new Runnable() {
+            @Override
+            public void run() {
+                setListViewUnreadTipBar(timeLinePosition);
+            }
+        });
     }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
@@ -224,11 +238,17 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private void savePositionToDB() {
         savePositionToPositionsCache();
         TimeLinePosition position = positionCache.get(currentGroupId);
-        position.newMsgIds = newMsgTipBar.getValues();
-        final String groupId = currentGroupId;
-        FriendsTimeLineDBTask
-                .asyncUpdatePosition(position, GlobalContext.getInstance().getCurrentAccountId(),
-                        groupId);
+        if (position != null) {
+            position.newMsgIds = newMsgTipBar.getValues();
+            final String groupId = currentGroupId;
+            FriendsTimeLineDBTask
+                    .asyncUpdatePosition(position,
+                            GlobalContext.getInstance().getCurrentAccountId(),
+                            groupId);
+            AppLogger
+                    .i("Save FriendsTimeLineFragment position to database current first visible item id "
+                            + position.firstItemId);
+        }
     }
 
     private void saveGroupIdToDB() {
