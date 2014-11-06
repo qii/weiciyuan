@@ -39,11 +39,9 @@ public class TimeLineBitmapDownloader {
     private Handler handler;
 
     static volatile boolean pauseDownloadWork = false;
-
     static final Object pauseDownloadWorkLock = new Object();
 
     static volatile boolean pauseReadWork = false;
-
     static final Object pauseReadWorkLock = new Object();
 
     private static final Object lock = new Object();
@@ -108,11 +106,9 @@ public class TimeLineBitmapDownloader {
         }
     }
 
-
     public void downloadAvatar(ImageView view, UserBean user) {
         downloadAvatar(view, user, false);
     }
-
 
     public void downloadAvatar(ImageView view, UserBean user, AbstractTimeLineFragment fragment) {
         boolean isFling = fragment.isListViewFling();
@@ -146,14 +142,11 @@ public class TimeLineBitmapDownloader {
         if (SettingUtility.getEnableBigPic()) {
             picUrl = msg.getOriginal_pic();
             displayImageView(view, picUrl, FileLocationMethod.picture_large, isFling, false);
-
         } else {
             picUrl = msg.getThumbnail_pic();
             displayImageView(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
-
         }
     }
-
 
     public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl,
             FileLocationMethod method, AbstractTimeLineFragment fragment) {
@@ -161,16 +154,13 @@ public class TimeLineBitmapDownloader {
         boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
         display(view, picUrl, method, isFling, true);
-
     }
 
     public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl,
             FileLocationMethod method) {
 
         display(view, picUrl, method, false, true);
-
     }
-
 
     public void downContentPic(IWeiciyuanDrawable view, MessageBean msg,
             AbstractTimeLineFragment fragment) {
@@ -181,11 +171,9 @@ public class TimeLineBitmapDownloader {
         if (SettingUtility.getEnableBigPic()) {
             picUrl = msg.getOriginal_pic();
             display(view, picUrl, FileLocationMethod.picture_large, isFling, false);
-
         } else {
             picUrl = msg.getThumbnail_pic();
             display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
-
         }
     }
 
@@ -254,16 +242,10 @@ public class TimeLineBitmapDownloader {
                         newTask.executeOnNormal();
                     }
                     return;
-
-
                 }
             }, 400);
-
-
         }
-
     }
-
 
     private void display(final IWeiciyuanDrawable view, final String urlKey,
             final FileLocationMethod method, boolean isFling, boolean isMultiPictures) {
@@ -314,21 +296,14 @@ public class TimeLineBitmapDownloader {
                         newTask.executeOnNormal();
                     }
                     return;
-
-
                 }
             }, 400);
-
-
         }
-
     }
-
 
     public void totalStopLoadPicture() {
 
     }
-
 
     private static boolean cancelPotentialDownload(String url, ImageView imageView) {
         IPictureWorker bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
@@ -346,7 +321,6 @@ public class TimeLineBitmapDownloader {
         return true;
     }
 
-
     private static IPictureWorker getBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
@@ -363,7 +337,6 @@ public class TimeLineBitmapDownloader {
         ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
         imageViewArrayList.add(imageView);
         display(imageViewArrayList, width, height, url, method, null);
-
     }
 
     public void display(final ArrayList<ImageView> imageView, final int width, final int height,
@@ -430,12 +403,10 @@ public class TimeLineBitmapDownloader {
                             imageView1.startAnimation(animation);
                         }
                     }
-
                 }
             }
         }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
-
 
     public static class DownloadCallback {
 
@@ -458,8 +429,6 @@ public class TimeLineBitmapDownloader {
         public void onComplete(String localPath) {
 
         }
-
-
     }
 
     public void download(final Activity activity, final String url, final FileLocationMethod method,
@@ -506,33 +475,32 @@ public class TimeLineBitmapDownloader {
                         .isThisUrlTaskFinished(url))) {
                     boolean downloaded = TaskCache.waitForPictureDownload(
                             url, new FileDownloaderHttpHelper.DownloadListener() {
-                        @Override
-                        public void pushProgress(final int progress, final int max) {
-                            handler.post(new Runnable() {
                                 @Override
-                                public void run() {
-                                    onProgressUpdate(progress, max);
+                                public void pushProgress(final int progress, final int max) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            onProgressUpdate(progress, max);
+                                        }
+                                    });
                                 }
-                            });
-                        }
 
-                        @Override
-                        public void completed() {
+                                @Override
+                                public void completed() {
 
-                        }
+                                }
 
-                        @Override
-                        public void cancel() {
+                                @Override
+                                public void cancel() {
 
-                        }
-                    }, FileManager.getFilePathFromUrl(url, method), method);
+                                }
+                            }, FileManager.getFilePathFromUrl(url, method), method);
                     if (downloaded) {
                         path = FileManager.getFilePathFromUrl(url, method);
                     }
                 }
 
                 return path;
-
             }
 
             @Override
@@ -551,7 +519,6 @@ public class TimeLineBitmapDownloader {
                 if (!isComponentLifeCycleFinished()) {
                     callback.onComplete(value);
                 }
-
             }
 
             boolean isComponentLifeCycleFinished() {
@@ -574,7 +541,6 @@ public class TimeLineBitmapDownloader {
 
                 return false;
             }
-
         }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

@@ -62,7 +62,6 @@ public class AccountBean implements Parcelable {
         this.black_magic = black_magic;
     }
 
-
     public int getNavigationPosition() {
         return navigationPosition;
     }
@@ -112,14 +111,12 @@ public class AccountBean implements Parcelable {
                 }
             };
 
-
     @Override
     public boolean equals(Object o) {
 
         return o instanceof AccountBean
                 && !TextUtils.isEmpty(((AccountBean) o).getUid())
                 && ((AccountBean) o).getUid().equalsIgnoreCase(getUid());
-
     }
 
     @Override

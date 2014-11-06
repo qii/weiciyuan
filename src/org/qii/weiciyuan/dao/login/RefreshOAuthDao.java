@@ -28,7 +28,6 @@ public class RefreshOAuthDao {
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
 
-
         if ((jsonData != null) && (jsonData.contains("{"))) {
             try {
                 JSONObject localJSONObject = new JSONObject(jsonData);
@@ -36,10 +35,8 @@ public class RefreshOAuthDao {
             } catch (JSONException localJSONException) {
 
             }
-
         }
         return "";
-
     }
 
     public RefreshOAuthDao(String code) {
@@ -51,5 +48,4 @@ public class RefreshOAuthDao {
     private String client_id = URLHelper.APP_KEY;
     private String client_secret = URLHelper.APP_SECRET;
     private String grant_type = "authorization_code";
-
 }

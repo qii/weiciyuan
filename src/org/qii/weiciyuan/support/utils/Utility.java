@@ -104,7 +104,6 @@ import java.util.concurrent.TimeUnit;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-
 public class Utility {
 
     private Utility() {
@@ -137,8 +136,6 @@ public class Utility {
 
                 }
             }
-
-
         }
 
         return sb.toString();
@@ -155,7 +152,6 @@ public class Utility {
                             URLDecoder.decode(v[1], "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-
                 }
             }
         }
@@ -205,7 +201,6 @@ public class Utility {
         listView.removeCallbacks(runnable);
         listView.setSelection(Math.min(listView.getFirstVisiblePosition(), 5));
         listView.smoothScrollToPosition(0);
-
     }
 
     public static int dip2px(int dipValue) {
@@ -289,7 +284,6 @@ public class Utility {
         return manager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
     }
 
-
     public static void configVibrateLedRingTone(Notification.Builder builder) {
         configRingTone(builder);
         configLed(builder);
@@ -319,7 +313,6 @@ public class Utility {
         if (SettingUtility.allowLed()) {
             builder.setLights(Color.WHITE, 2000, 2000);
         }
-
     }
 
     public static String getPicPathFromUri(Uri uri, Activity activity) {
@@ -370,7 +363,6 @@ public class Utility {
         return activities.size() > 0;
     }
 
-
     @Deprecated
     public static boolean isGooglePlaySafe(Activity activity) {
         Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms");
@@ -402,7 +394,6 @@ public class Utility {
             num = "(99+)";
         }
         return num;
-
     }
 
     public static boolean isJB() {
@@ -550,7 +541,6 @@ public class Utility {
         if (Utility.isIntentSafe(activity, shareIntent) && mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareIntent);
         }
-
     }
 
     public static void buildTabCount(ActionBar.Tab tab, String tabStrRes, int count) {
@@ -663,7 +653,6 @@ public class Utility {
         String domain = null;
         if (url.startsWith(ENTERPRISE_DOMAIN_PREFIX)) {
             domain = url.substring(ENTERPRISE_DOMAIN_PREFIX.length());
-
         } else if (url.startsWith(NORMAL_DOMAIN_PREFIX)) {
             domain = url.substring(NORMAL_DOMAIN_PREFIX.length());
         }
@@ -729,11 +718,8 @@ public class Utility {
             String[] result = url.split("/");
 
             return result != null && result.length == 2;
-
-
         }
     }
-
 
     public static String getMidFromUrl(String url) {
         url = convertWeiboCnToWeiboCom(url);
@@ -786,7 +772,6 @@ public class Utility {
         if (runnable != null) {
             runnable.run();
         }
-
     }
 
     //the position within the adapter's data set, will plus header view count
@@ -794,13 +779,12 @@ public class Utility {
             final int adapterItemPosition, final int top, final Runnable runnable) {
 
         listView.setSelectionFromTop(adapterItemPosition + listView.getHeaderViewsCount(), top);
-        AppLogger.i("ListView scrollTo "+(adapterItemPosition+listView.getHeaderViewsCount())+" offset "+top);
+        AppLogger.i("ListView scrollTo " + (adapterItemPosition + listView.getHeaderViewsCount())
+                + " offset " + top);
         if (runnable != null) {
             runnable.run();
         }
-
     }
-
 
     public static View getListViewFirstAdapterItemView(ListView listView) {
         if (listView instanceof HeaderListView) {
@@ -972,7 +956,6 @@ public class Utility {
         }
     }
 
-
     public static int getMaxLeftWidthOrHeightImageViewCanRead(int heightOrWidth) {
         //1pixel==4bytes http://stackoverflow.com/questions/13536042/android-bitmap-allocating-16-bytes-per-pixel
         //http://stackoverflow.com/questions/15313807/android-maximum-allowed-width-height-of-bitmap
@@ -1033,7 +1016,6 @@ public class Utility {
             }
 
             child.setBackground(null);
-
         }
 
         viewGroup.setBackground(null);
@@ -1079,7 +1061,6 @@ public class Utility {
         return result.toString();
     }
 
-
     //if app's certificate md5 is correct, enable Crashlytics crash log platform, you should not modify those md5 values
     public static boolean isCertificateFingerprintCorrect(Context context) {
         try {
@@ -1120,7 +1101,6 @@ public class Utility {
 
         return false;
     }
-
 
     public static void unregisterReceiverIgnoredReceiverNotRegisteredException(Context context,
             RecordOperationAppBroadcastReceiver broadcastReceiver) {
@@ -1163,7 +1143,6 @@ public class Utility {
         MediaScannerConnection
                 .scanFile(GlobalContext.getInstance(), new String[]{path}, new String[]{type},
                         null);
-
     }
 
     public static boolean isDebugMode() {

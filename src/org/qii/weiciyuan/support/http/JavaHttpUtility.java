@@ -50,15 +50,10 @@ import javax.net.ssl.X509TrustManager;
 public class JavaHttpUtility {
 
     private static final int CONNECT_TIMEOUT = 10 * 1000;
-
     private static final int READ_TIMEOUT = 10 * 1000;
-
     private static final int DOWNLOAD_CONNECT_TIMEOUT = 15 * 1000;
-
     private static final int DOWNLOAD_READ_TIMEOUT = 60 * 1000;
-
     private static final int UPLOAD_CONNECT_TIMEOUT = 15 * 1000;
-
     private static final int UPLOAD_READ_TIMEOUT = 5 * 60 * 1000;
 
     public class NullHostNameVerifier implements HostnameVerifier {
@@ -97,9 +92,7 @@ public class JavaHttpUtility {
             }
         } catch (Exception e) {
         }
-
     }
-
 
     public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param)
             throws WeiboException {
@@ -202,7 +195,6 @@ public class JavaHttpUtility {
             }
 
             throw exception;
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -242,7 +234,6 @@ public class JavaHttpUtility {
             Utility.closeSilently(buffer);
             urlConnection.disconnect();
         }
-
     }
 
     private String readError(HttpURLConnection urlConnection) throws WeiboException {
@@ -283,7 +274,6 @@ public class JavaHttpUtility {
             urlConnection.disconnect();
             globalContext = null;
         }
-
     }
 
     public String doGet(String urlStr, Map<String, String> param) throws WeiboException {
@@ -320,8 +310,6 @@ public class JavaHttpUtility {
             e.printStackTrace();
             throw new WeiboException(errorStr, e);
         }
-
-
     }
 
     public boolean doGetSaveFile(String urlStr, String path,
@@ -385,7 +373,6 @@ public class JavaHttpUtility {
                         file.delete();
                         throw new InterruptedIOException();
                     }
-
                 }
 
                 bytesum += byteread;
@@ -399,7 +386,6 @@ public class JavaHttpUtility {
             }
             AppLogger.v("download request= " + urlStr + " download finished");
             result = true;
-
         } catch (IOException e) {
             e.printStackTrace();
             AppLogger.v("download request= " + urlStr + " download failed");
@@ -412,7 +398,6 @@ public class JavaHttpUtility {
         }
 
         return result && ImageUtility.isThisBitmapCanRead(path);
-
     }
 
     private static String getBoundry() {
@@ -542,7 +527,6 @@ public class JavaHttpUtility {
                 if (listener != null) {
                     listener.transferred(transferred);
                 }
-
             }
 
             out.write(barry);
@@ -562,7 +546,6 @@ public class JavaHttpUtility {
             }
 
             targetFile.delete();
-
         } catch (IOException e) {
             e.printStackTrace();
             throw new WeiboException(errorStr, e);
@@ -576,7 +559,6 @@ public class JavaHttpUtility {
 
         return true;
     }
-
 }
 
 

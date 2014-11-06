@@ -35,7 +35,6 @@ public class ThemeUtility {
         Drawable drawable = ta.getDrawable(0);
         ta.recycle();
         return drawable;
-
     }
 
     public static int getResourceId(int attr) {
@@ -61,12 +60,10 @@ public class ThemeUtility {
                 .getIdentifier("android:id/search_src_text", null, null);
         TextView textView = (TextView) searchView.findViewById(id);
         textView.setTextColor(Color.WHITE);
-
     }
 
     //android:actionModeShareDrawalbe is not a public attr
     public static int getActionBarShareItemIcon() {
         return R.drawable.ic_menu_share_holo_dark;
     }
-
 }

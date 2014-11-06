@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 public class JavaReflectionUtility {
 
     public static <T> T getValue(AbsListView view, String name) {
-
         final Field field;
         try {
             field = AbsListView.class.getDeclaredField(name);
@@ -28,7 +27,6 @@ public class JavaReflectionUtility {
     }
 
     public static void setValue(AdapterView view, String name, int value) {
-
         final Field field;
         try {
             field = AdapterView.class.getDeclaredField(name);

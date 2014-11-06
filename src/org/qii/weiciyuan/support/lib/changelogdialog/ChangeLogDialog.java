@@ -1,5 +1,9 @@
 package org.qii.weiciyuan.support.lib.changelogdialog;
 
+import org.qii.weiciyuan.R;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,9 +15,6 @@ import android.content.res.XmlResourceParser;
 import android.util.Log;
 import android.webkit.WebView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
@@ -36,7 +37,8 @@ public class ChangeLogDialog {
     //Get the current app version
     private String GetAppVersion() {
         try {
-            PackageInfo _info = fActivity.getPackageManager().getPackageInfo(fActivity.getPackageName(), 0);
+            PackageInfo _info = fActivity.getPackageManager()
+                    .getPackageInfo(fActivity.getPackageName(), 0);
             return _info.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -45,7 +47,8 @@ public class ChangeLogDialog {
     }
 
     //Parse a the release tag and return html code
-    private String ParseReleaseTag(XmlResourceParser aXml) throws XmlPullParserException, IOException {
+    private String ParseReleaseTag(XmlResourceParser aXml)
+            throws XmlPullParserException, IOException {
         String _Result = "<h1>Release: " + aXml.getAttributeValue(null, "version") + "</h1><ul>";
         int eventType = aXml.getEventType();
         while ((eventType != XmlPullParser.END_TAG) || (aXml.getName().equals("change"))) {
@@ -78,7 +81,6 @@ public class ChangeLogDialog {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if ((eventType == XmlPullParser.START_TAG) && (_xml.getName().equals("release"))) {
                     _Result = _Result + ParseReleaseTag(_xml);
-
                 }
                 eventType = _xml.next();
             }
@@ -86,7 +88,6 @@ public class ChangeLogDialog {
             Log.e(TAG, e.getMessage(), e);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage(), e);
-
         } finally {
             _xml.close();
         }
@@ -141,5 +142,4 @@ public class ChangeLogDialog {
                 });
         builder.create().show();
     }
-
 }

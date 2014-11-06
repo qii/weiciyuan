@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.support.lib;
 
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.Utility;
 
 import android.animation.Animator;
@@ -16,9 +15,7 @@ import java.util.Objects;
 public class LayerEnablingAnimatorListener extends AnimatorListenerAdapter {
 
     private final View mTargetView;
-
     private int mLayerType;
-
     private Animator.AnimatorListener mAdapter;
 
     public LayerEnablingAnimatorListener(View targetView, Animator.AnimatorListener adapter) {

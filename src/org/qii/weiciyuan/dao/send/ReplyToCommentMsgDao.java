@@ -2,12 +2,13 @@ package org.qii.weiciyuan.dao.send;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,7 @@ public class ReplyToCommentMsgDao {
         map.put("comment_ori", comment_ori);
         map.put("without_mention", without_mention);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-
 
         Gson gson = new Gson();
 
@@ -42,9 +41,7 @@ public class ReplyToCommentMsgDao {
             AppLogger.e(e.getMessage());
         }
 
-
         return value;
-
     }
 
     public ReplyToCommentMsgDao(String token, CommentBean bean, String replyContent) {

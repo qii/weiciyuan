@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public class SendDMDao {
 
-
     public boolean send() throws WeiboException {
         String apiUrl = URLHelper.DM_SENT;
 
@@ -26,7 +25,6 @@ public class SendDMDao {
         HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, apiUrl, map);
 
         return true;
-
     }
 
     public SendDMDao(String token, String uid, String text) {

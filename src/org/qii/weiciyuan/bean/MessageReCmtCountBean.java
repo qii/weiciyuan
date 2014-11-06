@@ -12,9 +12,7 @@ import android.os.Parcelable;
 public class MessageReCmtCountBean implements Parcelable {
 
     private String id;
-
     private int comments = 0;
-
     private int reposts = 0;
 
     @Override

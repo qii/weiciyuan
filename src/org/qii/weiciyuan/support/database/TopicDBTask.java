@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.support.database;
 
+import org.qii.weiciyuan.support.database.table.TopicTable;
+
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import org.qii.weiciyuan.support.database.table.TopicTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class TopicDBTask {
     }
 
     public static void clear(String accountId) {
-        String sql = "delete from " + TopicTable.TABLE_NAME + " where " + TopicTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + TopicTable.TABLE_NAME + " where " + TopicTable.ACCOUNTID
+                + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
@@ -39,7 +41,8 @@ public class TopicDBTask {
     public static ArrayList<String> get(String accountId) {
         ArrayList<String> result = new ArrayList<String>();
 
-        String sql = "select * from " + TopicTable.TABLE_NAME + " where " + TopicTable.ACCOUNTID + "  = "
+        String sql = "select * from " + TopicTable.TABLE_NAME + " where " + TopicTable.ACCOUNTID
+                + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
@@ -55,7 +58,8 @@ public class TopicDBTask {
             return;
         }
 
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), TopicTable.TABLE_NAME);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
+                TopicTable.TABLE_NAME);
         final int accountidColumn = ih.getColumnIndex(TopicTable.ACCOUNTID);
         final int nameColumn = ih.getColumnIndex(TopicTable.TOPIC_NAME);
         try {
@@ -73,7 +77,6 @@ public class TopicDBTask {
             getWsd().endTransaction();
             ih.close();
         }
-
     }
 
     public static void asyncReplace(final String accountId, final List<String> value) {

@@ -1,15 +1,17 @@
 package org.qii.weiciyuan.support.database;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +29,6 @@ public class AccountDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -37,8 +38,8 @@ public class AccountDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-    public static OAuthActivity.DBResult addOrUpdateAccount(AccountBean account, boolean blackMagic) {
-
+    public static OAuthActivity.DBResult addOrUpdateAccount(AccountBean account,
+            boolean blackMagic) {
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, account.getUid());
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
@@ -61,7 +62,6 @@ public class AccountDBTask {
                     AccountTable.UID, cv);
             return OAuthActivity.DBResult.add_successfuly;
         }
-
     }
 
     public static void asyncUpdateMyProfile(final AccountBean accountBean, final UserBean value) {
@@ -131,7 +131,8 @@ public class AccountDBTask {
 
     public static AccountBean getAccount(String id) {
 
-        String sql = "select * from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " = " + id;
+        String sql = "select * from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID
+                + " = " + id;
         Cursor c = getRsd().rawQuery(sql, null);
         if (c.moveToNext()) {
             AccountBean account = new AccountBean();
@@ -159,7 +160,6 @@ public class AccountDBTask {
             return account;
         }
         return null;
-
     }
 
     public static List<AccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
@@ -168,7 +168,8 @@ public class AccountDBTask {
         asString = asString.replace("[", "(");
         asString = asString.replace("]", ")");
 
-        String sql = "delete from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " in " + asString;
+        String sql = "delete from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID
+                + " in " + asString;
 
         getWsd().execSQL(sql);
 

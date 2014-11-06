@@ -36,7 +36,6 @@ public class DMBean extends ItemBean implements Parcelable {
 
     private transient SpannableString listViewSpannableString;
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -60,10 +59,8 @@ public class DMBean extends ItemBean implements Parcelable {
 
         dest.writeLong(mills);
 
-
         dest.writeParcelable(sender, flags);
         dest.writeParcelable(recipient, flags);
-
     }
 
     public static final Parcelable.Creator<DMBean> CREATOR =
@@ -96,7 +93,6 @@ public class DMBean extends ItemBean implements Parcelable {
                     return new DMBean[size];
                 }
             };
-
 
     public String getId() {
         return idstr;
@@ -246,7 +242,6 @@ public class DMBean extends ItemBean implements Parcelable {
     public void setGeo(String geo) {
         this.geo = geo;
     }
-
 
     @Override
     public String toString() {

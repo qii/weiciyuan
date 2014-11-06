@@ -1,14 +1,16 @@
 package org.qii.weiciyuan.dao.show;
 
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
+
+import android.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,8 @@ import java.util.Map;
 public class ShowUserDao {
 
     public UserBean getUserInfo() throws WeiboException {
-        String url = (!TextUtils.isEmpty(domain) ? URLHelper.USER_DOMAIN_SHOW : URLHelper.USER_SHOW);
+        String url = (!TextUtils.isEmpty(domain) ? URLHelper.USER_DOMAIN_SHOW
+                : URLHelper.USER_SHOW);
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("uid", uid);
@@ -28,7 +31,6 @@ public class ShowUserDao {
         map.put("domain", domain);
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         Gson gson = new Gson();
 
@@ -40,9 +42,7 @@ public class ShowUserDao {
             AppLogger.e(e.getMessage());
         }
 
-
         return value;
-
     }
 
     private String access_token;

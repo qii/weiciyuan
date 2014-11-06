@@ -22,7 +22,6 @@ public class DMDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -89,12 +88,9 @@ public class DMDBTask {
             } catch (JsonSyntaxException ignored) {
 
             }
-
         }
 
         c.close();
         return result;
-
     }
-
 }

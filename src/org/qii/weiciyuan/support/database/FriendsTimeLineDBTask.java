@@ -53,7 +53,6 @@ public class FriendsTimeLineDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-
     private static void addHomeLineMsg(MessageListBean list, String accountId) {
 
         if (list == null || list.getSize() == 0) {
@@ -139,7 +138,6 @@ public class FriendsTimeLineDBTask {
                 replace(list, accountId, groupId);
             }
         }).start();
-
     }
 
     public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId,
@@ -165,7 +163,6 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-
     private static void updatePosition(TimeLinePosition position, String accountId) {
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
                 + "  = "
@@ -188,7 +185,6 @@ public class FriendsTimeLineDBTask {
             getWsd().insert(HomeTable.TABLE_NAME,
                     HomeTable.ID, cv);
         }
-
     }
 
     private static TimeLinePosition getPosition(String accountId) {
@@ -204,12 +200,10 @@ public class FriendsTimeLineDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();
@@ -226,7 +220,6 @@ public class FriendsTimeLineDBTask {
             if (!TextUtils.isEmpty(id)) {
                 return id;
             }
-
         }
         c.close();
         return "0";
@@ -287,7 +280,6 @@ public class FriendsTimeLineDBTask {
                 HomeOtherGroupTimeLineDBTask.updateCount(msgId, commentCount, repostCount);
             }
         }).start();
-
     }
 
     private static void updateCount(String msgId, int commentCount, int repostCount) {
@@ -313,7 +305,6 @@ public class FriendsTimeLineDBTask {
                 } catch (JsonSyntaxException e) {
 
                 }
-
             }
         }
         c.close();
@@ -396,7 +387,6 @@ public class FriendsTimeLineDBTask {
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());
                 }
-
             } else {
                 msgList.add(null);
             }
@@ -422,6 +412,5 @@ public class FriendsTimeLineDBTask {
         result.setStatuses(msgList);
         c.close();
         return result;
-
     }
 }

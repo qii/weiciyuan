@@ -14,7 +14,6 @@ import android.widget.Toast;
 public class PicSaveTask extends MyAsyncTask<Void, Boolean, Boolean> {
 
     private String path;
-
     private Activity activity;
 
     public PicSaveTask(Activity activity, String path) {
@@ -26,7 +25,6 @@ public class PicSaveTask extends MyAsyncTask<Void, Boolean, Boolean> {
     protected Boolean doInBackground(Void... params) {
         return FileManager.saveToPicDir(path);
     }
-
 
     @Override
     protected void onPostExecute(Boolean value) {

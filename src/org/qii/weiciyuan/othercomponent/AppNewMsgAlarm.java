@@ -20,7 +20,6 @@ public class AppNewMsgAlarm {
     private static final int REQUEST_CODE = 195;
 
     public static void startAlarm(Context context, boolean silent) {
-
         String value = SettingUtility.getFrequency();
 
         long time = AlarmManager.INTERVAL_DAY;
@@ -50,7 +49,7 @@ public class AppNewMsgAlarm {
     public static void stopAlarm(Context context, boolean clearNotification) {
         AlarmManager alarm = (AlarmManager) context.getSystemService(
                 Context.ALARM_SERVICE);
-        Intent intent =FetchNewMsgService.newIntentFromAlarmManager();
+        Intent intent = FetchNewMsgService.newIntentFromAlarmManager();
         PendingIntent sender = PendingIntent
                 .getService(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarm.cancel(sender);

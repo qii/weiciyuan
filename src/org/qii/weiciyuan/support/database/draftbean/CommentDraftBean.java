@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import org.qii.weiciyuan.bean.MessageBean;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.bean.MessageBean;
 
 /**
  * User: qii
@@ -13,7 +14,6 @@ public class CommentDraftBean implements Parcelable {
     private String accountId;
     private MessageBean messageBean;
     private String id;
-
 
     @Override
     public int describeContents() {
@@ -34,7 +34,8 @@ public class CommentDraftBean implements Parcelable {
                     CommentDraftBean commentDraftBean = new CommentDraftBean();
                     commentDraftBean.content = in.readString();
                     commentDraftBean.accountId = in.readString();
-                    commentDraftBean.messageBean = in.readParcelable(MessageBean.class.getClassLoader());
+                    commentDraftBean.messageBean = in
+                            .readParcelable(MessageBean.class.getClassLoader());
                     commentDraftBean.id = in.readString();
                     return commentDraftBean;
                 }
@@ -67,7 +68,6 @@ public class CommentDraftBean implements Parcelable {
     public void setMessageBean(MessageBean messageBean) {
         this.messageBean = messageBean;
     }
-
 
     public String getId() {
         return id;

@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import android.graphics.drawable.ColorDrawable;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
+
+import android.graphics.drawable.ColorDrawable;
 
 import java.lang.ref.WeakReference;
 

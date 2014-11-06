@@ -35,7 +35,6 @@ public class PerformanceImageView extends ImageView {
         mBlockMeasurement = false;
     }
 
-
     @Override
     public void requestLayout() {
         if (mBlockMeasurement && mMeasuredExactly) {

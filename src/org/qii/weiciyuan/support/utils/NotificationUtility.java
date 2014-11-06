@@ -36,7 +36,6 @@ public class NotificationUtility {
         }
 
         return count;
-
     }
 
     @Deprecated
@@ -61,7 +60,6 @@ public class NotificationUtility {
                 mention += actualFetchedSize;
             } else {
                 mention += Math.max(actualFetchedSize, unreadMentionCmt);
-
             }
         }
 
@@ -95,7 +93,6 @@ public class NotificationUtility {
                                 String.valueOf(cmt));
                 stringBuilder.append(txt);
             }
-
         }
         return stringBuilder.toString();
     }
@@ -126,5 +123,4 @@ public class NotificationUtility {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(id);
     }
-
 }

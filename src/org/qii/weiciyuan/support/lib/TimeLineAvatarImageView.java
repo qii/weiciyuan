@@ -1,5 +1,10 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,10 +16,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -28,7 +29,6 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
     private boolean pressed = false;
 
     private int vType = UserBean.V_TYPE_NONE;
-
 
     public TimeLineAvatarImageView(Context context) {
         this(context, null);
@@ -50,11 +50,14 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
         switch (vType) {
             case UserBean.V_TYPE_PERSONAL:
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_vip);
-                canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(), getHeight() - bitmap.getHeight(), paint);
+                canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(),
+                        getHeight() - bitmap.getHeight(), paint);
                 break;
             case UserBean.V_TYPE_ENTERPRISE:
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_enterprise_vip);
-                canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(), getHeight() - bitmap.getHeight(), paint);
+                bitmap = BitmapFactory
+                        .decodeResource(getResources(), R.drawable.avatar_enterprise_vip);
+                canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(),
+                        getHeight() - bitmap.getHeight(), paint);
                 break;
             default:
                 break;
@@ -65,12 +68,12 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
         }
     }
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (!showPressedState || !isClickable() || !isLongClickable())
+        if (!showPressedState || !isClickable() || !isLongClickable()) {
             return super.onTouchEvent(event);
+        }
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -137,7 +140,6 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
             vType = UserBean.V_TYPE_PERSONAL;
             invalidate();
         }
-
     }
 
     private void verifiedEnterprise() {
@@ -145,7 +147,6 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
             vType = UserBean.V_TYPE_ENTERPRISE;
             invalidate();
         }
-
     }
 
     private void reset() {
@@ -153,14 +154,13 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
             vType = UserBean.V_TYPE_NONE;
             invalidate();
         }
-
     }
-
 
     @Override
     public void setPressesStateVisibility(boolean value) {
-        if (showPressedState == value)
+        if (showPressedState == value) {
             return;
+        }
         showPressedState = value;
         invalidate();
     }

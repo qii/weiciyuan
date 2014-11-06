@@ -2,12 +2,13 @@ package org.qii.weiciyuan.dao.destroy;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,6 @@ public class DestroyCommentDao {
         map.put("access_token", access_token);
         map.put("cid", cid);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
         Gson gson = new Gson();
 
@@ -43,7 +43,5 @@ public class DestroyCommentDao {
         }
 
         return true;
-
-
     }
 }

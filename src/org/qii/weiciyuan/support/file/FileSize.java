@@ -11,13 +11,9 @@ import java.math.BigDecimal;
 public class FileSize {
 
     public static final long SIZE_BT = 1024L;
-
     public static final long SIZE_KB = SIZE_BT * 1024L;
-
     public static final long SIZE_MB = SIZE_KB * 1024L;
-
     public static final long SIZE_GB = SIZE_MB * 1024L;
-
     public static final long SIZE_TB = SIZE_GB * 1024L;
 
     public static final int SACLE = 2;
@@ -35,7 +31,6 @@ public class FileSize {
     }
 
     private void getFileSize(File file) {
-
         if (file == null || !file.exists()) {
             return;
         }
@@ -53,7 +48,6 @@ public class FileSize {
         for (File child : childArray) {
             getFileSize(child);
         }
-
     }
 
     public String toString() throws RuntimeException {
@@ -65,7 +59,6 @@ public class FileSize {
             }
 
             return convertSizeToString(this.longSize);
-
         } catch (IOException ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex.getMessage());
@@ -93,7 +86,6 @@ public class FileSize {
         }
     }
 
-
     public long getLongSize() throws RuntimeException {
         try {
 
@@ -104,6 +96,4 @@ public class FileSize {
             throw new RuntimeException(ex.getMessage());
         }
     }
-
-
 }

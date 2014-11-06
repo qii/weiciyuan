@@ -1,7 +1,8 @@
 package org.qii.weiciyuan.bean.android;
 
-import android.os.Bundle;
 import org.qii.weiciyuan.support.error.WeiboException;
+
+import android.os.Bundle;
 
 /**
  * User: qii

@@ -1,16 +1,5 @@
 package org.qii.weiciyuan.othercomponent.sendweiboservice;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.IBinder;
-import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -25,6 +14,18 @@ import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.IBinder;
+import android.text.TextUtils;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,6 @@ import java.util.Set;
  * Date: 12-8-21
  */
 public class SendWeiboService extends Service {
-
 
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
@@ -50,7 +50,6 @@ public class SendWeiboService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
 
         String token = intent.getStringExtra("token");
@@ -61,13 +60,13 @@ public class SendWeiboService extends Service {
 
         StatusDraftBean statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("draft");
 
-        WeiboSendTask task = new WeiboSendTask(lastNotificationId, token, account, picPath, content, geoBean, statusDraftBean);
+        WeiboSendTask task = new WeiboSendTask(lastNotificationId, token, account, picPath, content,
+                geoBean, statusDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         tasksResult.put(task, false);
 
         return START_REDELIVER_INTENT;
-
     }
 
     public void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
@@ -106,14 +105,13 @@ public class SendWeiboService extends Service {
 
         StatusDraftBean statusDraftBean;
 
-
         public WeiboSendTask(int lastNotificationId,
-                             String token,
-                             AccountBean account,
-                             String picPath,
-                             String content,
-                             GeoBean geoBean,
-                             StatusDraftBean statusDraftBean) {
+                String token,
+                AccountBean account,
+                String picPath,
+                String content,
+                GeoBean geoBean,
+                StatusDraftBean statusDraftBean) {
             this.lastNotificationId = lastNotificationId;
             this.token = token;
             this.account = account;
@@ -140,7 +138,8 @@ public class SendWeiboService extends Service {
                 builder.setProgress(0, 100, true);
             }
 
-            int notificationId = (lastNotificationId != -1) ? lastNotificationId : new Random().nextInt(Integer.MAX_VALUE);
+            int notificationId = (lastNotificationId != -1) ? lastNotificationId
+                    : new Random().nextInt(Integer.MAX_VALUE);
 
             if (Utility.isJB()) {
                 receiver = new BroadcastReceiver() {
@@ -150,14 +149,20 @@ public class SendWeiboService extends Service {
                     }
                 };
 
-                IntentFilter intentFilter = new IntentFilter("org.qii.weiciyuan.SendWeiboService.stop." + String.valueOf(notificationId));
+                IntentFilter intentFilter = new IntentFilter(
+                        "org.qii.weiciyuan.SendWeiboService.stop." + String.valueOf(
+                                notificationId));
 
                 registerReceiver(receiver, intentFilter);
 
-                Intent broadcastIntent = new Intent("org.qii.weiciyuan.SendWeiboService.stop." + String.valueOf(notificationId));
+                Intent broadcastIntent = new Intent(
+                        "org.qii.weiciyuan.SendWeiboService.stop." + String.valueOf(
+                                notificationId));
 
-                pendingIntent = PendingIntent.getBroadcast(SendWeiboService.this, 1, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
+                pendingIntent = PendingIntent.getBroadcast(SendWeiboService.this, 1,
+                        broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.send_failed, getString(R.string.cancel),
+                        pendingIntent);
                 notification = builder.build();
             } else {
                 notification = builder.getNotification();
@@ -165,28 +170,28 @@ public class SendWeiboService extends Service {
 
             NotificationUtility.show(notification, notificationId);
             tasksNotifications.put(WeiboSendTask.this, notificationId);
-
         }
 
         private boolean sendPic(String uploadPicPath) throws WeiboException {
-            return new StatusNewMsgDao(token).setPic(uploadPicPath).setGeoBean(geoBean).sendNewMsg(content, new FileUploaderHttpHelper.ProgressListener() {
+            return new StatusNewMsgDao(token).setPic(uploadPicPath).setGeoBean(geoBean).sendNewMsg(
+                    content, new FileUploaderHttpHelper.ProgressListener() {
 
-                @Override
-                public void transferred(long data) {
+                        @Override
+                        public void transferred(long data) {
 
-                    publishProgress(data);
-                }
+                            publishProgress(data);
+                        }
 
-                @Override
-                public void waitServerResponse() {
-                    publishProgress(-1L);
-                }
+                        @Override
+                        public void waitServerResponse() {
+                            publishProgress(-1L);
+                        }
 
-                @Override
-                public void completed() {
-                    publishProgress(size);
-                }
-            });
+                        @Override
+                        public void completed() {
+                            publishProgress(size);
+                        }
+                    });
         }
 
         private boolean sendText() throws WeiboException {
@@ -208,13 +213,12 @@ public class SendWeiboService extends Service {
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
-
             }
-            if (!result)
+            if (!result) {
                 cancel(true);
+            }
             return null;
         }
-
 
         private double lastStatus = -1d;
         private long lastMillis = -1L;
@@ -251,7 +255,8 @@ public class SendWeiboService extends Service {
                             .setSmallIcon(R.drawable.upload_white);
 
                     if (Utility.isJB()) {
-                        builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
+                        builder.addAction(R.drawable.send_failed, getString(R.string.cancel),
+                                pendingIntent);
                         notification = builder.build();
                     } else {
                         notification = builder.getNotification();
@@ -271,15 +276,15 @@ public class SendWeiboService extends Service {
                 }
 
                 NotificationUtility.show(notification, tasksNotifications.get(WeiboSendTask.this));
-
             }
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (statusDraftBean != null)
+            if (statusDraftBean != null) {
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
+            }
             showSuccessfulNotification(WeiboSendTask.this);
 
             if (receiver != null) {
@@ -310,9 +315,11 @@ public class SendWeiboService extends Service {
 
             Intent notifyIntent = WriteWeiboActivity.startBecauseSendFailed(SendWeiboService.this,
                     account, content, picPath, geoBean, statusDraftBean,
-                    String.format(SendWeiboService.this.getString(R.string.failed_reason), e.getError()));
+                    String.format(SendWeiboService.this.getString(R.string.failed_reason),
+                            e.getError()));
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(SendWeiboService.this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(SendWeiboService.this, 0,
+                    notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentIntent(pendingIntent);
 
@@ -327,14 +334,18 @@ public class SendWeiboService extends Service {
                 } else {
                     Bitmap bitmap = ImageUtility.getNotificationSendFailedPic(picPath);
                     if (bitmap != null) {
-                        Notification.BigPictureStyle bigPictureStyle = new Notification.BigPictureStyle(builder);
-                        bigPictureStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                        Notification.BigPictureStyle bigPictureStyle
+                                = new Notification.BigPictureStyle(builder);
+                        bigPictureStyle.setBigContentTitle(
+                                getString(R.string.send_faile_click_to_open));
                         bigPictureStyle.bigPicture(bitmap);
                         bigPictureStyle.setSummaryText(account.getUsernick());
                         builder.setStyle(bigPictureStyle);
                     } else {
-                        Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
-                        bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                        Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(
+                                builder);
+                        bigTextStyle.setBigContentTitle(
+                                getString(R.string.send_faile_click_to_open));
                         bigTextStyle.bigText(content);
                         bigTextStyle.setSummaryText(account.getUsernick());
                         builder.setStyle(bigTextStyle);
@@ -350,13 +361,14 @@ public class SendWeiboService extends Service {
 
                 intent.putExtra("lastNotificationId", tasksNotifications.get(task));
 
-                PendingIntent retrySendIntent = PendingIntent.getService(SendWeiboService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.addAction(R.drawable.send_light, getString(R.string.retry_send), retrySendIntent);
+                PendingIntent retrySendIntent = PendingIntent.getService(SendWeiboService.this, 0,
+                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.send_light, getString(R.string.retry_send),
+                        retrySendIntent);
                 notification = builder.build();
             } else {
                 notification = builder.getNotification();
             }
-
 
             final int id = tasksNotifications.get(task);
             NotificationUtility.show(notification, id);
@@ -368,7 +380,6 @@ public class SendWeiboService extends Service {
                 }
             }, 3000);
         }
-
 
         private void showSuccessfulNotification(final WeiboSendTask task) {
             Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
@@ -389,9 +400,5 @@ public class SendWeiboService extends Service {
                 }
             }, 3000);
         }
-
-
     }
-
-
 }

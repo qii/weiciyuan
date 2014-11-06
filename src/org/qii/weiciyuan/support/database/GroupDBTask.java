@@ -1,13 +1,15 @@
 package org.qii.weiciyuan.support.database;
 
+import com.google.gson.Gson;
+
+import org.qii.weiciyuan.bean.GroupListBean;
+import org.qii.weiciyuan.support.database.table.GroupTable;
+import org.qii.weiciyuan.support.database.table.HomeTable;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.google.gson.Gson;
-import org.qii.weiciyuan.bean.GroupListBean;
-import org.qii.weiciyuan.support.database.table.GroupTable;
-import org.qii.weiciyuan.support.database.table.HomeTable;
 
 /**
  * User: qii
@@ -20,7 +22,6 @@ public class GroupDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -31,8 +32,8 @@ public class GroupDBTask {
     }
 
     public static GroupListBean get(String accountId) {
-
-        String sql = "select * from " + GroupTable.TABLE_NAME + " where " + GroupTable.ACCOUNTID + "  = "
+        String sql = "select * from " + GroupTable.TABLE_NAME + " where " + GroupTable.ACCOUNTID
+                + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         if (c.moveToNext()) {
@@ -40,8 +41,9 @@ public class GroupDBTask {
             String json = c.getString(c.getColumnIndex(GroupTable.JSONDATA));
             if (!TextUtils.isEmpty(json)) {
                 GroupListBean bean = new Gson().fromJson(json, GroupListBean.class);
-                if (bean != null)
+                if (bean != null) {
                     return bean;
+                }
             }
         }
         return null;
@@ -60,7 +62,6 @@ public class GroupDBTask {
         cv.put(GroupTable.JSONDATA, new Gson().toJson(bean));
         getWsd().insert(GroupTable.TABLE_NAME,
                 HomeTable.ID, cv);
-
     }
 
     private static void clearGroup(String accountId) {

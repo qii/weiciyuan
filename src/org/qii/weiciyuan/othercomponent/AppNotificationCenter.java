@@ -57,13 +57,10 @@ public class AppNotificationCenter {
 
     private HashMap<AccountBean, MessageListBean> unreadMentions
             = new HashMap<AccountBean, MessageListBean>();
-
     private HashMap<AccountBean, CommentListBean> unreadMentionsComment
             = new HashMap<AccountBean, CommentListBean>();
-
     private HashMap<AccountBean, CommentListBean> unreadComments
             = new HashMap<AccountBean, CommentListBean>();
-
     private HashMap<AccountBean, UnreadBean> unreadBeans = new HashMap<AccountBean, UnreadBean>();
 
     public static synchronized AppNotificationCenter getInstance() {

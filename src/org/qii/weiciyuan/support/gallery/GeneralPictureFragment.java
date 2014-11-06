@@ -32,13 +32,11 @@ public class GeneralPictureFragment extends Fragment {
     private static final int NAVIGATION_BAR_HEIGHT_DP_UNIT = 48;
 
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_WIDTH = 2000;
-
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
 
     private PhotoView photoView;
 
     public static final int ANIMATION_DURATION = 300;
-
 
     public static GeneralPictureFragment newInstance(String path, AnimationRect rect,
             boolean animationIn) {
@@ -93,7 +91,6 @@ public class GeneralPictureFragment extends Fragment {
                     super.onPostExecute(bitmap);
                     photoView.setImageBitmap(bitmap);
                 }
-
             }.executeOnIO();
 
             return view;
@@ -195,7 +192,6 @@ public class GeneralPictureFragment extends Fragment {
 
         getActivity().overridePendingTransition(0, 0);
         animateClose(backgroundAnimator);
-
     }
 
     private void animateClose(ObjectAnimator backgroundAnimator) {
@@ -227,7 +223,6 @@ public class GeneralPictureFragment extends Fragment {
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             startScale = (float) startBounds.height() / finalBounds.height();
-
         } else {
             startScale = (float) startBounds.width() / finalBounds.width();
         }
@@ -255,7 +250,6 @@ public class GeneralPictureFragment extends Fragment {
 
                                     }
                                 });
-
                     }
                 });
 
@@ -277,8 +271,5 @@ public class GeneralPictureFragment extends Fragment {
                 "clipLeft", 0, AnimationRect.getClipLeft(rect, finalBounds)));
 
         animationSet.start();
-
-
     }
-
 }

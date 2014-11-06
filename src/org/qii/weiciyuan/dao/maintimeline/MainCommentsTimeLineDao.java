@@ -25,7 +25,6 @@ import java.util.Map;
  */
 public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
 
-
     public void setSince_id(String since_id) {
         this.since_id = since_id;
     }
@@ -48,17 +47,11 @@ public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
     }
 
     protected String access_token;
-
     private String since_id;
-
     private String max_id;
-
     private String count;
-
     private String page;
-
     private String filter_by_author;
-
     private String filter_by_source;
 
     public MainCommentsTimeLineDao(String access_token) {
@@ -72,7 +65,6 @@ public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
     }
 
     public CommentListBean getGSONMsgListWithoutClearUnread() throws WeiboException {
-
         String url = getUrl();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -108,16 +100,13 @@ public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
                     TimeUtility.dealMills(msg);
                 }
             }
-
         }
 
         return value;
     }
 
     public CommentListBean getGSONMsgList() throws WeiboException {
-
         CommentListBean value = getGSONMsgListWithoutClearUnread();
-
         clearUnread();
         return value;
     }

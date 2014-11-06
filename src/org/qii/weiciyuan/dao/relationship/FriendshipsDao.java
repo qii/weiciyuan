@@ -1,14 +1,16 @@
 package org.qii.weiciyuan.dao.relationship;
 
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
+
+import android.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,6 @@ public class FriendshipsDao {
     public UserBean followIt() throws WeiboException {
         String url = URLHelper.FRIENDSHIPS_CREATE;
         return executeTask(url);
-
     }
 
     public UserBean unFollowIt() throws WeiboException {
@@ -46,8 +47,9 @@ public class FriendshipsDao {
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
         try {
             UserBean value = new Gson().fromJson(jsonData, UserBean.class);
-            if (value != null)
+            if (value != null) {
                 return value;
+            }
         } catch (JsonSyntaxException e) {
 
             AppLogger.e(e.getMessage());

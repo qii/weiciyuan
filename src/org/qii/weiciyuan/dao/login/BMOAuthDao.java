@@ -27,7 +27,6 @@ public class BMOAuthDao {
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
 
-
         if ((jsonData != null) && (jsonData.contains("{"))) {
             try {
                 JSONObject localJSONObject = new JSONObject(jsonData);
@@ -40,10 +39,8 @@ public class BMOAuthDao {
             } catch (JSONException localJSONException) {
 
             }
-
         }
         return null;
-
     }
 
     public BMOAuthDao(String username, String password, String key, String secret) {
@@ -58,5 +55,4 @@ public class BMOAuthDao {
     private String client_id;
     private String client_secret;
     private String grant_type = "password";
-
 }

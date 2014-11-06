@@ -27,7 +27,6 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -55,7 +54,6 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
                 }
             };
 
-
     private List<CommentBean> getComments() {
         return comments;
     }
@@ -63,7 +61,6 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
     public void setComments(List<CommentBean> comments) {
         this.comments = comments;
     }
-
 
     @Override
     public CommentBean getItem(int position) {
@@ -87,10 +84,12 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
             return;
         }
 
-        boolean receivedCountBelowRequestCount = newValue.getSize() < Integer.valueOf(SettingUtility.getMsgCount());
-        boolean receivedCountEqualRequestCount = newValue.getSize() == Integer.valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountBelowRequestCount = newValue.getSize() < Integer
+                .valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountEqualRequestCount = newValue.getSize() == Integer
+                .valueOf(SettingUtility.getMsgCount());
         if (receivedCountEqualRequestCount && this.getSize() > 0) {
-            CommentBean middleUnreadItem=new CommentBean();
+            CommentBean middleUnreadItem = new CommentBean();
             middleUnreadItem.setMiddleUnreadItem(true);
             middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
             newValue.getItemList().add(middleUnreadItem);
@@ -105,7 +104,7 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
         boolean isLastItemNull = false;
         while (listIterator.hasNext()) {
             CommentBean msg = listIterator.next();
-            if (msg == null||msg.isMiddleUnreadItem()) {
+            if (msg == null || msg.isMiddleUnreadItem()) {
                 if (isLastItemNull) {
                     listIterator.remove();
                 }
@@ -117,8 +116,9 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
     }
 
     public void addMiddleData(int position, CommentListBean middleValue, boolean towardsBottom) {
-        if (middleValue == null)
+        if (middleValue == null) {
             return;
+        }
 
         if (middleValue.getSize() == 0 || middleValue.getSize() == 1) {
             getItemList().remove(position);
@@ -141,7 +141,6 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
         }
 
         getItemList().addAll(position, middleData);
-
     }
 
     @Override

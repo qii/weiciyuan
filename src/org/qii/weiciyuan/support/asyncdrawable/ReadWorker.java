@@ -19,18 +19,13 @@ import java.lang.ref.WeakReference;
  */
 public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
 
-
     private String data = "";
-
-    private WeakReference<ImageView> viewWeakReference;
-
-    private FileLocationMethod method;
-
-
-    private WeakReference<ProgressBar> pbWeakReference;
-
     private boolean isMultiPictures = false;
 
+    private WeakReference<ImageView> viewWeakReference;
+    private WeakReference<ProgressBar> pbWeakReference;
+
+    private FileLocationMethod method;
     private IWeiciyuanDrawable IWeiciyuanDrawable;
 
     public String getUrl() {
@@ -45,7 +40,6 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
         this.method = method;
         this.isMultiPictures = isMultiPictures;
     }
-
 
     public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method,
             boolean isMultiPictures) {
@@ -66,7 +60,6 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
             }
         }
         this.isMultiPictures = isMultiPictures;
-
     }
 
     @Override
@@ -92,7 +85,6 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
                 (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
 
         return result;
-
     }
 
     @Override
@@ -115,7 +107,6 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
                 pb.setMax(max);
                 pb.setProgress(progress);
             }
-
         }
     }
 
@@ -131,7 +122,6 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
             if (pb != null) {
                 pb.setVisibility(View.INVISIBLE);
             }
-
         }
         imageView.setImageDrawable(
                 new ColorDrawable(DebugColor.DOWNLOAD_CANCEL));
@@ -166,14 +156,11 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
                 if (pb != null) {
                     pb.setVisibility(View.INVISIBLE);
                 }
-
             }
             imageView.setImageDrawable(
                     new ColorDrawable(DebugColor.DOWNLOAD_FAILED));
-
         }
     }
-
 
     FileDownloaderHttpHelper.DownloadListener downloadListener
             = new FileDownloaderHttpHelper.DownloadListener() {

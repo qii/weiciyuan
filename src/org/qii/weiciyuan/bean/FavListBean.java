@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,6 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> implements P
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -54,7 +54,6 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> implements P
                 }
             };
 
-
     public List<FavBean> getFavorites() {
         return favorites;
     }
@@ -67,7 +66,6 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> implements P
     public int getSize() {
         return favorites.size();
     }
-
 
     @Override
     public MessageBean getItem(int position) {

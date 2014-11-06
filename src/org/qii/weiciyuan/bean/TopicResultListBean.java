@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
  * User: qii
  * Date: 12-9-26
  */
-public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBean> implements Parcelable {
-
+public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBean>
+        implements Parcelable {
 
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
 
@@ -23,7 +24,6 @@ public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBe
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -56,7 +56,6 @@ public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBe
         return statuses.size();
     }
 
-
     @Override
     public MessageBean getItem(int position) {
         return statuses.get(position);
@@ -66,7 +65,6 @@ public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBe
     public List<MessageBean> getItemList() {
         return statuses;
     }
-
 
     public List<MessageBean> getStatuses() {
         return statuses;
@@ -79,12 +77,9 @@ public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBe
     @Override
     public void addNewData(TopicResultListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
-
             this.getItemList().clear();
             this.getItemList().addAll(newValue.getItemList());
             this.setTotal_number(newValue.getTotal_number());
-
-
         }
     }
 
@@ -93,7 +88,6 @@ public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBe
         if (oldValue != null && oldValue.getSize() > 0) {
             getItemList().addAll(oldValue.getItemList());
             setTotal_number(oldValue.getTotal_number());
-
         }
     }
 

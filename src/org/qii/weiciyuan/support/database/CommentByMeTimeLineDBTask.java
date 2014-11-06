@@ -32,7 +32,6 @@ public class CommentByMeTimeLineDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -41,7 +40,6 @@ public class CommentByMeTimeLineDBTask {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getReadableDatabase();
     }
-
 
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
@@ -71,7 +69,6 @@ public class CommentByMeTimeLineDBTask {
                     ih.bind(jsondataColumn, "");
                 }
                 ih.execute();
-
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
@@ -107,7 +104,7 @@ public class CommentByMeTimeLineDBTask {
                     CommentBean value = gson.fromJson(json, CommentBean.class);
                     if (!value.isMiddleUnreadItem()) {
                         value.getListViewSpannableString();
-                     }
+                    }
                     msgList.add(value);
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());
@@ -120,9 +117,7 @@ public class CommentByMeTimeLineDBTask {
         result.setComments(msgList);
         c.close();
         return new CommentTimeLineData(result, position);
-
     }
-
 
     private static void reduceCommentTable(String accountId) {
         String searchCount = "select count(" + CommentByMeTable.CommentByMeDataTable.ID
@@ -186,7 +181,6 @@ public class CommentByMeTimeLineDBTask {
         new Thread(runnable).start();
     }
 
-
     private static void updatePosition(TimeLinePosition position, String accountId) {
         String sql = "select * from " + CommentByMeTable.TABLE_NAME + " where "
                 + CommentByMeTable.ACCOUNTID + "  = "
@@ -226,12 +220,10 @@ public class CommentByMeTimeLineDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();

@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.R;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -7,7 +9,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
 
 /**
  * User: qii
@@ -54,7 +55,6 @@ public class ListViewMiddleMsgLoadingView extends FrameLayout {
         complete();
         this.word.setText(errorMessage);
         this.word.setTextColor(getContext().getResources().getColor(R.color.red));
-
     }
 }
 

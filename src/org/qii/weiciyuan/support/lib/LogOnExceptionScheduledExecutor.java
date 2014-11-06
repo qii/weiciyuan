@@ -58,6 +58,4 @@ public class LogOnExceptionScheduledExecutor extends ScheduledThreadPoolExecutor
             }
         }
     }
-
-
 }

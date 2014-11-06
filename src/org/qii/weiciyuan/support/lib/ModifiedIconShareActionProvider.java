@@ -1,18 +1,21 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.support.utils.ThemeUtility;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
-import org.qii.weiciyuan.support.utils.ThemeUtility;
 
 /**
  * User: qii
  * Date: 13-9-29
  * issue: #150
- * android:actionModeShareDrawalbe is not a public attribute, and ShareActionProvider don't have any method to modify icon too.
- * so must override ShareActionProvider, find the first ImageView, set resource, this is just a workaround, a better solution is to
+ * android:actionModeShareDrawalbe is not a public attribute, and ShareActionProvider don't have any
+ * method to modify icon too.
+ * so must override ShareActionProvider, find the first ImageView, set resource, this is just a
+ * workaround, a better solution is to
  * write custom ActionProvider
  */
 public class ModifiedIconShareActionProvider extends ShareActionProvider {
@@ -35,8 +38,9 @@ public class ModifiedIconShareActionProvider extends ShareActionProvider {
     private int index = 0;
 
     private void setIcon(ViewGroup viewGroup) {
-        if (index > 1)
+        if (index > 1) {
             return;
+        }
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
@@ -50,9 +54,6 @@ public class ModifiedIconShareActionProvider extends ShareActionProvider {
                     iv.setImageResource(ThemeUtility.getActionBarShareItemIcon());
                 }
             }
-
-
         }
-
     }
 }

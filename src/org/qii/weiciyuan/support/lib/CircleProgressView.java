@@ -20,7 +20,6 @@ public class CircleProgressView extends View {
     private Paint mPaint = new Paint();
 
     private int progress = 0;
-
     private int max = 100;
 
     private ValueAnimator valueAnimator;
@@ -71,7 +70,6 @@ public class CircleProgressView extends View {
         invalidate();
     }
 
-
     public void setProgress(int progress) {
         if (progress == 0) {
             invalidate();
@@ -108,9 +106,7 @@ public class CircleProgressView extends View {
             }
         });
         valueAnimator.start();
-
     }
-
 
     public void executeRunnableAfterAnimationFinish(final Runnable runnable) {
         if (valueAnimator != null && valueAnimator.isRunning()) {

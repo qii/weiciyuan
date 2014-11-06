@@ -2,15 +2,16 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
@@ -38,9 +39,7 @@ public class MentionsWeiboTimeLineDao {
         map.put("filter_by_type", filter_by_type);
         map.put("trim_user", trim_user);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         return jsonData;
     }
@@ -73,7 +72,6 @@ public class MentionsWeiboTimeLineDao {
                     TimeUtility.dealMills(msg);
                 }
             }
-
         }
 
         return value;
@@ -91,7 +89,6 @@ public class MentionsWeiboTimeLineDao {
 
         return value;
     }
-
 
     private String access_token;
     private String since_id;

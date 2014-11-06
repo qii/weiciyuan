@@ -2,14 +2,15 @@ package org.qii.weiciyuan.dao.topic;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
@@ -36,9 +37,7 @@ public class SearchTopicDao {
         map.put("count", count);
         map.put("page", page);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         return jsonData;
     }
@@ -60,7 +59,6 @@ public class SearchTopicDao {
             List<MessageBean> msgList = value.getStatuses();
             Iterator<MessageBean> iterator = msgList.iterator();
 
-
             while (iterator.hasNext()) {
                 MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
@@ -70,13 +68,10 @@ public class SearchTopicDao {
                     TimeUtility.dealMills(msg);
                 }
             }
-
         }
-
 
         return value;
     }
-
 
     public SearchTopicDao(String token, String q) {
         this.access_token = token;

@@ -18,7 +18,6 @@ import java.util.Map;
 public class Mid2IdDao {
 
     private String token;
-
     private String mid;
 
     public Mid2IdDao(String token, String mid) {
@@ -43,5 +42,4 @@ public class Mid2IdDao {
         }
         return "0";
     }
-
 }

@@ -6,11 +6,11 @@ import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 
 import java.util.HashMap;
@@ -69,21 +69,13 @@ public class MainFriendsTimeLineDao {
         return value;
     }
 
-
     protected String access_token;
-
     protected String since_id;
-
     protected String max_id;
-
     protected String count;
-
     protected String page;
-
     protected String base_app;
-
     protected String feature;
-
     protected String trim_user;
 
     public MainFriendsTimeLineDao(String access_token) {
@@ -126,6 +118,4 @@ public class MainFriendsTimeLineDao {
         this.trim_user = trim_user;
         return this;
     }
-
-
 }

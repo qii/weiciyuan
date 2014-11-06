@@ -26,7 +26,6 @@ public class DownloadPicturesDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -35,7 +34,6 @@ public class DownloadPicturesDBTask {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getReadableDatabase();
     }
-
 
     public static void add(String url, String path, FileLocationMethod method) {
         ContentValues cv = new ContentValues();
@@ -62,9 +60,7 @@ public class DownloadPicturesDBTask {
         synchronized (DownloadPicturesDBTask.class) {
             trimToSize();
         }
-
     }
-
 
     public static String get(String url) {
 
@@ -87,9 +83,7 @@ public class DownloadPicturesDBTask {
                     new String[]{path});
         }
         return path;
-
     }
-
 
     public static void remove(String url) {
         String sql = "delete from " + DownloadPicturesTable.TABLE_NAME + " where "
@@ -131,7 +125,6 @@ public class DownloadPicturesDBTask {
         while (c.moveToNext()) {
             String path = c.getString(c.getColumnIndex(DownloadPicturesTable.PATH));
             pathList.add(path);
-
         }
 
         c.close();
@@ -162,7 +155,6 @@ public class DownloadPicturesDBTask {
 
         trimToSize();
     }
-
 
     public static void clearAll() {
         getWsd().delete(DownloadPicturesTable.TABLE_NAME, null, null);

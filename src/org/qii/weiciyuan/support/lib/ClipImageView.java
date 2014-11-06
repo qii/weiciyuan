@@ -19,24 +19,18 @@ import pl.droidsonroids.gif.GifImageView;
 public class ClipImageView extends GifImageView {
 
     private float clipHorizontalPercent;
-
     private float clipVerticalPercent;
 
     private float clipTopPercent;
-
     private float clipBottomPercent;
-
     private float clipLeftPercent;
-
     private float clipRightPercent;
 
     private Rect rect;
-
     private Paint paint;
 
     public ClipImageView(Context context) {
         this(context, null, -1);
-
     }
 
     public ClipImageView(Context context, AttributeSet attrs) {
@@ -54,9 +48,7 @@ public class ClipImageView extends GifImageView {
             this.clipHorizontalPercent = value;
             invalidate();
         }
-
     }
-
 
     public void setClipVertical(float value) {
         if (this.clipVerticalPercent != value) {
@@ -101,7 +93,6 @@ public class ClipImageView extends GifImageView {
 
     @Override
     public void draw(Canvas canvas) {
-
         Drawable drawable = getDrawable();
 
         if (drawable == null || (
@@ -174,8 +165,5 @@ public class ClipImageView extends GifImageView {
         canvas.clipRect(clipRect);
         super.draw(canvas);
         canvas.restore();
-
-
     }
-
 }

@@ -22,56 +22,32 @@ import java.util.Date;
 public class MessageBean extends ItemBean implements Parcelable {
 
     private String created_at;
-
     private long id;
-
     private String idstr;
-
     private String text;
-
     private String source;
-
     private boolean favorited;
-
     private String truncated;
-
     private String in_reply_to_status_id;
-
     private String in_reply_to_user_id;
-
     private String in_reply_to_screen_name;
-
     private String mid;
-
     private int reposts_count = 0;
-
     private int comments_count = 0;
     //    private Object annotations;
-
     private String thumbnail_pic;
-
     private String bmiddle_pic;
-
     private String original_pic;
-
     private String sourceString;
-
     private long mills;
-
     private MessageBean retweeted_status;
-
     private UserBean user;
-
     private GeoBean geo;
 
     private ArrayList<PicUrls> pic_urls = new ArrayList<PicUrls>();
-
     private ArrayList<String> pic_ids = new ArrayList<String>();
-
-    private boolean isMiddleUnreadItem=false;
-
+    private boolean isMiddleUnreadItem = false;
     private transient SpannableString listViewSpannableString;
-
 
     public static class PicUrls implements Parcelable {
 
@@ -99,7 +75,6 @@ public class MessageBean extends ItemBean implements Parcelable {
                         return new PicUrls[size];
                     }
                 };
-
     }
 
     @Override
@@ -140,7 +115,6 @@ public class MessageBean extends ItemBean implements Parcelable {
         dest.writeStringList(pic_ids);
 
         dest.writeBooleanArray(new boolean[]{this.isMiddleUnreadItem});
-
     }
 
     public static final Parcelable.Creator<MessageBean> CREATOR =
@@ -184,7 +158,7 @@ public class MessageBean extends ItemBean implements Parcelable {
                     in.readStringList(messageBean.pic_ids);
 
                     in.readBooleanArray(booleans);
-                    messageBean.isMiddleUnreadItem=booleans[0];
+                    messageBean.isMiddleUnreadItem = booleans[0];
 
                     return messageBean;
                 }
@@ -193,7 +167,6 @@ public class MessageBean extends ItemBean implements Parcelable {
                     return new MessageBean[size];
                 }
             };
-
 
     public String getCreated_at() {
 
@@ -205,7 +178,6 @@ public class MessageBean extends ItemBean implements Parcelable {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
             return format.format(new Date(created_at));
-
         }
         return "";
     }
@@ -313,7 +285,6 @@ public class MessageBean extends ItemBean implements Parcelable {
         this.comments_count = comments_count;
     }
 
-
     public UserBean getUser() {
         return user;
     }
@@ -337,7 +308,6 @@ public class MessageBean extends ItemBean implements Parcelable {
     public long getIdLong() {
         return this.id;
     }
-
 
     public SpannableString getListViewSpannableString() {
         if (!TextUtils.isEmpty(listViewSpannableString)) {
@@ -366,7 +336,6 @@ public class MessageBean extends ItemBean implements Parcelable {
     public void setSourceString(String sourceString) {
         this.sourceString = sourceString;
     }
-
 
     public long getMills() {
         if (mills == 0L) {
@@ -431,7 +400,6 @@ public class MessageBean extends ItemBean implements Parcelable {
 
     private ArrayList<String> highUrls = new ArrayList<String>();
 
-
     public ArrayList<String> getThumbnailPicUrls() {
         if (thumbnaiUrls.size() > 0) {
             return thumbnaiUrls;
@@ -470,7 +438,6 @@ public class MessageBean extends ItemBean implements Parcelable {
         this.middleUrls = value;
         return value;
     }
-
 
     public ArrayList<String> getHighPicUrls() {
         if (highUrls.size() > 0) {
@@ -521,6 +488,4 @@ public class MessageBean extends ItemBean implements Parcelable {
     public String toString() {
         return ObjectToStringUtility.toString(this);
     }
-
-
 }

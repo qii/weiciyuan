@@ -24,7 +24,8 @@ public class TimeUtility {
     private static String YEAR = GlobalContext.getInstance().getString(R.string.year);
 
     private static String YESTER_DAY = GlobalContext.getInstance().getString(R.string.yesterday);
-    private static String THE_DAY_BEFORE_YESTER_DAY = GlobalContext.getInstance().getString(R.string.the_day_before_yesterday);
+    private static String THE_DAY_BEFORE_YESTER_DAY = GlobalContext.getInstance()
+            .getString(R.string.the_day_before_yesterday);
     private static String TODAY = GlobalContext.getInstance().getString(R.string.today);
 
     private static String DATE_FORMAT = GlobalContext.getInstance().getString(R.string.date_format);
@@ -34,7 +35,6 @@ public class TimeUtility {
     private static java.text.SimpleDateFormat dayFormat = null;
     private static java.text.SimpleDateFormat dateFormat = null;
     private static java.text.SimpleDateFormat yearFormat = null;
-
 
     private TimeUtility() {
 
@@ -58,8 +58,9 @@ public class TimeUtility {
 
         Calendar nowCalendar = Calendar.getInstance();
 
-        if (msgCalendar == null)
+        if (msgCalendar == null) {
             msgCalendar = Calendar.getInstance();
+        }
 
         msgCalendar.setTimeInMillis(time);
 
@@ -81,35 +82,36 @@ public class TimeUtility {
         long calHours = calMins / 60;
 
         if (calHours < 24 && isSameDay(nowCalendar, msgCalendar)) {
-            if (dayFormat == null)
+            if (dayFormat == null) {
                 dayFormat = new java.text.SimpleDateFormat("HH:mm");
+            }
 
             String result = dayFormat.format(msgCalendar.getTime());
             return new StringBuilder().append(TODAY).append(" ").append(result).toString();
-
         }
-
 
         long calDay = calHours / 24;
 
         if (calDay < 31) {
             if (isYesterDay(nowCalendar, msgCalendar)) {
-                if (dayFormat == null)
+                if (dayFormat == null) {
                     dayFormat = new java.text.SimpleDateFormat("HH:mm");
+                }
 
                 String result = dayFormat.format(msgCalendar.getTime());
                 return new StringBuilder(YESTER_DAY).append(" ").append(result).toString();
-
             } else if (isTheDayBeforeYesterDay(nowCalendar, msgCalendar)) {
-                if (dayFormat == null)
+                if (dayFormat == null) {
                     dayFormat = new java.text.SimpleDateFormat("HH:mm");
+                }
 
                 String result = dayFormat.format(msgCalendar.getTime());
-                return new StringBuilder(THE_DAY_BEFORE_YESTER_DAY).append(" ").append(result).toString();
-
+                return new StringBuilder(THE_DAY_BEFORE_YESTER_DAY).append(" ").append(result)
+                        .toString();
             } else {
-                if (dateFormat == null)
+                if (dateFormat == null) {
                     dateFormat = new java.text.SimpleDateFormat(DATE_FORMAT);
+                }
 
                 String result = dateFormat.format(msgCalendar.getTime());
                 return new StringBuilder(result).toString();
@@ -119,19 +121,18 @@ public class TimeUtility {
         long calMonth = calDay / 31;
 
         if (calMonth < 12 && isSameYear(nowCalendar, msgCalendar)) {
-            if (dateFormat == null)
+            if (dateFormat == null) {
                 dateFormat = new java.text.SimpleDateFormat(DATE_FORMAT);
+            }
 
             String result = dateFormat.format(msgCalendar.getTime());
             return new StringBuilder().append(result).toString();
-
         }
-        if (yearFormat == null)
+        if (yearFormat == null) {
             yearFormat = new java.text.SimpleDateFormat(YEAR_FORMAT);
+        }
         String result = yearFormat.format(msgCalendar.getTime());
         return new StringBuilder().append(result).toString();
-
-
     }
 
     private static boolean isSameHalfDay(Calendar now, Calendar msg) {
@@ -157,21 +158,18 @@ public class TimeUtility {
     private static boolean isYesterDay(Calendar now, Calendar msg) {
         int nowDay = now.get(Calendar.DAY_OF_YEAR);
         int msgDay = msg.get(Calendar.DAY_OF_YEAR);
-
         return (nowDay - msgDay) == 1;
     }
 
     private static boolean isTheDayBeforeYesterDay(Calendar now, Calendar msg) {
         int nowDay = now.get(Calendar.DAY_OF_YEAR);
         int msgDay = msg.get(Calendar.DAY_OF_YEAR);
-
         return (nowDay - msgDay) == 2;
     }
 
     private static boolean isSameYear(Calendar now, Calendar msg) {
         int nowYear = now.get(Calendar.YEAR);
         int msgYear = msg.get(Calendar.YEAR);
-
         return nowYear == msgYear;
     }
 

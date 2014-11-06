@@ -14,7 +14,6 @@ public class CommentsTable {
 
     public static final String TIMELINEDATA = "timelinedata";
 
-
     public static class CommentsDataTable {
 
         public static final String TABLE_NAME = "comments_data_table";
@@ -26,7 +25,5 @@ public class CommentsTable {
         public static final String MBLOGID = "mblogid";
 
         public static final String JSONDATA = "json";
-
     }
-
 }

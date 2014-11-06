@@ -2,12 +2,13 @@ package org.qii.weiciyuan.dao.fav;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.FavBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,16 +27,13 @@ public class FavDao {
     }
 
     public FavBean favIt() throws WeiboException {
-
         String url = URLHelper.FAV_CREATE;
         return executeTask(url);
     }
 
     public FavBean unFavIt() throws WeiboException {
-
         String url = URLHelper.FAV_DESTROY;
         return executeTask(url);
-
     }
 
     private FavBean executeTask(String url) throws WeiboException {
@@ -47,8 +45,9 @@ public class FavDao {
 
         try {
             FavBean value = new Gson().fromJson(jsonData, FavBean.class);
-            if (value != null)
+            if (value != null) {
                 return value;
+            }
         } catch (JsonSyntaxException e) {
             AppLogger.e(e.getMessage());
         }

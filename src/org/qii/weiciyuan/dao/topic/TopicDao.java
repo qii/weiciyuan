@@ -41,7 +41,6 @@ public class TopicDao {
 
         }
         return false;
-
     }
 
     public boolean destroy(String trend_name) throws WeiboException {
@@ -71,17 +70,13 @@ public class TopicDao {
             try {
                 jsonObject = new JSONObject(jsonData);
                 return jsonObject.optBoolean("result", false);
-
             } catch (JSONException e) {
 
             }
             return false;
-
-
         } catch (JSONException e) {
 
         }
         return false;
     }
-
 }

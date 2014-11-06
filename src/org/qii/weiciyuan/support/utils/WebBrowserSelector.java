@@ -1,11 +1,12 @@
 package org.qii.weiciyuan.support.utils;
 
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
 
 /**
  * User: qii

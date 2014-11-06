@@ -52,7 +52,6 @@ public class AnimationUtility {
         objectAnimator.setDuration(300);
         objectAnimator.setInterpolator(new DecelerateInterpolator());
         objectAnimator.start();
-
     }
 
     public static void forceConvertActivityFromTranslucent(Activity activity) {
@@ -102,13 +101,11 @@ public class AnimationUtility {
                 method.invoke(activity, new Object[]{null});
             } catch (Throwable ignored) {
                 ignored.printStackTrace();
-
             }
         }
     }
 
     private static class FragmentViewYWrapper {
-
         private View view;
 
         FragmentViewYWrapper(View view) {
@@ -121,7 +118,6 @@ public class AnimationUtility {
     }
 
     private static class FragmentViewXWrapper {
-
         private View view;
 
         FragmentViewXWrapper(View view) {
@@ -167,10 +163,8 @@ public class AnimationUtility {
                     > (float) imageviewHeight / bitmapHeight) {
                 // Extend start bounds horizontally
                 startScale = (float) imageviewHeight / bitmapHeight;
-
             } else {
                 startScale = (float) imageViewWidth / bitmapWidth;
-
             }
 
             bitmapHeight = (int) (bitmapHeight * startScale);
@@ -186,13 +180,10 @@ public class AnimationUtility {
         } else {
             return null;
         }
-
-
     }
 
     public static View getAppContentView(Activity activity) {
         final View appView = activity.findViewById(android.R.id.content);
         return appView;
-
     }
 }

@@ -2,14 +2,15 @@ package org.qii.weiciyuan.dao.timeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
@@ -36,7 +37,6 @@ public class RepostsTimeLineByIdDao {
         map.put("page", page);
         map.put("filter_by_author", filter_by_author);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         Gson gson = new Gson();
@@ -54,7 +54,6 @@ public class RepostsTimeLineByIdDao {
             List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
             while (iterator.hasNext()) {
-
                 MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
                     iterator.remove();
@@ -63,15 +62,11 @@ public class RepostsTimeLineByIdDao {
                     TimeUtility.dealMills(msg);
                 }
             }
-
-
         }
         return value;
     }
 
-
     public RepostsTimeLineByIdDao(String token, String id) {
-
         this.access_token = token;
         this.id = id;
         this.count = SettingUtility.getMsgCount();

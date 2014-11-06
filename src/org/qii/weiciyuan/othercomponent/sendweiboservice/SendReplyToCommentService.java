@@ -36,9 +36,7 @@ import java.util.Set;
  */
 public class SendReplyToCommentService extends Service {
 
-
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
-
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
 
     private Handler handler = new Handler();
@@ -85,9 +83,7 @@ public class SendReplyToCommentService extends Service {
         tasksResult.put(task, false);
 
         return START_REDELIVER_INTENT;
-
     }
-
 
     private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
 
@@ -143,9 +139,7 @@ public class SendReplyToCommentService extends Service {
             notificationManager.notify(notificationId, notification);
 
             tasksNotifications.put(WeiboSendTask.this, notificationId);
-
         }
-
 
         private void sendText() throws WeiboException {
             ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, oriMsg, content);
@@ -157,8 +151,6 @@ public class SendReplyToCommentService extends Service {
                 repostNewMsgDao.setStatus(content);
                 repostNewMsgDao.sendNewMsg();
             }
-
-
         }
 
         @Override
@@ -173,7 +165,6 @@ public class SendReplyToCommentService extends Service {
             return null;
         }
 
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -181,14 +172,12 @@ public class SendReplyToCommentService extends Service {
                 DraftDBManager.getInstance().remove(replyDraftBean.getId());
             }
             showSuccessfulNotification(WeiboSendTask.this);
-
         }
 
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
             showFailedNotification(WeiboSendTask.this);
-
         }
 
         private void showSuccessfulNotification(final WeiboSendTask task) {
@@ -263,7 +252,6 @@ public class SendReplyToCommentService extends Service {
                 builder.addAction(R.drawable.send_light, getString(R.string.retry_send),
                         retrySendIntent);
                 notification = builder.build();
-
             } else {
                 notification = builder.getNotification();
             }
@@ -279,7 +267,6 @@ public class SendReplyToCommentService extends Service {
                 }
             }, 3000);
         }
-
     }
 
     private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
@@ -299,7 +286,5 @@ public class SendReplyToCommentService extends Service {
             stopSelf();
         }
     }
-
-
 }
 

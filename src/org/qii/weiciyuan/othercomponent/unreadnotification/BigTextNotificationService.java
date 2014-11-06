@@ -46,7 +46,6 @@ import java.util.HashMap;
  */
 public class BigTextNotificationService extends NotificationServiceHelper {
 
-
     public static Intent newIntent(AccountBean accountBean,
             MessageListBean mentionsWeiboData, CommentListBean commentsToMeData
             , CommentListBean mentionsCommentData, UnreadBean unreadBean,
@@ -72,19 +71,14 @@ public class BigTextNotificationService extends NotificationServiceHelper {
     private class ValueWrapper {
 
         private AccountBean accountBean;
-
         private MessageListBean mentionsWeibo;
-
         private CommentListBean mentionsComment;
-
         private CommentListBean commentsToMe;
-
         private UnreadBean unreadBean;
 
         private int currentIndex;
 
         private Intent clickToOpenAppPendingIntentInner;
-
         private String ticker;
 
         private ArrayList<Parcelable> notificationItems;
@@ -95,7 +89,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
     //key is account uid
     private static HashMap<String, ValueWrapper> valueBagHashMap
             = new HashMap<String, ValueWrapper>();
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -148,7 +141,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
 
         return super.onStartCommand(intent, flags, startId);
     }
-
 
     private void buildNotification(String uid) {
 
@@ -258,12 +250,10 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                                                 "weiciyuan:remove notification items" + System
                                                         .currentTimeMillis(),
                                                 Toast.LENGTH_SHORT).show();
-
                                     }
                                 });
                             }
                         }
-
                     }
                 }).start();
             }
@@ -301,7 +291,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                             PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(R.drawable.reply_to_comment_light,
                     getApplicationContext().getString(R.string.reply_to_comment), pendingIntent);
-
         }
 
         String avatar = ((ItemBean) itemBean).getUser().getAvatar_large();
@@ -360,7 +349,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
         notificationManager.notify(getMentionsWeiboNotificationId(accountBean), builder.build());
     }
 
-
     private PendingIntent getPendingIntent(Intent clickToOpenAppPendingIntentInner,
             Parcelable itemBean, AccountBean accountBean) {
         clickToOpenAppPendingIntentInner.setExtrasClassLoader(getClass().getClassLoader());
@@ -382,7 +370,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
             } else {
                 unreadTabIndex = UnreadTabIndex.MENTION_COMMENT;
             }
-
         }
         clickToOpenAppPendingIntentInner
                 .putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
@@ -393,7 +380,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                         PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
-
 
     private String getItemBigContentTitle(AccountBean accountBean,
             ArrayList<Parcelable> notificationItems, int currentIndex) {
@@ -438,5 +424,4 @@ public class BigTextNotificationService extends NotificationServiceHelper {
         ItemBean itemBean = (ItemBean) notificationItems.get(currentIndex);
         return TimeLineUtility.convertNormalStringToSpannableString(itemBean.getText());
     }
-
 }

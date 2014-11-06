@@ -1,7 +1,8 @@
 package org.qii.weiciyuan.support.utils;
 
-import android.content.IntentFilter;
 import org.qii.weiciyuan.bean.MessageBean;
+
+import android.content.IntentFilter;
 
 /**
  * User: qii
@@ -38,11 +39,14 @@ public class AppEventAction {
         return musicFilter;
     }
 
-    public static final String SLIDING_MENU_CLOSED_BROADCAST = "org.qii.weiciyuan.slidingmenu_closed";
+    public static final String SLIDING_MENU_CLOSED_BROADCAST
+            = "org.qii.weiciyuan.slidingmenu_closed";
 
-    private static final String SEND_COMMENT_OR_REPLY_SUCCESSFULLY = "org.qii.weiciyuan.SEND.COMMENT.COMPLETED";
+    private static final String SEND_COMMENT_OR_REPLY_SUCCESSFULLY
+            = "org.qii.weiciyuan.SEND.COMMENT.COMPLETED";
 
-    private static final String SEND_REPOST_SUCCESSFULLY = "org.qii.weiciyuan.SEND.REPOST.COMPLETED";
+    private static final String SEND_REPOST_SUCCESSFULLY
+            = "org.qii.weiciyuan.SEND.REPOST.COMPLETED";
 
     public static String buildSendCommentOrReplySuccessfullyAction(MessageBean oriMsg) {
         return SEND_COMMENT_OR_REPLY_SUCCESSFULLY + oriMsg.getId();
@@ -51,5 +55,4 @@ public class AppEventAction {
     public static String buildSendRepostSuccessfullyAction(MessageBean oriMsg) {
         return SEND_REPOST_SUCCESSFULLY + oriMsg.getId();
     }
-
 }

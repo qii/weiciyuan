@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import org.qii.weiciyuan.bean.CommentBean;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.bean.CommentBean;
 
 /**
  * User: qii
@@ -33,7 +34,8 @@ public class ReplyDraftBean implements Parcelable {
                     ReplyDraftBean replyDraftBean = new ReplyDraftBean();
                     replyDraftBean.content = in.readString();
                     replyDraftBean.accountId = in.readString();
-                    replyDraftBean.commentBean = in.readParcelable(CommentBean.class.getClassLoader());
+                    replyDraftBean.commentBean = in
+                            .readParcelable(CommentBean.class.getClassLoader());
                     replyDraftBean.id = in.readString();
                     return replyDraftBean;
                 }
@@ -42,7 +44,6 @@ public class ReplyDraftBean implements Parcelable {
                     return new ReplyDraftBean[size];
                 }
             };
-
 
     public String getAccountId() {
         return accountId;
@@ -67,7 +68,6 @@ public class ReplyDraftBean implements Parcelable {
     public void setCommentBean(CommentBean commentBean) {
         this.commentBean = commentBean;
     }
-
 
     public String getId() {
         return id;

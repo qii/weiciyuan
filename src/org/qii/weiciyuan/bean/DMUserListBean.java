@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,6 @@ public class DMUserListBean extends ListBean<DMUserBean, DMUserListBean> impleme
                 }
             };
 
-
     @Override
     public int getSize() {
         return user_list.size();
@@ -80,7 +80,6 @@ public class DMUserListBean extends ListBean<DMUserBean, DMUserListBean> impleme
         this.setTotal_number(oldValue.getTotal_number());
         this.setNext_cursor(oldValue.getNext_cursor());
         this.setPrevious_cursor(oldValue.getPrevious_cursor());
-
     }
 
     @Override

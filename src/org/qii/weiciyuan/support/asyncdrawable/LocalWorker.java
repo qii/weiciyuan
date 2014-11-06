@@ -23,16 +23,13 @@ import java.lang.ref.WeakReference;
  */
 public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
 
-
     private String data = "";
+    private boolean isMultiPictures = false;
 
     private WeakReference<ImageView> viewWeakReference;
-
-    private FileLocationMethod method;
-
     private WeakReference<ProgressBar> pbWeakReference;
 
-    private boolean isMultiPictures = false;
+    private FileLocationMethod method;
 
     private IWeiciyuanDrawable IWeiciyuanDrawable;
 
@@ -49,7 +46,6 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
         this.isMultiPictures = isMultiPictures;
     }
 
-
     public LocalWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method,
             boolean isMultiPictures) {
 
@@ -64,9 +60,7 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
         }
 
         this.isMultiPictures = isMultiPictures;
-
     }
-
 
     @Override
     protected Bitmap doInBackground(String... url) {
@@ -168,8 +162,6 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
         } else {
             imageView.setImageDrawable(new ColorDrawable(DebugColor.READ_FAILED));
         }
-
-
     }
 
     private void resetProgressBarStatues() {
@@ -182,7 +174,6 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
         }
     }
 
-
     private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
 
         view.setImageBitmap(bitmap);
@@ -191,9 +182,6 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
         view.animate().alpha(1.0f).setDuration(500)
                 .setListener(new LayerEnablingAnimatorListener(view, null));
         view.setTag(getUrl());
-
     }
-
-
 }
 

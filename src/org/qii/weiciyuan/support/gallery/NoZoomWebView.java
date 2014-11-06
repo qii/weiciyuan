@@ -22,7 +22,8 @@ public class NoZoomWebView extends WebView {
         super(context, attrs, defStyle);
     }
 
-    public NoZoomWebView(Context context, AttributeSet attrs, int defStyle, boolean privateBrowsing) {
+    public NoZoomWebView(Context context, AttributeSet attrs, int defStyle,
+            boolean privateBrowsing) {
         super(context, attrs, defStyle, privateBrowsing);
     }
 

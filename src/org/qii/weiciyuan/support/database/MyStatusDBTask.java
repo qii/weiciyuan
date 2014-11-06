@@ -41,7 +41,6 @@ public class MyStatusDBTask {
     }
 
     public static void add(MessageListBean list, String accountId) {
-
         if (list == null || list.getSize() == 0) {
             return;
         }
@@ -76,10 +75,7 @@ public class MyStatusDBTask {
             getWsd().endTransaction();
             ih.close();
         }
-
-
     }
-
 
     public static void clear(String accountId) {
         String sql = "delete from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where "
@@ -109,13 +105,11 @@ public class MyStatusDBTask {
             } catch (JsonSyntaxException ignored) {
 
             }
-
         }
 
         result.setStatuses(msgList);
         c.close();
         return new MyStatusTimeLineData(result, getPosition(accountId));
-
     }
 
     private static void updatePosition(TimeLinePosition position, String accountId) {
@@ -156,12 +150,10 @@ public class MyStatusDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();

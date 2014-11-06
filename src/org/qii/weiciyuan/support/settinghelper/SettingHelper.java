@@ -17,8 +17,9 @@ class SettingHelper {
     }
 
     private static SharedPreferences.Editor getEditorObject(Context paramContext) {
-        if (editor == null)
+        if (editor == null) {
             editor = PreferenceManager.getDefaultSharedPreferences(paramContext).edit();
+        }
         return editor;
     }
 
@@ -26,21 +27,25 @@ class SettingHelper {
         return getSharedPreferencesObject(paramContext).getInt(paramString, paramInt);
     }
 
-    public static long getSharedPreferences(Context paramContext, String paramString, long paramLong) {
+    public static long getSharedPreferences(Context paramContext, String paramString,
+            long paramLong) {
         return getSharedPreferencesObject(paramContext).getLong(paramString, paramLong);
     }
 
-    public static Boolean getSharedPreferences(Context paramContext, String paramString, Boolean paramBoolean) {
+    public static Boolean getSharedPreferences(Context paramContext, String paramString,
+            Boolean paramBoolean) {
         return getSharedPreferencesObject(paramContext).getBoolean(paramString, paramBoolean);
     }
 
-    public static String getSharedPreferences(Context paramContext, String paramString1, String paramString2) {
+    public static String getSharedPreferences(Context paramContext, String paramString1,
+            String paramString2) {
         return getSharedPreferencesObject(paramContext).getString(paramString1, paramString2);
     }
 
     private static SharedPreferences getSharedPreferencesObject(Context paramContext) {
-        if (sharedPreferences == null)
+        if (sharedPreferences == null) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(paramContext);
+        }
         return sharedPreferences;
     }
 

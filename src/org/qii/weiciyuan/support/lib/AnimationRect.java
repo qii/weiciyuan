@@ -82,48 +82,31 @@ public class AnimationRect implements Parcelable {
                 }
             };
 
-
     public static final int TYPE_CLIP_V = 0;
-
     public static final int TYPE_CLIP_H = 1;
-
     public static final int TYPE_EXTEND_V = 2;
-
     public static final int TYPE_EXTEND_H = 3;
 
-
     public float clipByParentRectTop;
-
     public float clipByParentRectBottom;
-
     public float clipByParentRectLeft;
-
     public float clipByParentRectRight;
 
-
     public Rect imageViewEntireRect;
-
     public Rect imageViewVisibleRect;
-
     public Rect scaledBitmapRect;
-
 
     public int type = -1;
 
     public boolean isTotalVisible;
-
     public boolean isTotalInvisible;
 
     public boolean isScreenPortrait;
 
     public float thumbnailWidthHeightRatio;
-
     public int thumbnailWidth;
-
     public int thumbnailHeight;
-
     public int widgetWidth;
-
     public int widgetHeight;
 
     public static AnimationRect buildFromImageView(ImageView imageView) {
@@ -193,7 +176,6 @@ public class AnimationRect implements Parcelable {
 
                     startScale = (float) imageViewWidth / bitmapWidth;
                     rect.type = TYPE_CLIP_V;
-
                 } else {
                     startScale = (float) imageViewHeight / bitmapHeight;
                     rect.type = TYPE_CLIP_H;
@@ -219,7 +201,6 @@ public class AnimationRect implements Parcelable {
                     startScale = (float) imageViewHeight / bitmapHeight;
 
                     rect.type = TYPE_EXTEND_V;
-
                 } else {
                     startScale = (float) imageViewWidth / bitmapWidth;
                     rect.type = TYPE_EXTEND_H;
@@ -244,7 +225,6 @@ public class AnimationRect implements Parcelable {
         return rect;
     }
 
-
     public static float getClipLeft(AnimationRect animationRect, Rect finalBounds) {
         final Rect startBounds = animationRect.scaledBitmapRect;
 
@@ -252,7 +232,6 @@ public class AnimationRect implements Parcelable {
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             startScale = (float) startBounds.height() / finalBounds.height();
-
         } else {
             startScale = (float) startBounds.width() / finalBounds.width();
         }
@@ -290,7 +269,6 @@ public class AnimationRect implements Parcelable {
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             startScale = (float) startBounds.height() / finalBounds.height();
-
         } else {
             startScale = (float) startBounds.width() / finalBounds.width();
         }
@@ -317,7 +295,6 @@ public class AnimationRect implements Parcelable {
                             - animationRect.imageViewEntireRect.top);
 
             deltaTop += deltaInvisibleTop;
-
         }
 
         return (deltaTop) / (float) oriBitmapScaledHeight;
@@ -330,7 +307,6 @@ public class AnimationRect implements Parcelable {
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             startScale = (float) startBounds.height() / finalBounds.height();
-
         } else {
             startScale = (float) startBounds.width() / finalBounds.width();
         }
@@ -369,7 +345,6 @@ public class AnimationRect implements Parcelable {
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             startScale = (float) startBounds.height() / finalBounds.height();
-
         } else {
             startScale = (float) startBounds.width() / finalBounds.width();
         }
@@ -401,5 +376,4 @@ public class AnimationRect implements Parcelable {
         deltaBottom += thumbnailAndOriDeltaBottomSize;
         return (deltaBottom) / (float) oriBitmapScaledHeight;
     }
-
 }

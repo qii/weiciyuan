@@ -1,9 +1,15 @@
 package org.qii.weiciyuan.support.crashmanager;
 
-import android.text.TextUtils;
 import org.qii.weiciyuan.support.file.FileManager;
 
-import java.io.*;
+import android.text.TextUtils;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,6 +58,5 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         } finally {
             previousHandler.uncaughtException(thread, exception);
         }
-
     }
 }

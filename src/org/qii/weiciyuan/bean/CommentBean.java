@@ -29,10 +29,8 @@ public class CommentBean extends ItemBean implements Parcelable {
 
     private String sourceString;
 
-    private boolean isMiddleUnreadItem=false;
-
+    private boolean isMiddleUnreadItem = false;
     private transient SpannableString listViewSpannableString;
-
 
     @Override
     public int describeContents() {
@@ -49,7 +47,6 @@ public class CommentBean extends ItemBean implements Parcelable {
         dest.writeString(source);
         dest.writeString(mid);
         dest.writeLong(mills);
-
 
         dest.writeParcelable(user, flags);
         dest.writeParcelable(status, flags);
@@ -75,13 +72,14 @@ public class CommentBean extends ItemBean implements Parcelable {
 
                     commentBean.user = in.readParcelable(UserBean.class.getClassLoader());
                     commentBean.status = in.readParcelable(MessageBean.class.getClassLoader());
-                    commentBean.reply_comment = in.readParcelable(CommentBean.class.getClassLoader());
+                    commentBean.reply_comment = in
+                            .readParcelable(CommentBean.class.getClassLoader());
 
                     commentBean.sourceString = in.readString();
 
                     boolean[] booleans = new boolean[1];
                     in.readBooleanArray(booleans);
-                    commentBean.isMiddleUnreadItem=booleans[0];
+                    commentBean.isMiddleUnreadItem = booleans[0];
 
                     return commentBean;
                 }
@@ -91,7 +89,6 @@ public class CommentBean extends ItemBean implements Parcelable {
                 }
             };
 
-
     public CommentBean getReply_comment() {
         return reply_comment;
     }
@@ -99,7 +96,6 @@ public class CommentBean extends ItemBean implements Parcelable {
     public void setReply_comment(CommentBean reply_comment) {
         this.reply_comment = reply_comment;
     }
-
 
     //comment timeline show comment
     public SpannableString getListViewSpannableString() {
@@ -114,7 +110,6 @@ public class CommentBean extends ItemBean implements Parcelable {
     public void setListViewSpannableString(SpannableString listViewSpannableString) {
         this.listViewSpannableString = listViewSpannableString;
     }
-
 
     public long getMills() {
         if (mills == 0L) {
@@ -136,7 +131,6 @@ public class CommentBean extends ItemBean implements Parcelable {
         return TimeUtility.getListTime(this);
     }
 
-
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
@@ -152,7 +146,6 @@ public class CommentBean extends ItemBean implements Parcelable {
     public long getIdLong() {
         return this.id;
     }
-
 
     public String getText() {
         return text;
@@ -174,8 +167,9 @@ public class CommentBean extends ItemBean implements Parcelable {
         if (!TextUtils.isEmpty(sourceString)) {
             return sourceString;
         } else {
-            if (!TextUtils.isEmpty(source))
+            if (!TextUtils.isEmpty(source)) {
                 sourceString = Html.fromHtml(this.source).toString();
+            }
             return sourceString;
         }
     }
@@ -183,7 +177,6 @@ public class CommentBean extends ItemBean implements Parcelable {
     public void setSourceString(String sourceString) {
         this.sourceString = sourceString;
     }
-
 
     public String getMid() {
         return mid;

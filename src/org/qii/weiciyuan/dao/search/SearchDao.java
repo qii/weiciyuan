@@ -2,15 +2,16 @@ package org.qii.weiciyuan.dao.search;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
@@ -24,7 +25,6 @@ import java.util.Map;
  */
 public class SearchDao {
     public UserListBean getUserList() throws WeiboException {
-
         String url = URLHelper.USERS_SEARCH;
 
         Map<String, String> map = new HashMap<String, String>();
@@ -33,11 +33,9 @@ public class SearchDao {
         map.put("page", page);
         map.put("q", q);
 
-
         String jsonData = null;
 
         jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         Gson gson = new Gson();
 
@@ -48,12 +46,10 @@ public class SearchDao {
 
             AppLogger.e(e.getMessage());
         }
-
         return value;
     }
 
     public SearchStatusListBean getStatusList() throws WeiboException {
-
         String url = URLHelper.STATUSES_SEARCH;
 
         Map<String, String> map = new HashMap<String, String>();
@@ -61,7 +57,6 @@ public class SearchDao {
         map.put("count", count);
         map.put("page", page);
         map.put("q", q);
-
 
         String jsonData = null;
 
@@ -73,7 +68,6 @@ public class SearchDao {
         try {
             value = gson.fromJson(jsonData, SearchStatusListBean.class);
             List<MessageBean> list = value.getItemList();
-
             Iterator<MessageBean> iterator = list.iterator();
             while (iterator.hasNext()) {
                 MessageBean msg = iterator.next();
@@ -93,20 +87,16 @@ public class SearchDao {
         return value;
     }
 
-
     private String access_token;
     private String q;
     private String count;
     private String page;
 
-
     public SearchDao(String access_token, String q) {
-
         this.access_token = access_token;
         this.q = q;
         this.count = SettingUtility.getMsgCount();
     }
-
 
     public SearchDao setCount(String count) {
         this.count = count;
@@ -117,6 +107,4 @@ public class SearchDao {
         this.page = page;
         return this;
     }
-
-
 }

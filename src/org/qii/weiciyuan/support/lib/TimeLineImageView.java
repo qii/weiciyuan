@@ -1,7 +1,15 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
+
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -10,9 +18,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 
 /**
  * User: qii
@@ -56,7 +61,6 @@ public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable
         this.setAddStatesFromChildren(true);
     }
 
-
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
@@ -77,11 +81,9 @@ public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable
         mImageView.setImageBitmap(bm);
     }
 
-
     public ImageView getImageView() {
         return mImageView;
     }
-
 
     public void setProgress(int value, int max) {
         pb.setVisibility(View.VISIBLE);
@@ -107,9 +109,11 @@ public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable
 
     @Override
     public void setPressesStateVisibility(boolean value) {
-        if (parentPressState == value)
+        if (parentPressState == value) {
             return;
-        setForeground(value ? getResources().getDrawable(R.drawable.timelineimageview_cover) : null);
+        }
+        setForeground(
+                value ? getResources().getDrawable(R.drawable.timelineimageview_cover) : null);
         parentPressState = value;
     }
 }

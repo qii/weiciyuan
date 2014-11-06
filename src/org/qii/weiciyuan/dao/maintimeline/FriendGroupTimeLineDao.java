@@ -2,12 +2,13 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 
 import java.util.HashMap;
@@ -57,13 +58,10 @@ public class FriendGroupTimeLineDao extends MainFriendsTimeLineDao {
         }
         if (value != null && value.getItemList().size() > 0) {
             TimeLineUtility.filterMessage(value);
-
         }
-
 
         return value;
     }
-
 
     public FriendGroupTimeLineDao(String access_token, String list_id) {
 

@@ -18,7 +18,6 @@ import android.widget.ImageView;
 public class LinearGradientCoverImageView extends ImageView {
 
     private LinearGradient linearGradient;
-
     private Paint paint = new Paint();
 
     public LinearGradientCoverImageView(Context context) {
@@ -31,9 +30,7 @@ public class LinearGradientCoverImageView extends ImageView {
 
     public LinearGradientCoverImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -46,6 +43,4 @@ public class LinearGradientCoverImageView extends ImageView {
         }
         canvas.drawPaint(paint);
     }
-
-
 }

@@ -19,9 +19,7 @@ import java.util.ListIterator;
 public class MessageListBean extends ListBean<MessageBean, MessageListBean> implements Parcelable {
 
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
-
     private List<AdBean> ad = new ArrayList<AdBean>();
-
     private int removedCount = 0;
 
     @Override
@@ -31,7 +29,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -66,7 +63,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
                 }
             };
 
-
     private List<MessageBean> getStatuses() {
         return statuses;
     }
@@ -78,7 +74,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
     public void setStatuses(List<MessageBean> statuses) {
         this.statuses = statuses;
     }
-
 
     @Override
     public int getSize() {
@@ -94,7 +89,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
     public List<MessageBean> getItemList() {
         return getStatuses();
     }
-
 
     public int getReceivedCount() {
         return getSize() + removedCount;
@@ -116,7 +110,7 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         boolean receivedCountEqualRequestCount = newValue.getReceivedCount() >= Integer
                 .valueOf(SettingUtility.getMsgCount());
         if (receivedCountEqualRequestCount && this.getSize() > 0) {
-            MessageBean middleUnreadItem=new MessageBean();
+            MessageBean middleUnreadItem = new MessageBean();
             middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
             middleUnreadItem.setMiddleUnreadItem(true);
             newValue.getItemList().add(middleUnreadItem);
@@ -147,7 +141,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         if (oldValue != null && oldValue.getSize() > 1) {
             getItemList().addAll(oldValue.getItemList().subList(1, oldValue.getSize()));
             setTotal_number(oldValue.getTotal_number());
-
         }
     }
 
@@ -177,7 +170,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         }
 
         getItemList().addAll(position, middleData);
-
     }
 
     public void replaceData(MessageListBean value) {
@@ -199,6 +191,4 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
     public String toString() {
         return ObjectToStringUtility.toString(this);
     }
-
-
 }

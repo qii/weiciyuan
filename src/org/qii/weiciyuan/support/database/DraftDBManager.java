@@ -1,15 +1,21 @@
 package org.qii.weiciyuan.support.database;
 
+import com.google.gson.Gson;
+
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.database.draftbean.CommentDraftBean;
+import org.qii.weiciyuan.support.database.draftbean.DraftListViewItemBean;
+import org.qii.weiciyuan.support.database.draftbean.ReplyDraftBean;
+import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
+import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
+import org.qii.weiciyuan.support.database.table.DraftTable;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.google.gson.Gson;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.bean.GeoBean;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.database.draftbean.*;
-import org.qii.weiciyuan.support.database.table.DraftTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,11 +29,9 @@ import java.util.Set;
 public class DraftDBManager {
     private static DraftDBManager singleton = null;
 
-
     private SQLiteDatabase wsd = null;
 
     private SQLiteDatabase rsd = null;
-
 
     private DraftDBManager() {
 
@@ -48,15 +52,16 @@ public class DraftDBManager {
         return singleton;
     }
 
-
     public void insertStatus(String content, GeoBean gps, String pic, String accountId) {
         ContentValues cv = new ContentValues();
         cv.put(DraftTable.CONTENT, content);
         cv.put(DraftTable.ACCOUNTID, accountId);
-        if (gps != null)
+        if (gps != null) {
             cv.put(DraftTable.GPS, new Gson().toJson(gps));
-        if (!TextUtils.isEmpty(pic))
+        }
+        if (!TextUtils.isEmpty(pic)) {
             cv.put(DraftTable.PIC, pic);
+        }
         cv.put(DraftTable.TYPE, DraftTable.TYPE_WEIBO);
         wsd.insert(DraftTable.TABLE_NAME,
                 DraftTable.ID, cv);
@@ -92,13 +97,13 @@ public class DraftDBManager {
                 DraftTable.ID, cv);
     }
 
-
     public List<DraftListViewItemBean> getDraftList(String accountId) {
 
         Gson gson = new Gson();
         List<DraftListViewItemBean> result = new ArrayList<DraftListViewItemBean>();
 
-        String sql = "select * from " + DraftTable.TABLE_NAME + " where " + DraftTable.ACCOUNTID + "  = "
+        String sql = "select * from " + DraftTable.TABLE_NAME + " where " + DraftTable.ACCOUNTID
+                + "  = "
                 + accountId + " order by " + DraftTable.ID + " desc";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
@@ -131,7 +136,9 @@ public class DraftDBManager {
                     repostDraftBean.setContent(content);
                     repostDraftBean.setAccountId(accountId);
 
-                    MessageBean messageBean = gson.fromJson(c.getString(c.getColumnIndex(DraftTable.JSONDATA)), MessageBean.class);
+                    MessageBean messageBean = gson
+                            .fromJson(c.getString(c.getColumnIndex(DraftTable.JSONDATA)),
+                                    MessageBean.class);
                     repostDraftBean.setMessageBean(messageBean);
 
                     item.setRepostDraftBean(repostDraftBean);
@@ -145,7 +152,9 @@ public class DraftDBManager {
                     commentDraftBean.setContent(content);
                     commentDraftBean.setAccountId(accountId);
 
-                    MessageBean commentMessageBean = gson.fromJson(c.getString(c.getColumnIndex(DraftTable.JSONDATA)), MessageBean.class);
+                    MessageBean commentMessageBean = gson
+                            .fromJson(c.getString(c.getColumnIndex(DraftTable.JSONDATA)),
+                                    MessageBean.class);
                     commentDraftBean.setMessageBean(commentMessageBean);
 
                     item.setCommentDraftBean(commentDraftBean);
@@ -159,39 +168,39 @@ public class DraftDBManager {
                     replyDraftBean.setContent(content);
                     replyDraftBean.setAccountId(accountId);
 
-                    CommentBean commentBean = gson.fromJson(c.getString(c.getColumnIndex(DraftTable.JSONDATA)), CommentBean.class);
+                    CommentBean commentBean = gson
+                            .fromJson(c.getString(c.getColumnIndex(DraftTable.JSONDATA)),
+                                    CommentBean.class);
                     replyDraftBean.setCommentBean(commentBean);
 
                     item.setReplyDraftBean(replyDraftBean);
                     result.add(item);
                     break;
             }
-
-
         }
 
         c.close();
         return result;
-
     }
 
-
-    public List<DraftListViewItemBean> removeAndGet(Set<String> checkedItemPosition, String acountId) {
+    public List<DraftListViewItemBean> removeAndGet(Set<String> checkedItemPosition,
+            String acountId) {
         String[] args = checkedItemPosition.toArray(new String[0]);
         String asString = Arrays.toString(args);
         asString = asString.replace("[", "(");
         asString = asString.replace("]", ")");
 
-        String sql = "delete from " + DraftTable.TABLE_NAME + " where " + DraftTable.ID + " in " + asString;
+        String sql = "delete from " + DraftTable.TABLE_NAME + " where " + DraftTable.ID + " in "
+                + asString;
 
         wsd.execSQL(sql);
         return getDraftList(acountId);
     }
 
     public void remove(String id) {
-        String sql = "delete from " + DraftTable.TABLE_NAME + " where " + DraftTable.ID + " = " + id;
+        String sql = "delete from " + DraftTable.TABLE_NAME + " where " + DraftTable.ID + " = "
+                + id;
 
         wsd.execSQL(sql);
     }
-
 }

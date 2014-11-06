@@ -31,7 +31,6 @@ public class FavouriteDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -91,7 +90,6 @@ public class FavouriteDBTask {
             getWsd().insert(FavouriteTable.TABLE_NAME,
                     FavouriteTable.ID, cv);
         }
-
     }
 
     public static FavouriteTimeLineData getFavouriteMsgList(String accountId) {
@@ -130,9 +128,7 @@ public class FavouriteDBTask {
         }
         c.close();
         return new FavouriteTimeLineData(result, page, getPosition(accountId));
-
     }
-
 
     static void deleteAllFavourites(String accountId) {
         String sql = "delete from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where "
@@ -160,7 +156,6 @@ public class FavouriteDBTask {
 
         new Thread(runnable).start();
     }
-
 
     private static void updatePosition(TimeLinePosition position, String accountId) {
         String sql = "select * from " + FavouriteTable.TABLE_NAME + " where "
@@ -201,12 +196,10 @@ public class FavouriteDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();
@@ -226,5 +219,4 @@ public class FavouriteDBTask {
             }
         }).start();
     }
-
 }

@@ -35,9 +35,7 @@ import java.util.Set;
  */
 public class SendCommentService extends Service {
 
-
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
-
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
 
     private Handler handler = new Handler();
@@ -80,9 +78,7 @@ public class SendCommentService extends Service {
         tasksResult.put(task, false);
 
         return START_REDELIVER_INTENT;
-
     }
-
 
     private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
 
@@ -114,7 +110,6 @@ public class SendCommentService extends Service {
             this.content = content;
             this.oriMsg = oriMsg;
             this.commentDraftBean = commentDraftBean;
-
         }
 
         @Override
@@ -139,15 +134,12 @@ public class SendCommentService extends Service {
             notificationManager.notify(notificationId, notification);
 
             tasksNotifications.put(WeiboSendTask.this, notificationId);
-
         }
-
 
         private CommentBean sendText() throws WeiboException {
             CommentNewMsgDao dao = new CommentNewMsgDao(token, oriMsg.getId(), content);
             dao.enableComment_ori(comment_ori);
             return dao.sendNewMsg();
-
         }
 
         @Override
@@ -162,7 +154,6 @@ public class SendCommentService extends Service {
             return null;
         }
 
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -170,14 +161,12 @@ public class SendCommentService extends Service {
                 DraftDBManager.getInstance().remove(commentDraftBean.getId());
             }
             showSuccessfulNotification(WeiboSendTask.this);
-
         }
 
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
             showFailedNotification(WeiboSendTask.this);
-
         }
 
         private void showSuccessfulNotification(final WeiboSendTask task) {
@@ -250,7 +239,6 @@ public class SendCommentService extends Service {
                 builder.addAction(R.drawable.send_light, getString(R.string.retry_send),
                         retrySendIntent);
                 notification = builder.build();
-
             } else {
                 notification = builder.getNotification();
             }
@@ -264,7 +252,6 @@ public class SendCommentService extends Service {
                 }
             }, 3000);
         }
-
     }
 
     private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
@@ -284,6 +271,4 @@ public class SendCommentService extends Service {
             stopSelf();
         }
     }
-
-
 }

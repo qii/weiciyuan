@@ -150,7 +150,6 @@ public class WifiAutoDownloadPictureRunnable implements Runnable {
         }
         TaskCache.waitForPictureDownload(url, null, path,
                 FileLocationMethod.picture_large);
-
     }
 
     private void downloadAvatar(String url) {
@@ -163,8 +162,6 @@ public class WifiAutoDownloadPictureRunnable implements Runnable {
         }
         TaskCache.waitForPictureDownload(url, null, path,
                 FileLocationMethod.avatar_large);
-
     }
-
 }
 

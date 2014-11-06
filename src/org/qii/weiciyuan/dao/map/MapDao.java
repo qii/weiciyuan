@@ -63,7 +63,6 @@ public class MapDao {
                         -1);
 
         return bitmap;
-
     }
 
     public MapDao(String token, double lan, double lat) {
@@ -77,6 +76,4 @@ public class MapDao {
     private double lan;
 
     private double lat;
-
-
 }

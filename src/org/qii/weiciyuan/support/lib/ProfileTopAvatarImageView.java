@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.content.Context;
 import android.util.AttributeSet;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -24,8 +25,5 @@ public class ProfileTopAvatarImageView extends TimeLineAvatarImageView {
 
     protected void initLayout(Context context) {
         setPadding(Utility.dip2px(5), Utility.dip2px(5), Utility.dip2px(5), Utility.dip2px(5));
-
     }
-
-
 }

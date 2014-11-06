@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,6 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> implem
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -50,7 +50,6 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> implem
                 }
             };
 
-
     private List<MessageBean> getReposts() {
         return reposts;
     }
@@ -58,7 +57,6 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> implem
     public void setReposts(List<MessageBean> reposts) {
         this.reposts = reposts;
     }
-
 
     @Override
     public int getSize() {
@@ -85,7 +83,6 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> implem
         if (oldValue != null && oldValue.getSize() > 1) {
             getItemList().addAll(oldValue.getItemList().subList(1, oldValue.getSize()));
             setTotal_number(oldValue.getTotal_number());
-
         }
     }
 

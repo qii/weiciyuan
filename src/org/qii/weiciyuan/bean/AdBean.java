@@ -10,7 +10,6 @@ import android.os.Parcelable;
 public class AdBean implements Parcelable {
 
     private String id;
-
     private String mark;
 
     @Override

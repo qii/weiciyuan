@@ -2,18 +2,23 @@ package org.qii.weiciyuan.dao.fav;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.FavBean;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: qii
@@ -28,14 +33,12 @@ public class FavListDao {
         map.put("count", count);
         map.put("page", page);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         return jsonData;
     }
 
     public FavListBean getGSONMsgList() throws WeiboException {
-
         String json = getMsgListJson();
         Gson gson = new Gson();
 
@@ -66,24 +69,19 @@ public class FavListDao {
                     TimeUtility.dealMills(msg.getStatus());
                 }
             }
-
         }
 
         return value;
     }
 
-
     private String access_token;
     private String count;
     private String page;
 
-
     public FavListDao(String access_token) {
-
         this.access_token = access_token;
         this.count = SettingUtility.getMsgCount();
     }
-
 
     public FavListDao setCount(String count) {
         this.count = count;
@@ -94,6 +92,4 @@ public class FavListDao {
         this.page = page;
         return this;
     }
-
-
 }

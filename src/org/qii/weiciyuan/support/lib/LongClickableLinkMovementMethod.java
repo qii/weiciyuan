@@ -21,13 +21,10 @@ import android.widget.TextView;
 public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
     private static final int CLICK = 1;
-
     private static final int UP = 2;
-
     private static final int DOWN = 3;
 
     private boolean mHasPerformedLongPress;
-
     private CheckForLongPress mPendingCheckForLongPress;
 
     private boolean pressed;

@@ -56,9 +56,7 @@ public class DMDao {
         } catch (JsonSyntaxException e) {
 
             AppLogger.e(e.getMessage());
-
         }
         return value;
     }
-
 }

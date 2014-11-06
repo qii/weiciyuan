@@ -2,14 +2,15 @@ package org.qii.weiciyuan.dao.shorturl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.ShareListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
@@ -31,7 +32,6 @@ public class ShareShortUrlTimeLineDao {
         map.put("max_id", max_id);
         map.put("url_short", url_short);
 
-
         String jsonData = null;
 
         jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
@@ -40,7 +40,6 @@ public class ShareShortUrlTimeLineDao {
     }
 
     public ShareListBean getGSONMsgList() throws WeiboException {
-
         String json = getMsgListJson();
         Gson gson = new Gson();
 
@@ -48,16 +47,12 @@ public class ShareShortUrlTimeLineDao {
         try {
             value = gson.fromJson(json, ShareListBean.class);
         } catch (JsonSyntaxException e) {
-
             AppLogger.e(e.getMessage());
         }
 
         if (value != null) {
-
             Iterator<MessageBean> iterator = value.getItemList().iterator();
-
             while (iterator.hasNext()) {
-
                 MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
                     iterator.remove();
@@ -66,26 +61,20 @@ public class ShareShortUrlTimeLineDao {
                     TimeUtility.dealMills(msg);
                 }
             }
-
         }
-
         return value;
     }
-
 
     private String access_token;
     private String url_short;
     private String count;
     private String max_id;
 
-
     public ShareShortUrlTimeLineDao(String access_token, String url_short) {
-
         this.access_token = access_token;
         this.url_short = url_short;
         this.count = SettingUtility.getMsgCount();
     }
-
 
     public ShareShortUrlTimeLineDao setCount(String count) {
         this.count = count;

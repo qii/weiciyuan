@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.dao.location;
 
-
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.support.utils.Utility;
 
@@ -15,7 +14,6 @@ import java.util.Locale;
 public class GoogleGeoCoderDao {
 
     public String get() {
-
         Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
 
         List<Address> addresses = null;
@@ -38,7 +36,6 @@ public class GoogleGeoCoderDao {
             return builder.toString();
         }
         return null;
-
     }
 
     public GoogleGeoCoderDao(Activity activity, GeoBean geoBean) {
@@ -47,6 +44,5 @@ public class GoogleGeoCoderDao {
     }
 
     private Activity activity;
-
     private GeoBean geoBean;
 }

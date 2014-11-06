@@ -1,6 +1,32 @@
 package org.qii.weiciyuan.support.utils;
 
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.AtUserBean;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.DMBean;
+import org.qii.weiciyuan.bean.DMListBean;
+import org.qii.weiciyuan.bean.DMUserBean;
+import org.qii.weiciyuan.bean.DMUserListBean;
+import org.qii.weiciyuan.bean.EmotionBean;
+import org.qii.weiciyuan.bean.FavBean;
+import org.qii.weiciyuan.bean.FavListBean;
+import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.bean.GroupBean;
+import org.qii.weiciyuan.bean.GroupListBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.MessageReCmtCountBean;
+import org.qii.weiciyuan.bean.NearbyStatusListBean;
+import org.qii.weiciyuan.bean.RepostListBean;
+import org.qii.weiciyuan.bean.SearchStatusListBean;
+import org.qii.weiciyuan.bean.SearchUserBean;
+import org.qii.weiciyuan.bean.ShareListBean;
+import org.qii.weiciyuan.bean.TagBean;
+import org.qii.weiciyuan.bean.TopicResultListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.UserListBean;
 
 /**
  * User: qii
@@ -19,7 +45,8 @@ public class ObjectToStringUtility {
     public static String toString(CommentBean comment) {
         UserBean userBean = comment.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeUtility.getListTime(comment.getMills()), username, comment.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(comment.getMills()), username,
+                comment.getText());
     }
 
     public static String toString(CommentListBean commentList) {
@@ -41,19 +68,22 @@ public class ObjectToStringUtility {
     public static String toString(MessageBean msg) {
         UserBean userBean = msg.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeUtility.getListTime(msg.getMills()), username, msg.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(msg.getMills()), username,
+                msg.getText());
     }
 
     public static String toString(DMBean dm) {
         UserBean userBean = dm.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeUtility.getListTime(dm.getMills()), username, dm.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(dm.getMills()), username,
+                dm.getText());
     }
 
     public static String toString(DMUserBean dm) {
         UserBean userBean = dm.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeUtility.getListTime(dm.getMills()), username, dm.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(dm.getMills()), username,
+                dm.getText());
     }
 
     public static String toString(DMUserListBean listBean) {

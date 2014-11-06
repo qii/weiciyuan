@@ -34,11 +34,9 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class GifPictureFragment extends Fragment {
 
     private static final int NAVIGATION_BAR_HEIGHT_DP_UNIT = 48;
-
     private static final int ANIMATION_DURATION = 300;
 
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_WIDTH = 2000;
-
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
 
     private PhotoView gifImageView;
@@ -82,7 +80,6 @@ public class GifPictureFragment extends Fragment {
         try {
             GifDrawable gifFromFile = new GifDrawable(gifFile);
             gifImageView.setImageDrawable(gifFromFile);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -185,7 +182,6 @@ public class GifPictureFragment extends Fragment {
                             animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
                                     "clipBottom", thumbnailAndOriDeltaHeight, 0));
                             animationSet.start();
-
                         } else {
 
                             AnimatorSet animationSet = new AnimatorSet();
@@ -213,8 +209,6 @@ public class GifPictureFragment extends Fragment {
                                     "clipRight", thumbnailAndOriDeltaWidth, 0));
 
                             animationSet.start();
-
-
                         }
 
                         photoView.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -225,7 +219,6 @@ public class GifPictureFragment extends Fragment {
         return view;
     }
 
-
     public void animationExit(ObjectAnimator backgroundAnimator) {
 
         if (Math.abs(gifImageView.getScale() - 1.0f) > 0.1f) {
@@ -235,7 +228,6 @@ public class GifPictureFragment extends Fragment {
 
         getActivity().overridePendingTransition(0, 0);
         animateClose(backgroundAnimator);
-
     }
 
     private void animateClose(ObjectAnimator backgroundAnimator) {
@@ -273,7 +265,6 @@ public class GifPictureFragment extends Fragment {
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             startScale = (float) startBounds.height() / finalBounds.height();
-
         } else {
             startScale = (float) startBounds.width() / finalBounds.width();
         }
@@ -315,7 +306,6 @@ public class GifPictureFragment extends Fragment {
 
                                     }
                                 });
-
                     }
                 });
 
@@ -358,9 +348,6 @@ public class GifPictureFragment extends Fragment {
                     "clipRight", 0, serverClipThumbnailRightSizePercent));
 
             animationSet.start();
-
-
         }
     }
-
 }

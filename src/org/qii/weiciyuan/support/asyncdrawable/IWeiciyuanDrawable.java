@@ -1,12 +1,13 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import org.qii.weiciyuan.bean.UserBean;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.bean.UserBean;
 
 /**
  * User: qii

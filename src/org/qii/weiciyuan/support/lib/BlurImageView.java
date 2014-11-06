@@ -20,13 +20,11 @@ import android.widget.ImageView;
  */
 public class BlurImageView extends ImageView {
 
-
     private static int radius = 20;
 
     private Thread blurThread;
 
     private String url;
-
 
     public BlurImageView(Context context) {
         super(context);
@@ -85,7 +83,6 @@ public class BlurImageView extends ImageView {
                 }
                 return;
             }
-
         }
         super.setImageDrawable(drawable);
     }
@@ -102,7 +99,6 @@ public class BlurImageView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
-
 
     private Bitmap fastBlur(Bitmap sentBitmap, int radius) {
 //       on Android 4.4, some bitmaps will crash, fuck RenderScript

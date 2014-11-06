@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ public class ShareListBean extends ListBean<MessageBean, ShareListBean> implemen
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -56,7 +56,6 @@ public class ShareListBean extends ListBean<MessageBean, ShareListBean> implemen
                     return new ShareListBean[size];
                 }
             };
-
 
     public String getUrl_long() {
         return url_long;
@@ -99,8 +98,9 @@ public class ShareListBean extends ListBean<MessageBean, ShareListBean> implemen
 
     @Override
     public void addNewData(ShareListBean newValue) {
-        if (newValue == null)
+        if (newValue == null) {
             return;
+        }
         getItemList().clear();
         getItemList().addAll(newValue.getItemList());
         setTotal_number(newValue.getTotal_number());

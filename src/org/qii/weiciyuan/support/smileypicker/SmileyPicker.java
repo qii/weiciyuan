@@ -38,20 +38,15 @@ public class SmileyPicker extends LinearLayout {
     private int mPickerHeight;
 
     private EditText mEditText;
-
+    private ViewPager viewPager;
+    private ImageView centerPoint;
+    private ImageView leftPoint;
+    private ImageView rightPoint;
     private LayoutInflater mInflater;
 
     private Activity activity;
 
     private final LayoutTransition transitioner = new LayoutTransition();
-
-    private ViewPager viewPager;
-
-    private ImageView centerPoint;
-
-    private ImageView leftPoint;
-
-    private ImageView rightPoint;
 
     public SmileyPicker(Context paramContext) {
         super(paramContext);
@@ -92,7 +87,6 @@ public class SmileyPicker extends LinearLayout {
                         centerPoint.getDrawable().setLevel(0);
                         rightPoint.getDrawable().setLevel(1);
                         break;
-
                 }
             }
         });
@@ -104,9 +98,7 @@ public class SmileyPicker extends LinearLayout {
         this.activity = activity;
         rootLayout.setLayoutTransition(transitioner);
         setupAnimations(transitioner);
-
     }
-
 
     public void show(Activity paramActivity, boolean showAnimation) {
         if (showAnimation) {
@@ -123,16 +115,13 @@ public class SmileyPicker extends LinearLayout {
         // this method is used to fix this issue
         paramActivity.getWindow()
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
     }
 
     public void hide(Activity paramActivity) {
         setVisibility(View.GONE);
         paramActivity.getWindow()
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
     }
-
 
     private class SmileyPagerAdapter extends PagerAdapter {
 
@@ -140,7 +129,6 @@ public class SmileyPicker extends LinearLayout {
         public void destroyItem(ViewGroup container, int position, Object object) {
             View view = (View) object;
             container.removeView(view);
-
         }
 
         @Override
@@ -162,8 +150,6 @@ public class SmileyPicker extends LinearLayout {
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-
-
         }
 
         @Override
@@ -180,13 +166,9 @@ public class SmileyPicker extends LinearLayout {
     private final class SmileyAdapter extends BaseAdapter {
 
         private LayoutInflater mInflater;
-
         private List<String> keys;
-
         private Map<String, Bitmap> bitmapMap;
-
         private int emotionPosition;
-
         private int count;
 
         public SmileyAdapter(Context context, int emotionPosition) {
@@ -216,7 +198,6 @@ public class SmileyPicker extends LinearLayout {
                 default:
                     throw new IllegalArgumentException("emotion position is invalid");
             }
-
         }
 
         private void bindView(final int position, View contentView) {
@@ -226,7 +207,6 @@ public class SmileyPicker extends LinearLayout {
                 imageView.setVisibility(View.VISIBLE);
                 textView.setVisibility(View.INVISIBLE);
                 imageView.setImageBitmap(bitmapMap.get(keys.get(position)));
-
             } else {
                 imageView.setVisibility(View.INVISIBLE);
                 textView.setVisibility(View.VISIBLE);
@@ -269,7 +249,6 @@ public class SmileyPicker extends LinearLayout {
     }
 
     private void setupAnimations(LayoutTransition transition) {
-
         ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "translationY",
                 SmileyPickerUtility.getScreenHeight(this.activity), mPickerHeight).
                 setDuration(transition.getDuration(LayoutTransition.APPEARING));
@@ -279,7 +258,5 @@ public class SmileyPicker extends LinearLayout {
                 SmileyPickerUtility.getScreenHeight(this.activity)).
                 setDuration(transition.getDuration(LayoutTransition.DISAPPEARING));
         transition.setAnimator(LayoutTransition.DISAPPEARING, animOut);
-
-
     }
 }

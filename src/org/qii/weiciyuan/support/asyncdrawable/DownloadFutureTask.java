@@ -50,7 +50,6 @@ public class DownloadFutureTask extends FutureTask<Boolean> {
         private FileLocationMethod method;
 
         private int progress;
-
         private int max;
 
         public void addDownloadListener(FileDownloaderHttpHelper.DownloadListener listener) {
@@ -94,7 +93,6 @@ public class DownloadFutureTask extends FutureTask<Boolean> {
                 case picture_large:
                     actualDownloadUrl = url.replace("large", "woriginal");
                     break;
-
             }
 
             boolean result = ImageUtility.getBitmapFromNetWork(actualDownloadUrl, filePath,
@@ -121,5 +119,4 @@ public class DownloadFutureTask extends FutureTask<Boolean> {
             return result;
         }
     }
-
 }

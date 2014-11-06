@@ -35,16 +35,13 @@ public class GalleryAnimationActivity extends FragmentActivity {
     private static final int STATUS_BAR_HEIGHT_DP_UNIT = 25;
 
     private ArrayList<AnimationRect> rectList;
-
     private ArrayList<String> urls = new ArrayList<String>();
 
     private ViewPager pager;
-
     private TextView position;
+    private View background;
 
     private int initPosition;
-
-    private View background;
 
     private ColorDrawable backgroundColor;
 
@@ -117,7 +114,6 @@ public class GalleryAnimationActivity extends FragmentActivity {
         if (savedInstanceState != null) {
             showBackgroundImmediately();
         }
-
     }
 
     private HashMap<Integer, ContainerFragment> fragmentMap
@@ -163,7 +159,6 @@ public class GalleryAnimationActivity extends FragmentActivity {
             return urls.size();
         }
     }
-
 
     public void showBackgroundImmediately() {
         if (background.getBackground() == null) {
@@ -212,6 +207,4 @@ public class GalleryAnimationActivity extends FragmentActivity {
             super.onBackPressed();
         }
     }
-
-
 }

@@ -2,14 +2,15 @@ package org.qii.weiciyuan.dao.user;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
@@ -23,7 +24,6 @@ import java.util.Map;
 public class StatusesTimeLineDao {
 
     public MessageListBean getGSONMsgList() throws WeiboException {
-
         String url = URLHelper.STATUSES_TIMELINE_BY_ID;
 
         Map<String, String> map = new HashMap<String, String>();
@@ -38,9 +38,7 @@ public class StatusesTimeLineDao {
         map.put("feature", feature);
         map.put("trim_user", trim_user);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         Gson gson = new Gson();
 
@@ -56,13 +54,11 @@ public class StatusesTimeLineDao {
             for (MessageBean b : value.getItemList()) {
                 TimeUtility.dealMills(b);
                 TimeLineUtility.addJustHighLightLinks(b);
-
             }
         }
 
         return value;
     }
-
 
     public StatusesTimeLineDao(String token, String uid) {
         this.access_token = token;

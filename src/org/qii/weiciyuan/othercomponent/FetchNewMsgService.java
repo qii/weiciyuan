@@ -33,7 +33,6 @@ import java.util.List;
  */
 public class FetchNewMsgService extends IntentService {
 
-
     public static Intent newIntentFromAlarmManager() {
         Intent intent = new Intent(GlobalContext.getInstance(), FetchNewMsgService.class);
         intent.setAction(ACTION_ALARM_MANAGER);
@@ -44,18 +43,14 @@ public class FetchNewMsgService extends IntentService {
         Intent intent = new Intent(GlobalContext.getInstance(), FetchNewMsgService.class);
         intent.setAction(ACTION_OPEN_APP);
         return intent;
-
     }
 
     private static final String ACTION_ALARM_MANAGER = "org.qii.weiciyuan:alarmmanager";
-
     private static final String ACTION_OPEN_APP = "org.qii.weiciyuan:openapp";
 
     //close service between 1 clock and 8 clock
     private static final int NIGHT_START_TIME_HOUR = 1;
-
     private static final int NIGHT_END_TIME_HOUR = 7;
-
 
     public FetchNewMsgService() {
         super("FetchNewMsgService");
@@ -68,7 +63,6 @@ public class FetchNewMsgService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         if (intent == null) {
             return;
         }
@@ -104,13 +98,11 @@ public class FetchNewMsgService extends IntentService {
         AppLogger.i("FetchNewMsgService finished");
     }
 
-
     private boolean isNowNight() {
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         return hour >= NIGHT_START_TIME_HOUR && hour <= NIGHT_END_TIME_HOUR;
     }
-
 
     private void fetchMsg(AccountBean accountBean) throws WeiboException {
         CommentListBean commentResult = null;
@@ -142,8 +134,6 @@ public class FetchNewMsgService extends IntentService {
             }
 
             commentResult = dao.getGSONMsgListWithoutClearUnread();
-
-
         }
 
         if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {

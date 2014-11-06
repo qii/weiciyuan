@@ -21,7 +21,6 @@ public class ClickableTextViewMentionLinkOnTouchListener implements View.OnTouch
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
         Layout layout = ((TextView) v).getLayout();
 
         if (layout == null) {
@@ -94,7 +93,5 @@ public class ClickableTextViewMentionLinkOnTouchListener implements View.OnTouch
         }
 
         return false;
-
     }
-
 }

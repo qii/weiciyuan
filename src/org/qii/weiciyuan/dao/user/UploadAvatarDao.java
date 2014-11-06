@@ -14,7 +14,6 @@ import java.util.Map;
  */
 public class UploadAvatarDao {
 
-
     public boolean upload() throws WeiboException {
         String url = URLHelper.AVATAR_UPLOAD;
         Map<String, String> map = new HashMap<String, String>();

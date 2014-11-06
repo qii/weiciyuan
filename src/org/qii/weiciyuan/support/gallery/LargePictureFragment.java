@@ -34,7 +34,6 @@ public class LargePictureFragment extends Fragment {
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -126,7 +125,6 @@ public class LargePictureFragment extends Fragment {
         large.setVisibility(View.VISIBLE);
     }
 
-
     private class LargeOnTouchListener implements View.OnTouchListener {
 
         GestureDetector gestureDetector;
@@ -149,5 +147,4 @@ public class LargePictureFragment extends Fragment {
             return false;
         }
     }
-
 }

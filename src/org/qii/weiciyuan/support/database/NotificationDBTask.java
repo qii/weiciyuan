@@ -47,7 +47,6 @@ public class NotificationDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-
     public static void addUnreadNotification(String accountId, ArrayList<String> msgIds,
             UnreadDBType type) {
 
@@ -66,7 +65,6 @@ public class NotificationDBTask {
                 ih.bind(accountidColumn, accountId);
                 ih.bind(typeColumn, type.getValue());
                 ih.execute();
-
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException ignored) {
@@ -114,7 +112,6 @@ public class NotificationDBTask {
         return total >= AppConfig.DEFAULT_NOTIFICATION_UNREAD_DB_CACHE_COUNT;
     }
 
-
     public static void asyncCleanUnread(final String accountId, final UnreadDBType type) {
         new Thread(new Runnable() {
             @Override
@@ -122,7 +119,6 @@ public class NotificationDBTask {
                 if (needCleanDB(accountId)) {
                     cleanUnread(accountId, type);
                 }
-
             }
         }).start();
     }

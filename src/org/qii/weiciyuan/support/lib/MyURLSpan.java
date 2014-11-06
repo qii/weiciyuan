@@ -79,7 +79,6 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         }
     }
 
-
     public void onLongClick(View widget) {
         Uri data = Uri.parse(getURL());
         if (data != null) {
@@ -95,10 +94,7 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
                 Utility.vibrate(widget.getContext(), widget);
                 LongClickLinkDialog dialog = new LongClickLinkDialog(data);
                 Utility.forceShowDialog((FragmentActivity) widget.getContext(), dialog);
-
-
             }
-
         }
     }
 

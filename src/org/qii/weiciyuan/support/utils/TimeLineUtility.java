@@ -39,7 +39,6 @@ public class TimeLineUtility {
     private TimeLineUtility() {
     }
 
-
     public static void addLinks(TextView view) {
         CharSequence content = view.getText();
         view.setText(convertNormalStringToSpannableString(content.toString()));
@@ -234,7 +233,6 @@ public class TimeLineUtility {
             if (hasOriMessage && oriMessage.getText().contains(filterWord)) {
                 return true;
             }
-
         }
 
         for (String filterWord : userFilter) {
@@ -263,7 +261,6 @@ public class TimeLineUtility {
                 if (filterWord.equals(str2.substring(1, str2.length() - 1))) {
                     return true;
                 }
-
             }
 
             if (content.getRetweeted_status() != null) {
@@ -280,10 +277,8 @@ public class TimeLineUtility {
                     if (filterWord.equals(str2.substring(1, str2.length() - 1))) {
                         return true;
                     }
-
                 }
             }
-
         }
 
         for (String filterWord : sourceFilter) {
@@ -300,7 +295,6 @@ public class TimeLineUtility {
 
         return false;
     }
-
 
     private static void addEmotions(SpannableString value) {
         Matcher localMatcher = WeiboPatterns.EMOTION_URL.matcher(value);
@@ -319,7 +313,6 @@ public class TimeLineUtility {
                             ImageSpan.ALIGN_BASELINE);
                     value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-
             }
         }
     }

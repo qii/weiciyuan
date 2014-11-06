@@ -26,10 +26,11 @@ public class MusicInfo {
 
     @Override
     public String toString() {
-        if (!TextUtils.isEmpty(artist))
+        if (!TextUtils.isEmpty(artist)) {
             return "Now Playing:" + artist + ":" + track;
-        else
+        } else {
             return "Now Playing:" + track;
+        }
     }
 
     public boolean isEmpty() {

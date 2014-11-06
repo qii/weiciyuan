@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class AppActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
 
     private static final int SCHEDULE_DELAY_MILLS = 3000;
-
     private static final int FETCH_PERIOD_SECONDS = 30;
 
     private int visibleActivityCount = 0;
@@ -24,7 +23,6 @@ public class AppActivityLifecycleCallbacks implements Application.ActivityLifecy
     private Handler uiHandler = new Handler(Looper.getMainLooper());
 
     private LogOnExceptionScheduledExecutor logOnExceptionScheduledExecutor;
-
     private ScheduledFuture scheduledFuture;
 
     public AppActivityLifecycleCallbacks() {

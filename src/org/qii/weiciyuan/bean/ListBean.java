@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**

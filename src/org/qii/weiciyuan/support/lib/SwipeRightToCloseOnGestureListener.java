@@ -1,11 +1,12 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.app.Activity;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -16,7 +17,6 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
     protected MotionEvent mLastOnDownEvent = null;
     private float[] firstPosition = new float[2];
     private View topView;
-
 
     public SwipeRightToCloseOnGestureListener(Activity activity, ViewPager viewPager) {
         this.viewPager = viewPager;
@@ -44,12 +44,12 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
         }
         final int MAX_MOTION_EVENT_DOWN__X_POSITION = Utility.dip2px(25);
         float s = e2.getRawX() - firstPosition[0];
-        if ((this.viewPager == null || this.viewPager.getCurrentItem() == 0) && firstPosition[0] <= MAX_MOTION_EVENT_DOWN__X_POSITION) {
+        if ((this.viewPager == null || this.viewPager.getCurrentItem() == 0)
+                && firstPosition[0] <= MAX_MOTION_EVENT_DOWN__X_POSITION) {
             this.topView.setTranslationX(s);
             return super.onScroll(e1, e2, distanceX, distanceY);
         } else {
             return false;
         }
     }
-
 }

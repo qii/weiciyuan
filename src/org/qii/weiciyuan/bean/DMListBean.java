@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.List;
 public class DMListBean extends ListBean<DMBean, DMListBean> implements Parcelable {
     private List<DMBean> direct_messages = new ArrayList<DMBean>();
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -22,7 +22,6 @@ public class DMListBean extends ListBean<DMBean, DMListBean> implements Parcelab
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(total_number);
         dest.writeString(previous_cursor);
         dest.writeString(next_cursor);
@@ -50,7 +49,6 @@ public class DMListBean extends ListBean<DMBean, DMListBean> implements Parcelab
                 }
             };
 
-
     public List<DMBean> getDirect_messages() {
         return direct_messages;
     }
@@ -63,7 +61,6 @@ public class DMListBean extends ListBean<DMBean, DMListBean> implements Parcelab
     public int getSize() {
         return direct_messages.size();
     }
-
 
     @Override
     public DMBean getItem(int position) {

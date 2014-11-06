@@ -48,26 +48,21 @@ public final class GlobalContext extends Application {
 
     //image size
     private Activity activity = null;
-
     private Activity currentRunningActivity = null;
 
     private DisplayMetrics displayMetrics = null;
+    private Handler handler = new Handler();
 
     //image memory cache
     private LruCache<String, Bitmap> appBitmapCache = null;
 
     //current account info
     private AccountBean accountBean = null;
-
+    private GroupListBean group = null;
 
     private LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>> emotionsPic
             = new LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>>();
-
-    private GroupListBean group = null;
-
     private MusicInfo musicInfo = new MusicInfo();
-
-    private Handler handler = new Handler();
 
     public boolean tokenExpiredDialogIsShowing = false;
 
@@ -178,12 +173,10 @@ public final class GlobalContext extends Application {
         return getAccountBean().getUid();
     }
 
-
     public String getCurrentAccountName() {
 
         return getAccountBean().getUsernick();
     }
-
 
     public synchronized LruCache<String, Bitmap> getBitmapCache() {
         if (appBitmapCache == null) {
@@ -249,7 +242,6 @@ public final class GlobalContext extends Application {
         }
     }
 
-
     private void getEmotionsTask() {
         Map<String, String> general = SmileyMap.getInstance().getGeneral();
         emotionsPic.put(SmileyMap.GENERAL_EMOTION_POSITION, getEmotionsTask(general));
@@ -298,6 +290,5 @@ public final class GlobalContext extends Application {
     public boolean checkUserIsLogin() {
         return getInstance().getAccountBean() != null;
     }
-
 }
 

@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import org.qii.weiciyuan.bean.MessageBean;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.bean.MessageBean;
 
 /**
  * User: qii
@@ -33,7 +34,8 @@ public class RepostDraftBean implements Parcelable {
                 public RepostDraftBean createFromParcel(Parcel in) {
                     RepostDraftBean repostDraftBean = new RepostDraftBean();
                     repostDraftBean.content = in.readString();
-                    repostDraftBean.messageBean = in.readParcelable(MessageBean.class.getClassLoader());
+                    repostDraftBean.messageBean = in
+                            .readParcelable(MessageBean.class.getClassLoader());
                     repostDraftBean.accountId = in.readString();
                     repostDraftBean.id = in.readString();
                     return repostDraftBean;
@@ -52,7 +54,6 @@ public class RepostDraftBean implements Parcelable {
         this.content = content;
     }
 
-
     public MessageBean getMessageBean() {
         return messageBean;
     }
@@ -61,7 +62,6 @@ public class RepostDraftBean implements Parcelable {
         this.messageBean = messageBean;
     }
 
-
     public String getAccountId() {
         return accountId;
     }
@@ -69,7 +69,6 @@ public class RepostDraftBean implements Parcelable {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
-
 
     public String getId() {
         return id;

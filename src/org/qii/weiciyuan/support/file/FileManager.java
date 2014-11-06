@@ -29,13 +29,9 @@ import java.util.List;
 public class FileManager {
 
     private static final String PICTURE_CACHE = "picture_cache";
-
     private static final String TXT2PIC = "txt2pic";
-
     private static final String WEBVIEW_FAVICON = "favicon";
-
     private static final String LOG = "log";
-
     private static final String WEICIYUAN = "weiciyuan";
 
     /**
@@ -82,7 +78,6 @@ public class FileManager {
                                                 }
                                             })
                                     .show();
-
                         }
                     });
                 }
@@ -114,7 +109,6 @@ public class FileManager {
 
         return !(!canRead || onlyRead || unMounted);
     }
-
 
     public static String getUploadPicTempFile() {
 
@@ -182,7 +176,6 @@ public class FileManager {
         }
 
         return result;
-
     }
 
     public static String getTxt2picPath() {
@@ -197,7 +190,6 @@ public class FileManager {
         }
         return path;
     }
-
 
     public static File createNewFileInSDCard(String absolutePath) {
         if (!isExternalStorageMounted()) {
@@ -225,12 +217,9 @@ public class FileManager {
             } catch (IOException e) {
                 AppLogger.d(e.getMessage());
                 return null;
-
             }
-
         }
         return null;
-
     }
 
     public static String getWebViewFaviconDirPath() {
@@ -254,14 +243,12 @@ public class FileManager {
         return "0MB";
     }
 
-
     public static List<String> getCachePath() {
         List<String> path = new ArrayList<String>();
         if (isExternalStorageMounted()) {
             String thumbnailPath = getSdCardPath() + File.separator + PICTURE_CACHE;
 
             path.add(thumbnailPath);
-
         }
         return path;
     }
@@ -272,8 +259,6 @@ public class FileManager {
             String thumbnailPath = getSdCardPath() + File.separator + PICTURE_CACHE;
 
             size += new FileSize(new File(thumbnailPath)).getLongSize();
-
-
         }
         return FileSize.convertSizeToString(size);
     }
@@ -327,7 +312,6 @@ public class FileManager {
         } catch (IOException e) {
             return false;
         }
-
     }
 
     private static void copyFile(File sourceFile, File targetFile) throws IOException {

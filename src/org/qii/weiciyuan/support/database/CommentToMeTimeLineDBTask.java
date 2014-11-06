@@ -32,7 +32,6 @@ public class CommentToMeTimeLineDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -41,7 +40,6 @@ public class CommentToMeTimeLineDBTask {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getReadableDatabase();
     }
-
 
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
@@ -63,14 +61,12 @@ public class CommentToMeTimeLineDBTask {
                     ih.bind(accountidColumn, accountId);
                     String json = gson.toJson(msg);
                     ih.bind(jsondataColumn, json);
-
                 } else {
                     ih.bind(mblogidColumn, "-1");
                     ih.bind(accountidColumn, accountId);
                     ih.bind(jsondataColumn, "");
                 }
                 ih.execute();
-
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
@@ -118,9 +114,7 @@ public class CommentToMeTimeLineDBTask {
         result.setComments(msgList);
         c.close();
         return new CommentTimeLineData(result, position);
-
     }
-
 
     private static void reduceCommentTable(String accountId) {
         String searchCount = "select count(" + CommentsTable.CommentsDataTable.ID + ") as total"
@@ -184,7 +178,6 @@ public class CommentToMeTimeLineDBTask {
         new Thread(runnable).start();
     }
 
-
     private static void updatePosition(TimeLinePosition position, String accountId) {
         String sql = "select * from " + CommentsTable.TABLE_NAME + " where "
                 + CommentsTable.ACCOUNTID + "  = "
@@ -223,12 +216,10 @@ public class CommentToMeTimeLineDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();

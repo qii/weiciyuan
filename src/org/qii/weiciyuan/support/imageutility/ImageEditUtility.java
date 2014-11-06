@@ -1,11 +1,18 @@
 package org.qii.weiciyuan.support.imageutility;
 
-import android.content.Context;
-import android.graphics.*;
-import android.view.View;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.file.FileManager;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,12 +68,12 @@ public class ImageEditUtility {
             FileOutputStream out = new FileOutputStream(path);
             output.compress(Bitmap.CompressFormat.PNG, 90, out);
 //            bitmap.recycle();
-            if (new File(path).exists())
+            if (new File(path).exists()) {
                 return path;
+            }
         } catch (Exception e) {
             AppLogger.e(e.getMessage());
         }
         return "";
     }
-
 }

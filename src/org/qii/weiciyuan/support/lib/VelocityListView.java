@@ -29,12 +29,10 @@ public class VelocityListView extends AutoScrollListView {
      * @author Cyril Mottier
      */
     public interface OnVelocityListViewListener {
-
         void onVelocityChanged(int velocity);
     }
 
     public interface OnVelocityEqualZeroListener {
-
         void onZero();
     }
 
@@ -51,9 +49,7 @@ public class VelocityListView extends AutoScrollListView {
 
     private final ForwardingOnScrollListener mForwardingOnScrollListener
             = new ForwardingOnScrollListener();
-
     private OnVelocityListViewListener mOnVelocityListViewListener;
-
     private OnVelocityEqualZeroListener onVelocityEqualZeroListener;
 
     private long mTime = INVALID_TIME;
@@ -61,17 +57,12 @@ public class VelocityListView extends AutoScrollListView {
     private int mVelocity;
 
     private int mFirstVisiblePosition;
-
     private int mFirstVisibleViewTop;
-
     private int mLastVisiblePosition;
-
     private int mLastVisibleViewTop;
-
     private int mLastItemCount;
 
     public static final int TOWARDS_BOTTOM = 0;
-
     public static final int TOWARDS_TOP = 1;
 
     private int towardsOrientation = TOWARDS_BOTTOM;
@@ -136,7 +127,6 @@ public class VelocityListView extends AutoScrollListView {
                 towardsOrientation = TOWARDS_BOTTOM;
             } else if (velocity > 0) {
                 towardsOrientation = TOWARDS_TOP;
-
             }
         }
     }
@@ -165,7 +155,6 @@ public class VelocityListView extends AutoScrollListView {
             for (OnScrollListener l : clientListener) {
                 l.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
             }
-
         }
 
         @Override
@@ -221,7 +210,6 @@ public class VelocityListView extends AutoScrollListView {
                             && mFirstVisiblePosition <= lastVisiblePosition) {
                         distance = getChildAt(mFirstVisiblePosition - firstVisiblePosition).getTop()
                                 - mFirstVisibleViewTop;
-
                     } else if (mLastVisiblePosition >= firstVisiblePosition
                             && mLastVisiblePosition <= lastVisiblePosition) {
                         distance = getChildAt(mLastVisiblePosition - firstVisiblePosition).getTop()
@@ -252,5 +240,4 @@ public class VelocityListView extends AutoScrollListView {
             mTime = now;
         }
     };
-
 }

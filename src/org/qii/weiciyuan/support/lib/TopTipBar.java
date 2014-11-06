@@ -46,7 +46,6 @@ public class TopTipBar extends TextView {
 
     private Type type;
 
-
     private static class TopTipBarComparator implements Comparator<Long>, Serializable {
 
         @Override
@@ -67,14 +66,11 @@ public class TopTipBar extends TextView {
     public static interface OnChangeListener {
 
         public void onChange(int count);
-
     }
-
 
     public void setOnChangeListener(OnChangeListener l) {
         this.onChangeListener = l;
         this.onChangeListener.onChange(ids.size());
-
     }
 
     public TopTipBar(Context context) {
@@ -168,14 +164,12 @@ public class TopTipBar extends TextView {
                     }
                 });
             }
-
         };
         Handler handler = getHandler();
         if (handler != null) {
             handler.postDelayed(lastRunnable, duration);
         }
     }
-
 
     private void setCount() {
 
@@ -190,7 +184,6 @@ public class TopTipBar extends TextView {
             disappear(0);
         }
     }
-
 
     public void hideCount() {
         if (!error) {
@@ -226,7 +219,6 @@ public class TopTipBar extends TextView {
         } else {
             setVisibility(View.INVISIBLE);
         }
-
     }
 
     public void clearAndReset() {

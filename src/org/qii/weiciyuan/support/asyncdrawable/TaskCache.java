@@ -35,7 +35,6 @@ public class TaskCache {
         public boolean offer(Runnable runnable) {
             return super.offerFirst(runnable);
         }
-
     }, sDownloadThreadFactory,
             new ThreadPoolExecutor.DiscardOldestPolicy() {
                 @Override
@@ -67,9 +66,7 @@ public class TaskCache {
                 TaskCache.backgroundWifiDownloadPicturesWorkLock.notifyAll();
             }
         }
-
     }
-
 
     public static boolean isDownloadTaskFinished() {
         return TaskCache.downloadTasks.isEmpty();
@@ -78,7 +75,6 @@ public class TaskCache {
     public static boolean isThisUrlTaskFinished(String url) {
         return !downloadTasks.containsKey(url);
     }
-
 
     public static boolean waitForPictureDownload(String url,
             FileDownloaderHttpHelper.DownloadListener downloadListener, String savedPath,
@@ -98,7 +94,6 @@ public class TaskCache {
                     downloadFutureTask = newDownloadFutureTask;
                     DOWNLOAD_THREAD_POOL_EXECUTOR.execute(downloadFutureTask);
                 }
-
             }
 
             downloadFutureTask.addDownloadListener(downloadListener);
@@ -117,9 +112,6 @@ public class TaskCache {
             } catch (CancellationException e) {
                 removeDownloadTask(url, downloadFutureTask);
             }
-
         }
     }
-
-
 }

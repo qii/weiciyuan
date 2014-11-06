@@ -3,12 +3,13 @@ package org.qii.weiciyuan.dao.maintimeline;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
 import org.qii.weiciyuan.bean.MessageReCmtCountBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,14 +34,10 @@ public class TimeLineReCmtCountDao {
 
         map.put("ids", idsBuilder.toString());
 
-
         return HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
     }
 
-
     public List<MessageReCmtCountBean> get() throws WeiboException {
-
-
         String json = getJson();
 
         List<MessageReCmtCountBean> value = null;
@@ -52,17 +49,16 @@ public class TimeLineReCmtCountDao {
             AppLogger.e(e.getMessage());
         }
 
-
         return value;
     }
-
 
     private String access_token;
     private List<String> msgIds;
 
     public TimeLineReCmtCountDao(String access_token, List<String> msgIds) {
-        if (msgIds == null)
+        if (msgIds == null) {
             throw new IllegalArgumentException("msgIds cant be null");
+        }
         int size = (msgIds.size() >= 100 ? 99 : msgIds.size());
         this.msgIds = new ArrayList<String>();
         this.access_token = access_token;

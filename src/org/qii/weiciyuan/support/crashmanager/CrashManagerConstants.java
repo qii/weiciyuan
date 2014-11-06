@@ -15,7 +15,6 @@ public class CrashManagerConstants {
     static String PHONE_MODEL = null;
     static String PHONE_MANUFACTURER = null;
 
-
     public static void loadFromContext(Context context) {
 
         CrashManagerConstants.ANDROID_VERSION = android.os.Build.VERSION.RELEASE;

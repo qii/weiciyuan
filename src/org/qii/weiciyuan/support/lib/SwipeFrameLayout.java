@@ -25,7 +25,6 @@ public class SwipeFrameLayout extends FrameLayout {
     private Activity activity;
 
     private boolean isDragging = false;
-
     private float[] initPointLocation = new float[2];
 
     private View topView;
@@ -35,7 +34,6 @@ public class SwipeFrameLayout extends FrameLayout {
     private int max_motion_event_down_x_position;
 
     private GestureDetector gestureDetector;
-
     private OverScroller scroller;
 
     private Handler uiHandler = new Handler();
@@ -133,14 +131,11 @@ public class SwipeFrameLayout extends FrameLayout {
                 }
                 AnimationUtility.forceConvertActivityFromTranslucent(activity);
                 forceConvertActivityFromTranslucentRunnable = null;
-
-
             }
         };
 
         forceConvertActivityFromTranslucentRunnable = runnable;
         uiHandler.postDelayed(forceConvertActivityFromTranslucentRunnable, 3000);
-
     }
 
     private void forceConvertActivityToTranslucent() {
@@ -148,7 +143,6 @@ public class SwipeFrameLayout extends FrameLayout {
             uiHandler.removeCallbacks(forceConvertActivityFromTranslucentRunnable);
         } else {
             AnimationUtility.forceConvertActivityToTranslucent(activity);
-
         }
     }
 
@@ -175,11 +169,9 @@ public class SwipeFrameLayout extends FrameLayout {
                 }
 
                 break;
-
         }
 
         return super.dispatchTouchEvent(ev);
-
     }
 
     @Override
@@ -195,7 +187,6 @@ public class SwipeFrameLayout extends FrameLayout {
                     return true;
                 }
                 break;
-
         }
         return super.onInterceptTouchEvent(ev);
     }
@@ -229,7 +220,6 @@ public class SwipeFrameLayout extends FrameLayout {
         scroller.startScroll(topView.getScrollX(), 0, -topView.getScrollX(), 0);
         lastScrollRunnable = new ScrollRunnable();
         post(lastScrollRunnable);
-
     }
 
     private ScrollRunnable lastScrollRunnable;
@@ -251,7 +241,6 @@ public class SwipeFrameLayout extends FrameLayout {
                     lastScrollRunnable = null;
                 }
             }
-
         }
     }
 
@@ -261,7 +250,6 @@ public class SwipeFrameLayout extends FrameLayout {
         protected MotionEvent mLastOnDownEvent = null;
 
         private float[] initPointLocation = new float[2];
-
 
         @Override
         public boolean onDown(MotionEvent e) {
@@ -293,7 +281,5 @@ public class SwipeFrameLayout extends FrameLayout {
                 return false;
             }
         }
-
     }
-
 }

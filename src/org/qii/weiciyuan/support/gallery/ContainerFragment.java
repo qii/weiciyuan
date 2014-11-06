@@ -24,7 +24,6 @@ import android.widget.TextView;
  */
 public class ContainerFragment extends Fragment {
 
-
     public static ContainerFragment newInstance(String url, AnimationRect rect,
             boolean animationIn, boolean firstOpenPage) {
         ContainerFragment fragment = new ContainerFragment();
@@ -37,11 +36,9 @@ public class ContainerFragment extends Fragment {
         return fragment;
     }
 
-    TextView wait;
-
-    TextView error;
-
-    CircleProgressView progressView;
+    private TextView wait;
+    private TextView error;
+    private CircleProgressView progressView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,12 +65,10 @@ public class ContainerFragment extends Fragment {
             wait.setVisibility(View.VISIBLE);
             TimeLineBitmapDownloader.getInstance()
                     .download(this, url, FileLocationMethod.picture_large, downloadCallback);
-
         }
 
         return view;
     }
-
 
     private TimeLineBitmapDownloader.DownloadCallback downloadCallback
             = new TimeLineBitmapDownloader.DownloadCallback() {
@@ -118,16 +113,12 @@ public class ContainerFragment extends Fragment {
                         error.setVisibility(View.INVISIBLE);
                         displayPicture(localPath, false);
                     }
-
                 }
             });
         }
-
-
     };
 
     private void displayPicture(String path, boolean animateIn) {
-
         GalleryAnimationActivity activity = (GalleryAnimationActivity) getActivity();
 
         AnimationRect rect = getArguments().getParcelable("rect");
@@ -152,15 +143,12 @@ public class ContainerFragment extends Fragment {
             }
             getChildFragmentManager().beginTransaction().replace(R.id.child, fragment)
                     .commitAllowingStateLoss();
-
         } else {
             LargePictureFragment fragment = LargePictureFragment.newInstance(path, animateIn);
             getChildFragmentManager().beginTransaction().replace(R.id.child, fragment)
                     .commitAllowingStateLoss();
         }
-
     }
-
 
     public void animationExit(ObjectAnimator backgroundAnimator) {
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.child);
@@ -173,7 +161,6 @@ public class ContainerFragment extends Fragment {
         }
     }
 
-
     public boolean canAnimateCloseActivity() {
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.child);
         if (fragment instanceof GeneralPictureFragment) {
@@ -185,13 +172,10 @@ public class ContainerFragment extends Fragment {
         }
     }
 
-
     public LongClickListener getLongClickListener() {
         String url = getArguments().getString("url");
         String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
         LongClickListener longClickListener = new LongClickListener(getActivity(), url, path);
         return longClickListener;
     }
-
-
 }

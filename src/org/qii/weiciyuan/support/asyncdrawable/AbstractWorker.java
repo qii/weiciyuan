@@ -33,5 +33,4 @@ public abstract class AbstractWorker<Params, Progress, Result>
         }
         return null;
     }
-
 }

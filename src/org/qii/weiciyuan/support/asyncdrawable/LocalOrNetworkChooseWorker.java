@@ -16,14 +16,11 @@ import java.lang.ref.WeakReference;
 public class LocalOrNetworkChooseWorker extends AbstractWorker<String, Integer, Boolean> {
 
     private String data = "";
+    private boolean isMultiPictures = false;
 
     private WeakReference<ImageView> viewWeakReference;
 
-
     private FileLocationMethod method;
-
-
-    private boolean isMultiPictures = false;
 
     private IWeiciyuanDrawable IWeiciyuanDrawable;
 
@@ -40,7 +37,6 @@ public class LocalOrNetworkChooseWorker extends AbstractWorker<String, Integer, 
         this.isMultiPictures = isMultiPictures;
     }
 
-
     public LocalOrNetworkChooseWorker(IWeiciyuanDrawable view, String url,
             FileLocationMethod method,
             boolean isMultiPictures) {
@@ -48,9 +44,7 @@ public class LocalOrNetworkChooseWorker extends AbstractWorker<String, Integer, 
         this(view.getImageView(), url, method, false);
         this.IWeiciyuanDrawable = view;
         this.isMultiPictures = isMultiPictures;
-
     }
-
 
     @Override
     protected Boolean doInBackground(String... url) {
@@ -110,11 +104,7 @@ public class LocalOrNetworkChooseWorker extends AbstractWorker<String, Integer, 
             }
 
             newTask.executeOnWaitNetwork();
-
         }
-
     }
-
-
 }
 

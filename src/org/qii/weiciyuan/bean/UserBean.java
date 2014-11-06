@@ -12,9 +12,7 @@ import android.os.Parcelable;
 public class UserBean implements Parcelable {
 
     public static final int V_TYPE_NONE = -1;
-
     public static final int V_TYPE_PERSONAL = 0;
-
     public static final int V_TYPE_ENTERPRISE = 1;
 
     public boolean isEnterpriseV() {
@@ -242,61 +240,33 @@ public class UserBean implements Parcelable {
     }
 
     private String id;
-
     private String screen_name;
-
     private String name;
-
     private String province;
-
     private String city;
-
     private String location;
-
     private String description;
-
     private String url;
-
     private String profile_image_url;
-
     private String cover_image;
-
     private String domain;
-
     private String gender;
-
     private String statuses_count = "0";
-
     private String favourites_count = "0";
-
     private String created_at;
-
     private boolean following;
-
     private String allow_all_act_msg;
-
     private String remark;
-
     private String geo_enabled;
-
     private boolean verified;
-
     private String allow_all_comment;
-
     private String avatar_large;
-
     private String verified_reason;
-
     private int verified_type;
-
     private boolean follow_me;
-
     private String online_status;
-
     private String bi_followers_count;
-
     private String followers_count = "0";
-
     private String friends_count = "0";
 
     public String getFollowers_count() {
@@ -314,7 +284,6 @@ public class UserBean implements Parcelable {
     public void setFriends_count(String friends_count) {
         this.friends_count = friends_count;
     }
-
 
     @Override
     public String toString() {
@@ -403,7 +372,6 @@ public class UserBean implements Parcelable {
                 }
             };
 
-
     @Override
     public boolean equals(Object o) {
         return o instanceof UserBean && id.equals(((UserBean) o).getId());
@@ -413,5 +381,4 @@ public class UserBean implements Parcelable {
     public int hashCode() {
         return getId().hashCode();
     }
-
 }

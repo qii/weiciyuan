@@ -2,12 +2,13 @@ package org.qii.weiciyuan.dao.group;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.GroupBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,10 +40,8 @@ public class UpdateGroupNameDao {
             AppLogger.e(e.getMessage());
         }
 
-
         return value;
     }
-
 
     public UpdateGroupNameDao(String token, String list_id, String name) {
         this.access_token = token;
@@ -53,7 +52,5 @@ public class UpdateGroupNameDao {
     private String access_token;
     private String name;
     private String list_id;
-
-
 }
 

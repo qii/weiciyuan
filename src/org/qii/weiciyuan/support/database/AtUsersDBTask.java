@@ -25,7 +25,6 @@ public class AtUsersDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -34,7 +33,6 @@ public class AtUsersDBTask {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getReadableDatabase();
     }
-
 
     public static void add(AtUserBean atUserBean, String accountId) {
         add(getWsd(), atUserBean, accountId);
@@ -55,7 +53,6 @@ public class AtUsersDBTask {
 
     public static List<AtUserBean> get(String accountId) {
         return get(getWsd(), accountId);
-
     }
 
     public static List<AtUserBean> get(SQLiteDatabase db, String accountId) {
@@ -78,9 +75,7 @@ public class AtUsersDBTask {
 
         c.close();
         return msgList;
-
     }
-
 
     private static void reduce(String accountId) {
         reduce(getWsd(), accountId);
@@ -112,12 +107,10 @@ public class AtUsersDBTask {
         }
     }
 
-
     static void clear(String accountId) {
         String sql = "delete from " + AtUsersTable.TABLE_NAME + " where " + AtUsersTable.ACCOUNTID
                 + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
-
 }

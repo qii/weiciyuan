@@ -4,10 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,6 @@ public class ClearUnreadDao {
         return URLHelper.UNREAD_CLEAR;
     }
 
-
     public boolean clearUnread() throws WeiboException {
 
         String url = getUrl();
@@ -37,7 +36,6 @@ public class ClearUnreadDao {
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("type", type);
-
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
@@ -54,7 +52,8 @@ public class ClearUnreadDao {
     /**
      * first check server unread status,if unread count is the same,reset unread count
      */
-    public boolean clearMentionStatusUnread(UnreadBean unreadBean, String accountId) throws WeiboException {
+    public boolean clearMentionStatusUnread(UnreadBean unreadBean, String accountId)
+            throws WeiboException {
         int count = unreadBean.getMention_status();
         UnreadBean currentCount = new UnreadDao(access_token, accountId).getCount();
         if (currentCount == null) {
@@ -67,7 +66,8 @@ public class ClearUnreadDao {
         return new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
     }
 
-    public boolean clearMentionCommentUnread(UnreadBean unreadBean, String accountId) throws WeiboException {
+    public boolean clearMentionCommentUnread(UnreadBean unreadBean, String accountId)
+            throws WeiboException {
         int count = unreadBean.getMention_cmt();
         UnreadBean currentCount = new UnreadDao(access_token, accountId).getCount();
         if (currentCount == null) {
@@ -80,7 +80,8 @@ public class ClearUnreadDao {
         return new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_CMT).clearUnread();
     }
 
-    public boolean clearCommentUnread(UnreadBean unreadBean, String accountId) throws WeiboException {
+    public boolean clearCommentUnread(UnreadBean unreadBean, String accountId)
+            throws WeiboException {
         int count = unreadBean.getCmt();
         UnreadBean currentCount = new UnreadDao(access_token, accountId).getCount();
         if (currentCount == null) {
@@ -93,20 +94,15 @@ public class ClearUnreadDao {
         return new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
     }
 
-
     private String access_token;
     private String type;
 
     public ClearUnreadDao(String access_token) {
-
         this.access_token = access_token;
     }
 
     public ClearUnreadDao(String access_token, String type) {
-
         this.access_token = access_token;
         this.type = type;
     }
-
-
 }

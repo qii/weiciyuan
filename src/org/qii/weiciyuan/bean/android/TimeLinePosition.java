@@ -18,13 +18,11 @@ public class TimeLinePosition implements Serializable {
         this.position = position;
     }
 
-
     public long firstItemId = 0L;
 
     //Fragment contain ListView, when Fragment is invisible (user dont open Fragment), ListView children count is zero, getFirstVisiblePosition return zero
     //App have to use firstItemId to calc correct position
     public int position = 0;
-
     public int top = 0;
 
     public TreeSet<Long> newMsgIds = new TreeSet<Long>();

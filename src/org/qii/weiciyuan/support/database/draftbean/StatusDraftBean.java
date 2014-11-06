@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import org.qii.weiciyuan.bean.GeoBean;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.bean.GeoBean;
 
 /**
  * User: qii
@@ -14,7 +15,6 @@ public class StatusDraftBean implements Parcelable {
     private GeoBean gps;
     private String accountId;
     private String id;
-
 
     @Override
     public int describeContents() {
@@ -46,7 +46,6 @@ public class StatusDraftBean implements Parcelable {
                     return new StatusDraftBean[size];
                 }
             };
-
 
     public String getContent() {
         return content;
@@ -80,7 +79,6 @@ public class StatusDraftBean implements Parcelable {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
-
 
     public String getId() {
         return id;

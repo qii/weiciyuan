@@ -42,15 +42,18 @@ public class MentionCommentsTimeLineDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
 
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
-        final int mblogidColumn = ih.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.MBLOGID);
-        final int accountidColumn = ih.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID);
-        final int jsondataColumn = ih.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.JSONDATA);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
+                MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
+        final int mblogidColumn = ih
+                .getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.MBLOGID);
+        final int accountidColumn = ih
+                .getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID);
+        final int jsondataColumn = ih
+                .getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.JSONDATA);
 
         try {
             getWsd().beginTransaction();
@@ -62,8 +65,6 @@ public class MentionCommentsTimeLineDBTask {
                 String json = gson.toJson(msg);
                 ih.bind(jsondataColumn, json);
                 ih.execute();
-
-
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
@@ -86,12 +87,15 @@ public class MentionCommentsTimeLineDBTask {
         CommentListBean result = new CommentListBean();
 
         List<CommentBean> msgList = new ArrayList<CommentBean>();
-        String sql = "select * from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + MentionCommentsTable.MentionCommentsDataTable.MBLOGID + " desc limit " + limit;
+        String sql = "select * from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME
+                + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID + "  = "
+                + accountId + " order by " + MentionCommentsTable.MentionCommentsDataTable.MBLOGID
+                + " desc limit " + limit;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
         while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.JSONDATA));
+            String json = c.getString(
+                    c.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.JSONDATA));
             if (!TextUtils.isEmpty(json)) {
                 try {
                     CommentBean value = gson.fromJson(json, CommentBean.class);
@@ -112,9 +116,7 @@ public class MentionCommentsTimeLineDBTask {
         CommentTimeLineData mentionTimeLineData = new CommentTimeLineData(result, position);
 
         return mentionTimeLineData;
-
     }
-
 
     private static void reduceCommentTable(String accountId) {
 //        String searchCount = "select count(" + MentionCommentsTable.MentionCommentsDataTable.ID + ") as total" + " from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID
@@ -152,18 +154,21 @@ public class MentionCommentsTimeLineDBTask {
                 addCommentLineMsg(data, accountId);
             }
         }).start();
-
     }
 
     static void deleteAllComments(String accountId) {
-        String sql = "delete from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME
+                + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID + " in " + "("
+                + accountId + ")";
 
         getWsd().execSQL(sql);
     }
 
-    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
-        if (position == null)
+    public static void asyncUpdatePosition(final TimeLinePosition position,
+            final String accountId) {
+        if (position == null) {
             return;
+        }
 
         Runnable runnable = new Runnable() {
             @Override
@@ -175,9 +180,9 @@ public class MentionCommentsTimeLineDBTask {
         new Thread(runnable).start();
     }
 
-
     private static void updatePosition(TimeLinePosition position, String accountId) {
-        String sql = "select * from " + MentionCommentsTable.TABLE_NAME + " where " + MentionCommentsTable.ACCOUNTID + "  = "
+        String sql = "select * from " + MentionCommentsTable.TABLE_NAME + " where "
+                + MentionCommentsTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -186,7 +191,8 @@ public class MentionCommentsTimeLineDBTask {
                 String[] args = {accountId};
                 ContentValues cv = new ContentValues();
                 cv.put(MentionCommentsTable.TIMELINEDATA, gson.toJson(position));
-                getWsd().update(MentionCommentsTable.TABLE_NAME, cv, MentionCommentsTable.ACCOUNTID + "=?", args);
+                getWsd().update(MentionCommentsTable.TABLE_NAME, cv,
+                        MentionCommentsTable.ACCOUNTID + "=?", args);
             } catch (JsonSyntaxException e) {
 
             }
@@ -201,7 +207,8 @@ public class MentionCommentsTimeLineDBTask {
     }
 
     public static TimeLinePosition getPosition(String accountId) {
-        String sql = "select * from " + MentionCommentsTable.TABLE_NAME + " where " + MentionCommentsTable.ACCOUNTID + "  = "
+        String sql = "select * from " + MentionCommentsTable.TABLE_NAME + " where "
+                + MentionCommentsTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -212,12 +219,10 @@ public class MentionCommentsTimeLineDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();

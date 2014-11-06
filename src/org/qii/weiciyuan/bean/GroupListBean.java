@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ public class GroupListBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeString(total_number);
         dest.writeTypedList(lists);
     }
@@ -45,7 +45,6 @@ public class GroupListBean implements Parcelable {
                     return new GroupListBean[size];
                 }
             };
-
 
     public List<GroupBean> getLists() {
         return lists;

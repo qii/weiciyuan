@@ -5,13 +5,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.bean.TagBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: qii
@@ -28,15 +32,12 @@ public class FriendsTimeLineTagDao {
         map.put("count", count);
         map.put("page", page);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         return jsonData;
     }
 
     public List<TagBean> getGSONMsgList() throws WeiboException {
-
         String json = getMsgListJson();
         List<TagBean> tagBeanList = new ArrayList<TagBean>();
 
@@ -60,15 +61,12 @@ public class FriendsTimeLineTagDao {
                 }
                 tagBeanList.add(bean);
             }
-
         } catch (JSONException e) {
             AppLogger.e(e.getMessage());
         }
 
-
         return tagBeanList;
     }
-
 
     private String access_token;
     private String uid;
@@ -76,17 +74,14 @@ public class FriendsTimeLineTagDao {
     private String page;
 
     public FriendsTimeLineTagDao(String access_token, String uid) {
-
         this.access_token = access_token;
         this.uid = uid;
         this.count = SettingUtility.getMsgCount();
     }
 
-
     public void setCount(String count) {
         this.count = count;
     }
-
 
     public void setPage(String page) {
         this.page = page;

@@ -2,14 +2,15 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
@@ -22,7 +23,6 @@ import java.util.Map;
  * Date: 12-9-12
  */
 public class CommentsTimeLineByMeDao implements ICommentsTimeLineDao {
-
 
     public void setSince_id(String since_id) {
         this.since_id = since_id;
@@ -39,7 +39,6 @@ public class CommentsTimeLineByMeDao implements ICommentsTimeLineDao {
     public void setPage(String page) {
         this.page = page;
     }
-
 
     private String access_token;
     private String since_id;
@@ -66,9 +65,7 @@ public class CommentsTimeLineByMeDao implements ICommentsTimeLineDao {
         map.put("page", page);
         map.put("filter_by_source", filter_by_source);
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
 
         Gson gson = new Gson();
 
@@ -92,7 +89,6 @@ public class CommentsTimeLineByMeDao implements ICommentsTimeLineDao {
                     TimeUtility.dealMills(msg);
                 }
             }
-
         }
         return value;
     }

@@ -1,7 +1,8 @@
 package org.qii.weiciyuan.support.crashmanager;
 
-import android.text.TextUtils;
 import org.qii.weiciyuan.support.file.FileManager;
+
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -20,16 +21,17 @@ public class CrashManager {
     private static final int MAX_LOG_FILES = 10;
 
     public static void registerHandler() {
-        Thread.UncaughtExceptionHandler currentHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.UncaughtExceptionHandler currentHandler = Thread
+                .getDefaultUncaughtExceptionHandler();
 
         // Register if not already registered
         if (!(currentHandler instanceof ExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(currentHandler));
         }
 
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        ScheduledExecutorService scheduledExecutorService = Executors
+                .newSingleThreadScheduledExecutor();
         scheduledExecutorService.schedule(new ClearLogTask(), 5, TimeUnit.SECONDS);
-
     }
 
     private static class ClearLogTask implements Runnable {

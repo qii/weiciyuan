@@ -34,7 +34,6 @@ public class DMUserBean extends ItemBean implements Parcelable {
 
         dest.writeParcelable(user, flags);
         dest.writeParcelable(direct_message, flags);
-
     }
 
     public static final Parcelable.Creator<DMUserBean> CREATOR =
@@ -84,7 +83,6 @@ public class DMUserBean extends ItemBean implements Parcelable {
     public String getCreated_at() {
         return direct_message.getCreated_at();
     }
-
 
     public long getMills() {
         return mills;

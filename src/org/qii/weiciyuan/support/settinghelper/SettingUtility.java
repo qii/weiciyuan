@@ -15,11 +15,8 @@ import android.content.Context;
 public class SettingUtility {
 
     private static final String FIRSTSTART = "firststart";
-
     private static final String LAST_FOUND_WEIBO_ACCOUNT_LINK = "last_found_weibo_account_link";
-
     private static final String BLACK_MAGIC = "black_magic";
-
     private static final String CLICK_TO_TOP_TIP = "click_to_top_tip";
 
     private SettingUtility() {
@@ -50,7 +47,6 @@ public class SettingUtility {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.FILTER, false);
     }
 
-
     public static int getFontSize() {
         String value = SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.FONT_SIZE, "15");
@@ -69,7 +65,6 @@ public class SettingUtility {
 
             default:
                 return R.style.AppTheme_Light;
-
         }
     }
 
@@ -85,7 +80,6 @@ public class SettingUtility {
             default:
                 SettingHelper.setEditor(getContext(), SettingActivity.THEME, "1");
                 break;
-
         }
     }
 
@@ -94,7 +88,6 @@ public class SettingUtility {
                 .getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "2");
         return Integer.valueOf(value);
     }
-
 
     public static int getCommentRepostAvatar() {
         String value = SettingHelper
@@ -114,18 +107,15 @@ public class SettingUtility {
         return Integer.valueOf(value);
     }
 
-
     public static void setEnableCommentRepostAvatar(boolean value) {
         SettingHelper.setEditor(getContext(), SettingActivity.SHOW_COMMENT_REPOST_AVATAR, value);
     }
-
 
     public static boolean getEnableCommentRepostListAvatar() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.SHOW_COMMENT_REPOST_AVATAR,
                         true);
     }
-
 
     public static int getNotificationStyle() {
         String value = SettingHelper
@@ -140,10 +130,8 @@ public class SettingUtility {
 
             default:
                 return 1;
-
         }
     }
-
 
     public static boolean isEnablePic() {
         return !SettingHelper
@@ -161,12 +149,10 @@ public class SettingUtility {
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_FETCH_MSG, false);
     }
 
-
     public static boolean getEnableAutoRefresh() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.AUTO_REFRESH, false);
     }
-
 
     public static boolean getEnableBigAvatar() {
         return SettingHelper
@@ -192,7 +178,6 @@ public class SettingUtility {
         SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_PIC, value);
     }
 
-
     public static void setEnableBigAvatar(boolean value) {
         SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_AVATAR, value);
     }
@@ -208,18 +193,15 @@ public class SettingUtility {
     public static boolean allowVibrate() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_VIBRATE, false);
-
     }
 
     public static boolean allowLed() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_LED, false);
-
     }
 
     public static String getRingtone() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_RINGTONE, "");
-
     }
 
     public static boolean allowFastScroll() {
@@ -229,26 +211,20 @@ public class SettingUtility {
 
     }
 
-
     public static boolean allowMentionToMe() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_MENTION_TO_ME, true);
-
     }
-
 
     public static boolean allowCommentToMe() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_COMMENT_TO_ME, true);
-
     }
-
 
     public static boolean allowMentionCommentToMe() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_MENTION_COMMENT_TO_ME,
                         true);
-
     }
 
     public static String getMsgCount() {
@@ -270,17 +246,14 @@ public class SettingUtility {
                         return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_25);
                     }
                 }
-
         }
         return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_25);
-
     }
 
     public static boolean disableHardwareAccelerated() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.DISABLE_HARDWARE_ACCELERATED,
                         false);
-
     }
 
     public static int getUploadQuality() {
@@ -324,14 +297,12 @@ public class SettingUtility {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_INTERNAL_WEB_BROWSER,
                         true);
-
     }
 
     public static boolean allowClickToCloseGallery() {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.ENABLE_CLICK_TO_CLOSE_GALLERY,
                         true);
-
     }
 
     public static boolean isBlackMagicEnabled() {
@@ -360,6 +331,4 @@ public class SettingUtility {
         return SettingHelper
                 .getSharedPreferences(getContext(), SettingActivity.FILTER_SINA_AD, false);
     }
-
-
 }

@@ -32,9 +32,7 @@ import java.util.ArrayList;
 public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
     private WeiboDetailImageView view;
-
     private ProgressBar pb;
-
     private Button retry;
 
     private MessageBean msg;
@@ -69,7 +67,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
         pb.setVisibility(View.VISIBLE);
         pb.setIndeterminate(true);
-
     }
 
     public void setView(WeiboDetailImageView view) {
@@ -104,9 +101,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
                     .getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle)
                     : null;
         }
-
     }
-
 
     FileDownloaderHttpHelper.DownloadListener downloadListener
             = new FileDownloaderHttpHelper.DownloadListener() {
@@ -116,7 +111,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             onProgressUpdate(progress, max);
         }
     };
-
 
     @Override
     protected void onProgressUpdate(Integer... values) {
@@ -130,8 +124,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
             pb.setMax(max);
             pb.setProgress(progress);
-
-
         }
     }
 
@@ -179,8 +171,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
                 }
             });
         }
-
-
     }
 
     private void readNormalPic(String path) {
@@ -194,5 +184,4 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         view.setAlpha(0.0f);
         view.animate().alpha(1.0f).setDuration(200);
     }
-
 }

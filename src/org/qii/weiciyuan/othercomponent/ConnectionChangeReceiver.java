@@ -16,7 +16,6 @@ import android.os.Looper;
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     private Handler handler = new Handler(Looper.getMainLooper());
-
     private Runnable task = null;
 
     //receive multi broadcasts at the same time
@@ -58,7 +57,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     }
 
     private static void decideTimeLineBigPic(Context context) {
-
         if (SettingUtility.getListAvatarMode() == 3) {
             SettingUtility.setEnableBigAvatar(Utility.isWifi(context));
         }
@@ -68,7 +66,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     }
 
     private static void decideCommentRepostAvatar(Context context) {
-
         if (SettingUtility.getCommentRepostAvatar() == 3) {
             SettingUtility.setEnableCommentRepostAvatar(Utility.isWifi(context));
         }

@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: qii
@@ -19,10 +20,8 @@ public class FavBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeParcelable(status, flags);
         dest.writeString(favorited_time);
-
     }
 
     public static final Parcelable.Creator<FavBean> CREATOR =
@@ -40,7 +39,6 @@ public class FavBean implements Parcelable {
                     return new FavBean[size];
                 }
             };
-
 
     public MessageBean getStatus() {
         return status;

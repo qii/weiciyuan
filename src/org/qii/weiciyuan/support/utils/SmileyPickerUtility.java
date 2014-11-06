@@ -34,7 +34,6 @@ public class SmileyPickerUtility {
         });
     }
 
-
     public static int getScreenHeight(Activity paramActivity) {
         Display display = paramActivity.getWindowManager().getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
@@ -46,7 +45,6 @@ public class SmileyPickerUtility {
         Rect localRect = new Rect();
         paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
         return localRect.top;
-
     }
 
     public static int getActionBarHeight(Activity paramActivity) {

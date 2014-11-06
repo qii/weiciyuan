@@ -21,13 +21,9 @@ import android.widget.ImageView;
 public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
-
     private String data = "";
-
     private ImageView view;
-
     private GlobalContext globalContext;
-
 
     public ProfileAvatarReadWorker(ImageView view, String url) {
         this.lruCache = GlobalContext.getInstance().getBitmapCache();
@@ -35,7 +31,6 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
         this.globalContext = GlobalContext.getInstance();
         this.data = url;
     }
-
 
     @Override
     protected Bitmap doInBackground(String... url) {
@@ -59,9 +54,7 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
                 .getDimensionPixelSize(R.dimen.profile_avatar_height);
 
         return ImageUtility.getRoundedCornerPic(path, avatarWidth, avatarHeight);
-
     }
-
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
@@ -70,12 +63,8 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
             view.setVisibility(View.VISIBLE);
             view.setImageBitmap(bitmap);
             lruCache.put(data, bitmap);
-
         } else {
             view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-
     }
-
-
 }

@@ -5,14 +5,10 @@ public class FileDownloaderHttpHelper {
         public void pushProgress(int progress, int max) {
         }
 
-
         public void completed() {
         }
 
-
         public void cancel() {
         }
-
-
     }
 }

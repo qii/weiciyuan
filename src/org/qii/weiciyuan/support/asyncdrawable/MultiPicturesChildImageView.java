@@ -1,5 +1,9 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.lib.PerformanceImageView;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,21 +13,18 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.lib.PerformanceImageView;
 
 /**
  * User: qii
  * Date: 13-9-4
  */
-public class MultiPicturesChildImageView extends PerformanceImageView implements IWeiciyuanDrawable {
+public class MultiPicturesChildImageView extends PerformanceImageView
+        implements IWeiciyuanDrawable {
 
     private Paint paint = new Paint();
     private boolean pressed = false;
     private boolean showGif = false;
     private Bitmap gif;
-
 
     public MultiPicturesChildImageView(Context context) {
         this(context, null);

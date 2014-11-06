@@ -22,7 +22,6 @@ public class QuickRelativeLayout extends ViewGroup {
     private static final int REPOST_CONTENT_PIC_INDEX = 8;
     private static final int REPOST_CONTENT_PIC_MULTI_INDEX = 9;
 
-
     public QuickRelativeLayout(Context context) {
         super(context);
     }
@@ -35,7 +34,6 @@ public class QuickRelativeLayout extends ViewGroup {
         super(context, attrs, defStyle);
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -45,15 +43,15 @@ public class QuickRelativeLayout extends ViewGroup {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        if (widthMode != MeasureSpec.EXACTLY || heightMode != MeasureSpec.UNSPECIFIED)
-            throw new IllegalArgumentException("this viewgroup only can be used in ListView and its layout_width must be match_parent");
-
+        if (widthMode != MeasureSpec.EXACTLY || heightMode != MeasureSpec.UNSPECIFIED) {
+            throw new IllegalArgumentException(
+                    "this viewgroup only can be used in ListView and its layout_width must be match_parent");
+        }
 
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
         int paddingRight = getPaddingRight();
-
 
         int avatarHeight = 0;
         int avatarWidth = 0;
@@ -70,22 +68,21 @@ public class QuickRelativeLayout extends ViewGroup {
         int sourceHeight = 0;
         int sourceWidth = 0;
 
-
         int contentMaxWidth = widthSize - paddingLeft - paddingRight;
 
         int childCount = getChildCount();
 
-
         int contentHeight = 0;
-
 
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
 
-            if (child.getVisibility() == View.GONE)
+            if (child.getVisibility() == View.GONE) {
                 continue;
+            }
 
-            final QuickRelativeLayout.LayoutParams lp = (QuickRelativeLayout.LayoutParams) child.getLayoutParams();
+            final QuickRelativeLayout.LayoutParams lp = (QuickRelativeLayout.LayoutParams) child
+                    .getLayoutParams();
             int defaultWidth = lp.width;
             int defaultHeight = lp.height;
 
@@ -101,7 +98,6 @@ public class QuickRelativeLayout extends ViewGroup {
 
                     avatarWidth = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
                     avatarHeight = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
-
 
                     lp.mLeft = paddingLeft + lp.leftMargin;
                     lp.mTop = paddingTop + lp.topMargin;
@@ -123,7 +119,8 @@ public class QuickRelativeLayout extends ViewGroup {
 
                     break;
                 case USERNAME_INDEX:
-                    int childWidth = contentMaxWidth - avatarWidth - countWidth - lp.leftMargin - lp.rightMargin;
+                    int childWidth = contentMaxWidth - avatarWidth - countWidth - lp.leftMargin
+                            - lp.rightMargin;
                     widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST);
                     heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     child.measure(widthSpec, heightSpec);
@@ -139,7 +136,8 @@ public class QuickRelativeLayout extends ViewGroup {
 
                     break;
                 case TIME_INDEX:
-                    int timeChildMaxWidth = contentMaxWidth - avatarWidth - lp.leftMargin - lp.rightMargin;
+                    int timeChildMaxWidth = contentMaxWidth - avatarWidth - lp.leftMargin
+                            - lp.rightMargin;
                     widthSpec = MeasureSpec.makeMeasureSpec(timeChildMaxWidth, MeasureSpec.AT_MOST);
                     heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     child.measure(widthSpec, heightSpec);
@@ -155,8 +153,10 @@ public class QuickRelativeLayout extends ViewGroup {
 
                     break;
                 case SOURCE_INDEX:
-                    int sourceChildMaxWidth = contentMaxWidth - avatarWidth - timeWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(sourceChildMaxWidth, MeasureSpec.AT_MOST);
+                    int sourceChildMaxWidth = contentMaxWidth - avatarWidth - timeWidth
+                            - lp.leftMargin - lp.rightMargin;
+                    widthSpec = MeasureSpec
+                            .makeMeasureSpec(sourceChildMaxWidth, MeasureSpec.AT_MOST);
                     heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     child.measure(widthSpec, heightSpec);
 
@@ -172,7 +172,8 @@ public class QuickRelativeLayout extends ViewGroup {
                     break;
                 case CONTENT_INDEX:
                     int contentChildMaxWidth = contentMaxWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(contentChildMaxWidth, MeasureSpec.EXACTLY);
+                    widthSpec = MeasureSpec
+                            .makeMeasureSpec(contentChildMaxWidth, MeasureSpec.EXACTLY);
                     heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     child.measure(widthSpec, heightSpec);
 
@@ -187,8 +188,10 @@ public class QuickRelativeLayout extends ViewGroup {
                     break;
                 case REPOST_FLAG_INDEX:
                 case REPOST_CONTENT_INDEX:
-                    int repostContentChildMaxWidth = contentMaxWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(repostContentChildMaxWidth, MeasureSpec.EXACTLY);
+                    int repostContentChildMaxWidth = contentMaxWidth - lp.leftMargin
+                            - lp.rightMargin;
+                    widthSpec = MeasureSpec
+                            .makeMeasureSpec(repostContentChildMaxWidth, MeasureSpec.EXACTLY);
                     heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     child.measure(widthSpec, heightSpec);
 
@@ -201,8 +204,10 @@ public class QuickRelativeLayout extends ViewGroup {
                     contentHeight = lp.mBottom + lp.bottomMargin;
                     break;
                 case REPOST_CONTENT_PIC_INDEX:
-                    int repostContentPicChildMaxWidth = contentMaxWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(repostContentPicChildMaxWidth, MeasureSpec.EXACTLY);
+                    int repostContentPicChildMaxWidth = contentMaxWidth - lp.leftMargin
+                            - lp.rightMargin;
+                    widthSpec = MeasureSpec
+                            .makeMeasureSpec(repostContentPicChildMaxWidth, MeasureSpec.EXACTLY);
                     heightSpec = MeasureSpec.makeMeasureSpec(defaultHeight, MeasureSpec.EXACTLY);
                     child.measure(widthSpec, heightSpec);
 
@@ -215,8 +220,10 @@ public class QuickRelativeLayout extends ViewGroup {
                     contentHeight = lp.mBottom + lp.bottomMargin;
                     break;
                 case REPOST_CONTENT_PIC_MULTI_INDEX:
-                    int repostContentMultiPicChildMaxWidth = contentMaxWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(repostContentMultiPicChildMaxWidth, MeasureSpec.EXACTLY);
+                    int repostContentMultiPicChildMaxWidth = contentMaxWidth - lp.leftMargin
+                            - lp.rightMargin;
+                    widthSpec = MeasureSpec.makeMeasureSpec(repostContentMultiPicChildMaxWidth,
+                            MeasureSpec.EXACTLY);
                     heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     child.measure(widthSpec, heightSpec);
 
@@ -229,15 +236,12 @@ public class QuickRelativeLayout extends ViewGroup {
                     contentHeight = lp.mBottom + lp.bottomMargin;
                     break;
             }
-
         }
-
 
         contentHeight += paddingBottom;
 
         setMeasuredDimension(widthSize, contentHeight);
     }
-
 
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
@@ -254,12 +258,11 @@ public class QuickRelativeLayout extends ViewGroup {
         return new LayoutParams(p);
     }
 
-
     @Override
     protected QuickRelativeLayout.LayoutParams generateDefaultLayoutParams() {
-        return new QuickRelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        return new QuickRelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
     }
-
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -269,51 +272,38 @@ public class QuickRelativeLayout extends ViewGroup {
         for (int i = 0; i < childCount; i++) {
 
             View child = getChildAt(i);
-            if (child.getVisibility() == View.GONE)
+            if (child.getVisibility() == View.GONE) {
                 continue;
+            }
 
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
             child.layout(lp.mLeft, lp.mTop, lp.mRight, lp.mBottom);
         }
-
-
     }
-
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
 
         private int mLeft, mTop, mRight, mBottom;
 
-
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-
-
         }
 
         public LayoutParams(int w, int h) {
             super(w, h);
         }
 
-
         public LayoutParams(ViewGroup.LayoutParams source) {
             super(source);
         }
-
 
         public LayoutParams(ViewGroup.MarginLayoutParams source) {
             super(source);
         }
 
-
         public LayoutParams(LayoutParams source) {
             super(source);
-
-
         }
-
-
     }
-
 }

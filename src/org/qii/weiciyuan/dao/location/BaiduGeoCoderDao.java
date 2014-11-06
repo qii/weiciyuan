@@ -12,7 +12,6 @@ import org.qii.weiciyuan.support.http.HttpUtility;
  */
 public class BaiduGeoCoderDao {
 
-
     public String get() throws WeiboException {
 
         final String url = String.format(URLHelper.BAIDU_GEO_CODER_MAP, lat, long_fix);
@@ -29,8 +28,6 @@ public class BaiduGeoCoderDao {
         } catch (JSONException exception) {
             return null;
         }
-
-
     }
 
     public BaiduGeoCoderDao(double lat, double long_fix) {
@@ -39,8 +36,5 @@ public class BaiduGeoCoderDao {
     }
 
     private float lat;
-
     private float long_fix;
-
-
 }

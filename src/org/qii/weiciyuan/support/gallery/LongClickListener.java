@@ -27,11 +27,9 @@ public class LongClickListener implements View.OnLongClickListener {
     private Activity context;
 
     private String url;
-
     private String filePath;
 
     private PicSaveTask saveTask;
-
 
     public LongClickListener(Activity activity, String url, String path) {
         this.context = activity;
@@ -89,7 +87,6 @@ public class LongClickListener implements View.OnLongClickListener {
             saveTask = new PicSaveTask(context, filePath);
             saveTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
-
     }
 }
 

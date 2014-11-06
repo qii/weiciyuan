@@ -32,7 +32,6 @@ public class HomeOtherGroupTimeLineDBTask {
     }
 
     private static SQLiteDatabase getWsd() {
-
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getWritableDatabase();
     }
@@ -41,7 +40,6 @@ public class HomeOtherGroupTimeLineDBTask {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
         return databaseHelper.getReadableDatabase();
     }
-
 
     private static void addHomeLineMsg(MessageListBean list, String accountId, String groupId) {
 
@@ -82,7 +80,6 @@ public class HomeOtherGroupTimeLineDBTask {
                     ih.bind(groupidColumn, groupId);
                 }
                 ih.execute();
-
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
@@ -187,12 +184,10 @@ public class HomeOtherGroupTimeLineDBTask {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
                     c.close();
                     return value;
-
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         c.close();
         return TimeLinePosition.empty();
@@ -230,7 +225,6 @@ public class HomeOtherGroupTimeLineDBTask {
                 } catch (JsonSyntaxException e) {
                     AppLogger.e(e.getMessage());
                 }
-
             } else {
                 msgList.add(null);
             }
@@ -256,7 +250,6 @@ public class HomeOtherGroupTimeLineDBTask {
         result.setStatuses(msgList);
         c.close();
         return result;
-
     }
 
     static void updateCount(String msgId, int commentCount, int repostCount) {
@@ -285,9 +278,7 @@ public class HomeOtherGroupTimeLineDBTask {
                 } catch (JsonSyntaxException e) {
 
                 }
-
             }
         }
     }
-
 }
