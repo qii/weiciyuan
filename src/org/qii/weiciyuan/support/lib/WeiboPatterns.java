@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.BuildConfig;
+
 import java.util.regex.Pattern;
 
 /**
@@ -18,6 +20,6 @@ public class WeiboPatterns {
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
     public static final String WEB_SCHEME = "http://";
-    public static final String TOPIC_SCHEME = "org.qii.weiciyuan.topic://";
-    public static final String MENTION_SCHEME = "org.qii.weiciyuan://";
+    public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
+    public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
 }

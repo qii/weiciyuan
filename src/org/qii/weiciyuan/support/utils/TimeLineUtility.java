@@ -153,7 +153,6 @@ public class TimeLineUtility {
     }
 
     public static void filterHomeTimeLineSinaWeiboAd(MessageListBean value) {
-
         if (!SettingUtility.isFilterSinaAd()) {
             return;
         }
@@ -165,7 +164,7 @@ public class TimeLineUtility {
 
         if (adBeanList.size() > 0) {
 
-            AppLogger.d("filter " + adBeanList.size() + " sina weibo ads");
+            AppLogger.i("filter " + adBeanList.size() + " sina weibo ads");
 
             List<String> adIdList = new ArrayList<String>();
 
