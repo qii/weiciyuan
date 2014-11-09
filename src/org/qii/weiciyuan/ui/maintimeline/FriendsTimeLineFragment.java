@@ -66,10 +66,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * User: qii
  * Date: 12-7-29
+ * Weibo home/friend timeline
  */
 public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean>
         implements GlobalContext.MyProfileInfoChangeListener,
         MainTimeLineActivity.ScrollableListFragment {
+
+    private static final String ARGUMENTS_ACCOUNT_EXTRA = FriendsTimeLineFragment.class.getName()
+            + ":account_extra";
+    private static final String ARGUMENTS_USER_EXTRA = FriendsTimeLineFragment.class.getName()
+            + ":userBean_extra";
+    private static final String ARGUMENTS_TOKEN_EXTRA = FriendsTimeLineFragment.class.getName()
+            + ":token_extra";
 
     private AccountBean accountBean;
     private UserBean userBean;
@@ -104,9 +112,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     public static FriendsTimeLineFragment newInstance(AccountBean accountBean, UserBean userBean,
             String token) {
-        FriendsTimeLineFragment fragment = new FriendsTimeLineFragment(accountBean, userBean,
-                token);
-        fragment.setArguments(new Bundle());
+        FriendsTimeLineFragment fragment = new FriendsTimeLineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARGUMENTS_ACCOUNT_EXTRA, accountBean);
+        bundle.putParcelable(ARGUMENTS_USER_EXTRA, userBean);
+        bundle.putString(ARGUMENTS_TOKEN_EXTRA, token);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -140,12 +151,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
             }
         }
-    }
-
-    public FriendsTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
-        this.accountBean = accountBean;
-        this.userBean = userBean;
-        this.token = token;
     }
 
     @Override
@@ -288,19 +293,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("account", accountBean);
-        outState.putParcelable("userBean", userBean);
-        outState.putString("token", token);
-
-//        outState.putSerializable("bean", getList());
-//        outState.putSerializable("groupDataCache", groupDataCache);
-//        outState.putString("currentGroupId", currentGroupId);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        userBean = getArguments().getParcelable(ARGUMENTS_USER_EXTRA);
+        accountBean = getArguments().getParcelable(ARGUMENTS_ACCOUNT_EXTRA);
+        token = getArguments().getString(ARGUMENTS_TOKEN_EXTRA);
+
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
@@ -322,7 +319,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     groupDataCache.put(ALL_GROUP_ID, getList().copy());
                 }
                 buildActionBarNav();
-
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -331,10 +327,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 setListViewPositionFromPositionsCache();
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = savedInstanceState.getParcelable("userBean");
-                accountBean = savedInstanceState.getParcelable("account");
-                token = savedInstanceState.getString("token");
-
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
                     dbTask = new DBCacheTask(this, accountBean.getUid());
                     dbTask.executeOnIO();
@@ -877,12 +869,20 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
+            MessageBean previousFirstItem = getList().getSize() > 0 ? getList().getItem(0) : null;
             int index = getListView().getFirstVisiblePosition();
+            getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
             int finalSize = getList().getSize();
-            final int positionAfterRefresh = index + finalSize - initSize + getListView()
+            int positionAfterRefresh = index + finalSize - initSize + getListView()
                     .getHeaderViewsCount();
+            //make sure isMiddleUnreadItem item is visible at first ListView visible position
+            if (previousFirstItem != null) {
+                int itemPositionAfterRefresh = getList().getItemList().indexOf(previousFirstItem);
+                if (getList().getItem(itemPositionAfterRefresh - 1).isMiddleUnreadItem()) {
+                    positionAfterRefresh -= 1;
+                }
+            }
             //use 1 px to show newMsgTipBar
             Utility.setListViewItemPosition(getListView(), positionAfterRefresh, 1,
                     new Runnable() {

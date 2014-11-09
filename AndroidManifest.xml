@@ -135,7 +135,7 @@
                 android:launchMode="singleTop"/>
 
 
-        <!--topic activity -->
+        <!--topic activity intent action refer to {@link WeiboPatterns}-->
         <activity
                 android:name=".ui.topic.SearchTopicByNameActivity"
                 android:label="@string/search_topic"
@@ -148,7 +148,7 @@
         </activity>
         <activity android:name=".ui.topic.UserTopicListActivity"/>
 
-        <!--user activity -->
+        <!--user activity intent action refer to {@link WeiboPatterns}-->
         <activity
                 android:name=".ui.userinfo.UserInfoActivity"
                 android:theme="@style/AppTheme_Dummy">

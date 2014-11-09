@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 /**
  * User: qii
  * Date: 12-12-27
- * fix web url bug which include chinese words, see WEB_URL
+ *
+ * AndroidManifest.xml Activity intent-filter
  */
 public class WeiboPatterns {
 

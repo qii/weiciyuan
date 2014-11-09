@@ -22,7 +22,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    buildToolsVersion "21.0.2"
+    buildToolsVersion "21.1.0"
     compileSdkVersion 21
 
     defaultConfig {
