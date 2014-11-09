@@ -49,6 +49,13 @@ import java.util.List;
 public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<CommentListBean>
         implements IRemoveItem {
 
+    private static final String ARGUMENTS_ACCOUNT_EXTRA = CommentsToMeTimeLineFragment.class.getName() + ":account_extra";
+    private static final String ARGUMENTS_USER_EXTRA = CommentsToMeTimeLineFragment.class.getName() + ":userBean_extra";
+    private static final String ARGUMENTS_TOKEN_EXTRA = CommentsToMeTimeLineFragment.class.getName() + ":token_extra";
+    private static final String ARGUMENTS_DATA_EXTRA = CommentsToMeTimeLineFragment.class.getName() + ":msg_extra";
+    private static final String ARGUMENTS_TIMELINE_POSITION_EXTRA = CommentsToMeTimeLineFragment.class.getName()
+            + ":timeline_position_extra";
+
     private AccountBean accountBean;
     private UserBean userBean;
     private String token;
@@ -63,14 +70,19 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         return bean;
     }
 
-    public CommentsToMeTimeLineFragment() {
-
+    public static CommentsToMeTimeLineFragment newInstance(AccountBean accountBean,
+            UserBean userBean, String token) {
+        CommentsToMeTimeLineFragment fragment = new CommentsToMeTimeLineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARGUMENTS_ACCOUNT_EXTRA, accountBean);
+        bundle.putParcelable(ARGUMENTS_USER_EXTRA, userBean);
+        bundle.putString(ARGUMENTS_TOKEN_EXTRA, token);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public CommentsToMeTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
-        this.accountBean = accountBean;
-        this.userBean = userBean;
-        this.token = token;
+    public CommentsToMeTimeLineFragment() {
+
     }
 
     public void setCurrentGroupId(int positoin) {
@@ -85,13 +97,9 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("account", accountBean);
-        outState.putParcelable("userBean", userBean);
-        outState.putString("token", token);
-
         if (getActivity().isChangingConfigurations()) {
-            outState.putParcelable("bean", bean);
-            outState.putSerializable("timeLinePosition", timeLinePosition);
+            outState.putParcelable(ARGUMENTS_DATA_EXTRA, bean);
+            outState.putSerializable(ARGUMENTS_TIMELINE_POSITION_EXTRA, timeLinePosition);
         }
     }
 
@@ -183,17 +191,18 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        userBean = getArguments().getParcelable(ARGUMENTS_USER_EXTRA);
+        accountBean = getArguments().getParcelable(ARGUMENTS_ACCOUNT_EXTRA);
+        token = getArguments().getString(ARGUMENTS_TOKEN_EXTRA);
+
         super.onActivityCreated(savedInstanceState);
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
-                accountBean = (AccountBean) savedInstanceState.getParcelable("account");
-                token = savedInstanceState.getString("token");
                 timeLinePosition = (TimeLinePosition) savedInstanceState
-                        .getSerializable("timeLinePosition");
+                        .getSerializable(ARGUMENTS_TIMELINE_POSITION_EXTRA);
 
                 Loader<CommentTimeLineData> loader = getLoaderManager()
                         .getLoader(DB_CACHE_LOADER_ID);
@@ -201,8 +210,8 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                     getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
-                CommentListBean savedBean = (CommentListBean) savedInstanceState
-                        .getSerializable("bean");
+                CommentListBean savedBean = savedInstanceState
+                        .getParcelable(ARGUMENTS_DATA_EXTRA);
                 if (savedBean != null && savedBean.getSize() > 0) {
                     clearAndReplaceValue(savedBean);
                     timeLineAdapter.notifyDataSetChanged();

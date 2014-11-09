@@ -219,7 +219,8 @@ public class CommentsTimeLine extends AbstractAppFragment
                 = ((CommentsToMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 CommentsToMeTimeLineFragment.class.getName()));
         if (fragment == null) {
-            fragment = new CommentsToMeTimeLineFragment(GlobalContext.getInstance().getAccountBean()
+            fragment = CommentsToMeTimeLineFragment.newInstance(
+                    GlobalContext.getInstance().getAccountBean()
                     , GlobalContext.getInstance().getAccountBean().getInfo(),
                     GlobalContext.getInstance().getSpecialToken());
         }
@@ -232,7 +233,8 @@ public class CommentsTimeLine extends AbstractAppFragment
                 = ((CommentsByMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 CommentsByMeTimeLineFragment.class.getName()));
         if (fragment == null) {
-            fragment = new CommentsByMeTimeLineFragment(GlobalContext.getInstance().getAccountBean()
+            fragment = CommentsByMeTimeLineFragment.newInstance(
+                    GlobalContext.getInstance().getAccountBean()
                     , GlobalContext.getInstance().getAccountBean().getInfo(),
                     GlobalContext.getInstance().getSpecialToken());
         }

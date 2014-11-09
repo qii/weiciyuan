@@ -52,6 +52,13 @@ import java.util.List;
 public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<CommentListBean>
         implements IRemoveItem {
 
+    private static final String ARGUMENTS_ACCOUNT_EXTRA = MentionsCommentTimeLineFragment.class.getName() + ":account_extra";
+    private static final String ARGUMENTS_USER_EXTRA = MentionsCommentTimeLineFragment.class.getName() + ":userBean_extra";
+    private static final String ARGUMENTS_TOKEN_EXTRA = MentionsCommentTimeLineFragment.class.getName() + ":token_extra";
+    private static final String ARGUMENTS_DATA_EXTRA = MentionsCommentTimeLineFragment.class.getName() + ":msg_extra";
+    private static final String ARGUMENTS_TIMELINE_POSITION_EXTRA = MentionsCommentTimeLineFragment.class.getName()
+            + ":timeline_position_extra";
+
     private AccountBean accountBean;
     private UserBean userBean;
     private String token;
@@ -68,15 +75,20 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         return bean;
     }
 
-    public MentionsCommentTimeLineFragment() {
-
+    public static MentionsCommentTimeLineFragment newInstance(AccountBean accountBean,
+            UserBean userBean,
+            String token) {
+        MentionsCommentTimeLineFragment fragment = new MentionsCommentTimeLineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARGUMENTS_ACCOUNT_EXTRA, accountBean);
+        bundle.putParcelable(ARGUMENTS_USER_EXTRA, userBean);
+        bundle.putString(ARGUMENTS_TOKEN_EXTRA, token);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public MentionsCommentTimeLineFragment(AccountBean accountBean, UserBean userBean,
-            String token) {
-        this.accountBean = accountBean;
-        this.userBean = userBean;
-        this.token = token;
+    public MentionsCommentTimeLineFragment() {
+
     }
 
     protected void clearAndReplaceValue(CommentListBean value) {
@@ -87,13 +99,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("account", accountBean);
-        outState.putParcelable("userBean", userBean);
-        outState.putString("token", token);
-
         if (getActivity().isChangingConfigurations()) {
-            outState.putParcelable("bean", bean);
-            outState.putSerializable("timeLinePosition", timeLinePosition);
+            outState.putParcelable(ARGUMENTS_DATA_EXTRA, bean);
+            outState.putSerializable(ARGUMENTS_TIMELINE_POSITION_EXTRA, timeLinePosition);
         }
     }
 
@@ -181,19 +189,20 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        userBean = getArguments().getParcelable(ARGUMENTS_USER_EXTRA);
+        accountBean = getArguments().getParcelable(ARGUMENTS_ACCOUNT_EXTRA);
+        token = getArguments().getString(ARGUMENTS_TOKEN_EXTRA);
+
         super.onActivityCreated(savedInstanceState);
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
-                accountBean = (AccountBean) savedInstanceState.getParcelable("account");
-                token = savedInstanceState.getString("token");
                 timeLinePosition = (TimeLinePosition) savedInstanceState
-                        .getSerializable("timeLinePosition");
-                CommentListBean savedBean = (CommentListBean) savedInstanceState
-                        .getParcelable("bean");
+                        .getSerializable(ARGUMENTS_TIMELINE_POSITION_EXTRA);
+                CommentListBean savedBean = savedInstanceState
+                        .getParcelable(ARGUMENTS_DATA_EXTRA);
 
                 Loader<CommentTimeLineData> loader = getLoaderManager()
                         .getLoader(DB_CACHE_LOADER_ID);

@@ -72,12 +72,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         implements GlobalContext.MyProfileInfoChangeListener,
         MainTimeLineActivity.ScrollableListFragment {
 
-    private static final String ARGUMENTS_ACCOUNT_EXTRA = FriendsTimeLineFragment.class.getName()
-            + ":account_extra";
-    private static final String ARGUMENTS_USER_EXTRA = FriendsTimeLineFragment.class.getName()
-            + ":userBean_extra";
-    private static final String ARGUMENTS_TOKEN_EXTRA = FriendsTimeLineFragment.class.getName()
-            + ":token_extra";
+    private static final String ARGUMENTS_ACCOUNT_EXTRA = FriendsTimeLineFragment.class.getName() + ":account_extra";
+    private static final String ARGUMENTS_USER_EXTRA = FriendsTimeLineFragment.class.getName() + ":userBean_extra";
+    private static final String ARGUMENTS_TOKEN_EXTRA = FriendsTimeLineFragment.class.getName() + ":token_extra";
 
     private AccountBean accountBean;
     private UserBean userBean;

@@ -228,7 +228,7 @@ public class MentionsTimeLine extends AbstractAppFragment
                 = ((MentionsCommentTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 MentionsCommentTimeLineFragment.class.getName()));
         if (fragment == null) {
-            fragment = new MentionsCommentTimeLineFragment(
+            fragment = MentionsCommentTimeLineFragment.newInstance(
                     GlobalContext.getInstance().getAccountBean()
                     , GlobalContext.getInstance().getAccountBean().getInfo(),
                     GlobalContext.getInstance().getSpecialToken());
@@ -242,7 +242,7 @@ public class MentionsTimeLine extends AbstractAppFragment
                 = ((MentionsWeiboTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 MentionsWeiboTimeLineFragment.class.getName()));
         if (fragment == null) {
-            fragment = new MentionsWeiboTimeLineFragment(
+            fragment = MentionsWeiboTimeLineFragment.newInstance(
                     GlobalContext.getInstance().getAccountBean()
                     , GlobalContext.getInstance().getAccountBean().getInfo(),
                     GlobalContext.getInstance().getSpecialToken());
