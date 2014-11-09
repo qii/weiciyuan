@@ -398,7 +398,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
                     .equals(SettingUtility.getLastFoundWeiboAccountLink());
             boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
             if (a && b) {
-                OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
+                OpenWeiboAccountLinkDialog dialog = OpenWeiboAccountLinkDialog.newInstance(url);
                 dialog.show(getSupportFragmentManager(), "");
                 SettingUtility.setLastFoundWeiboAccountLink(url);
             }
@@ -407,27 +407,17 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
 
     public static class OpenWeiboAccountLinkDialog extends DialogFragment {
 
-        private String url;
-
-        public OpenWeiboAccountLinkDialog() {
-
-        }
-
-        public OpenWeiboAccountLinkDialog(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public void onSaveInstanceState(Bundle outState) {
-            super.onSaveInstanceState(outState);
-            outState.putString("url", url);
+        public static OpenWeiboAccountLinkDialog newInstance(String url) {
+            OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("url", url);
+            dialog.setArguments(bundle);
+            return dialog;
         }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            if (savedInstanceState != null) {
-                this.url = savedInstanceState.getString("url");
-            }
+            final String url = getArguments().getString("url");
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.find_weibo_account_link)
                     .setMessage(url)

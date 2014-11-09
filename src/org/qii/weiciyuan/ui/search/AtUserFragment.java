@@ -39,12 +39,12 @@ public class AtUserFragment extends ListFragment {
     private String token;
     private AtUserTask task;
 
-    public AtUserFragment() {
-
-    }
-
-    public AtUserFragment(String token) {
-        this.token = token;
+    public static AtUserFragment newInstance(String token) {
+        AtUserFragment fragment = new AtUserFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("token", token);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -53,12 +53,6 @@ public class AtUserFragment extends ListFragment {
         if (task != null) {
             task.cancel(true);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("token", token);
     }
 
     @Override
@@ -71,9 +65,7 @@ public class AtUserFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            token = savedInstanceState.getString("token");
-        }
+        token = getArguments().getString("token");
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
                 result);
         setListAdapter(adapter);

@@ -275,7 +275,7 @@
             android:layout_below="@id/second"
             android:id="@+id/location"
             android:visibility="gone"
-            android:onClick="true"
+            android:clickable="true"
             android:layout_marginTop="8dp"/>
 
     <ImageView

@@ -4,6 +4,7 @@ import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -19,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 public class SmileyPickerUtility {
 
     public static void hideSoftInput(View paramEditText) {
-        ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method"))
+        ((InputMethodManager) GlobalContext.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
 
@@ -28,7 +29,7 @@ public class SmileyPickerUtility {
         paramEditText.post(new Runnable() {
             @Override
             public void run() {
-                ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method"))
+                ((InputMethodManager) GlobalContext.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .showSoftInput(paramEditText, 0);
             }
         });

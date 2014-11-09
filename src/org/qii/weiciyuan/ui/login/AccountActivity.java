@@ -45,8 +45,7 @@ public class AccountActivity extends AbstractAppActivity
         implements LoaderManager.LoaderCallbacks<List<AccountBean>> {
 
     private static final String ACTION_OPEN_FROM_APP_INNER = "org.qii.weiciyuan:accountactivity";
-    private static final String ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN
-            = "org.qii.weiciyuan:accountactivity_refresh_token";
+    private static final String ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN = "org.qii.weiciyuan:accountactivity_refresh_token";
 
     private static final String REFRESH_ACTION_EXTRA = "refresh_account";
 
@@ -100,11 +99,8 @@ public class AccountActivity extends AbstractAppActivity
         }
 
         if (ACTION_OPEN_FROM_APP_INNER_REFRESH_TOKEN.equals(action)) {
-
             showAddAccountDialog();
-
             AccountBean accountBean = getIntent().getParcelableExtra(REFRESH_ACTION_EXTRA);
-
             Toast.makeText(this, String.format(getString(R.string.account_token_has_expired),
                     accountBean.getUsernick()), Toast.LENGTH_SHORT).show();
         }
@@ -307,9 +303,8 @@ public class AccountActivity extends AbstractAppActivity
     }
 
     private class AccountAdapter extends BaseAdapter {
-
-        int checkedBG;
-        int defaultBG;
+        private int checkedBG;
+        private int defaultBG;
 
         public AccountAdapter() {
             defaultBG = getResources().getColor(R.color.transparent);
@@ -339,35 +334,46 @@ public class AccountActivity extends AbstractAppActivity
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            LayoutInflater layoutInflater = getLayoutInflater();
-            View mView = layoutInflater
-                    .inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
-            mView.findViewById(R.id.listview_root).setBackgroundColor(defaultBG);
-
-            if (listView.getCheckedItemPositions().get(i)) {
-                mView.findViewById(R.id.listview_root).setBackgroundColor(checkedBG);
-            }
-
-            TextView textView = (TextView) mView.findViewById(R.id.account_name);
-            if (accountList.get(i).getInfo() != null) {
-                textView.setText(accountList.get(i).getInfo().getScreen_name());
+            ViewHolder holder;
+            if (view == null || view.getTag() == null) {
+                LayoutInflater layoutInflater = getLayoutInflater();
+                View mView = layoutInflater
+                        .inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
+                holder = new ViewHolder();
+                holder.root = mView.findViewById(R.id.listview_root);
+                holder.name = (TextView) mView.findViewById(R.id.account_name);
+                holder.avatar = (ImageView) mView.findViewById(R.id.imageView_avatar);
+                holder.tokenInvalid = (TextView) mView.findViewById(R.id.token_expired);
+                view = mView;
             } else {
-                textView.setText(accountList.get(i).getUsernick());
+                holder = (ViewHolder) view.getTag();
             }
-            ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
+
+            holder.root.setBackgroundColor(defaultBG);
+            if (listView.getCheckedItemPositions().get(i)) {
+                holder.root.setBackgroundColor(checkedBG);
+            }
+
+            if (accountList.get(i).getInfo() != null) {
+                holder.name.setText(accountList.get(i).getInfo().getScreen_name());
+            } else {
+                holder.name.setText(accountList.get(i).getUsernick());
+            }
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
                 getBitmapDownloader()
-                        .downloadAvatar(imageView, accountList.get(i).getInfo(), false);
+                        .downloadAvatar(holder.avatar, accountList.get(i).getInfo(), false);
             }
 
-            TextView token = (TextView) mView.findViewById(R.id.token_expired);
-            if (!Utility.isTokenValid(accountList.get(i))) {
-                token.setVisibility(View.VISIBLE);
-            } else {
-                token.setVisibility(View.GONE);
-            }
-            return mView;
+            holder.tokenInvalid.setVisibility(!Utility.isTokenValid(accountList.get(i)) ? View.VISIBLE : View.GONE);
+            return view;
         }
+    }
+
+    class ViewHolder {
+        View root;
+        TextView name;
+        ImageView avatar;
+        TextView tokenInvalid;
     }
 }

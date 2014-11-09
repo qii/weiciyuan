@@ -23,7 +23,7 @@ public class AtUserActivity extends AbstractAppActivity {
         String token = getIntent().getStringExtra("token");
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new AtUserFragment(token))
+                    .replace(android.R.id.content, AtUserFragment.newInstance(token))
                     .commit();
         }
     }

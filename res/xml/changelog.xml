@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
+        version="0.5.0-2014.11"
+        versioncode="51">
+        <change>重写通知</change>
+    </release>
+    <release
         version="0.5.0beta8-2014.10"
         versioncode="49">
         <change>修复Android 5.0上GIF动画崩溃的bug</change>
