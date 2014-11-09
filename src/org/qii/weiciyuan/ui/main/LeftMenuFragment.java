@@ -52,6 +52,18 @@ import java.util.TreeSet;
 /**
  * User: qii
  * Date: 13-1-22
+ *
+ * left sliding menu
+ *
+ * homepage
+ * mentions
+ * comments
+ * direct message
+ * favourites
+ * search
+ * profile
+ * logout
+ * setting
  */
 public class LeftMenuFragment extends AbstractAppFragment {
 
