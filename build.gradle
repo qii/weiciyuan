@@ -1,19 +1,23 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'http://download.crashlytics.com/maven' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.13.2'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
+        maven { url 'http://download.crashlytics.com/maven' }
     }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
 
 android {
 
@@ -121,6 +125,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.crashlytics.android:crashlytics:1.1.11'
     compile(project(':libs:slidingmenulibrary')) {
         exclude group: 'com.google.android', module: 'support-v4'
     }
