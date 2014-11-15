@@ -107,7 +107,7 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            resValue "string", "applicationId", "org.qii.weiciyuan" + getApplicationIdSuffix()
+            resValue "string", "applicationId", "org.qii.weiciyuan"
             debuggable false
             runProguard false
             signingConfig signingConfigs.release
