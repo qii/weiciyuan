@@ -78,6 +78,7 @@ public class FetchNewMsgService extends IntentService {
             //empty
             AppLogger.i("FetchNewMsgService is started by " + ACTION_OPEN_APP);
         } else {
+            AppLogger.i("FetchNewMsgService receive Intent whose Action is empty");
 //            throw new IllegalArgumentException("Intent action is empty");
             //why System send Intent object whose Action is empty? fuck google, it is impossible according to api documents when this service flag is START_NOT_STICKY
             return;
