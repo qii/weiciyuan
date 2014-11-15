@@ -178,7 +178,16 @@ public class WriteWeiboActivity extends AbstractAppActivity
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
-                    startActivityForResult(intent, PIC_RESULT_KK);
+                    /**
+                     * not all 4.4 version devices have system app which accept Intent.ACTION_OPEN_DOCUMENT
+                     */
+                    if (Utility.isIntentSafe(WriteWeiboActivity.this, intent)) {
+                        startActivityForResult(intent, PIC_RESULT_KK);
+                    } else {
+                        Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(choosePictureIntent, PIC_RESULT);
+                    }
                 } else {
                     Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

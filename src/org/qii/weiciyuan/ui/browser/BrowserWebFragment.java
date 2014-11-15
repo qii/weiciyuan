@@ -259,7 +259,6 @@ public class BrowserWebFragment extends Fragment {
                 getActivity().finish();
                 return true;
             } else if (Utility.isWeiboMid(url)) {
-
                 String mid = Utility.getMidFromUrl(url);
                 RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(
                         BrowserWebFragment.this, url, mid);

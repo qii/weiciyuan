@@ -698,10 +698,10 @@ public class Utility {
             return false;
         } else {
             url = convertWeiboCnToWeiboCom(url);
-            boolean urlValide = url.startsWith("http://weibo.com/") || url
+            boolean isUrlValidate = url.startsWith("http://weibo.com/") || url
                     .startsWith("http://e.weibo.com/");
 
-            if (!urlValide) {
+            if (!isUrlValidate) {
                 return false;
             }
 
