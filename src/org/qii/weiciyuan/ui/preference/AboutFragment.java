@@ -224,7 +224,7 @@ public class AboutFragment extends PreferenceFragment {
         }
 
         if (packInfo != null) {
-            version = packInfo.versionName;
+            version = packInfo.versionName + "(" + packInfo.versionCode + ")";
         }
 
         if (!TextUtils.isEmpty(version)) {
