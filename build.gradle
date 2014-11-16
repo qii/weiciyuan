@@ -95,6 +95,7 @@ android {
 
     /*
      * android:targetPackage cant use ${applicationId}, so define a string source called "applicationId"
+     * Preference intent android:data dont support ${applicationId}
      */
 
     buildTypes {
@@ -102,12 +103,16 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             resValue "string", "applicationId", "org.qii.weiciyuan" + getApplicationIdSuffix()
+            resValue "string", "weiciyuanOfficalWeiboName",
+                    "org.qii.weiciyuan" + getApplicationIdSuffix() + ".mention://@四次元App"
             debuggable true
             runProguard false
             signingConfig signingConfigs.debug
         }
         release {
             resValue "string", "applicationId", "org.qii.weiciyuan"
+            resValue "string", "weiciyuanOfficalWeiboName",
+                    "org.qii.weiciyuan" + ".mention://@四次元App"
             debuggable false
             runProguard false
             signingConfig signingConfigs.release

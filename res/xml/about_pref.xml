@@ -11,7 +11,7 @@
                 >
             <intent
                     android:action="android.intent.action.VIEW"
-                    android:data="org.qii.weiciyuan://@四次元App"/>
+                android:data="@string/weiciyuanOfficalWeiboName" />
         </Preference>
 
         <Preference
