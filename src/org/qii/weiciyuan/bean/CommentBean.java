@@ -192,7 +192,7 @@ public class CommentBean extends ItemBean implements Parcelable {
 
     @Override
     public boolean isMiddleUnreadItem() {
-        return false;
+        return this.isMiddleUnreadItem;
     }
 
     public void setUser(UserBean user) {
