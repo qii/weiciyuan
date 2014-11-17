@@ -1,13 +1,11 @@
 package org.qii.weiciyuan.support.lib;
 
 import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.utils.JavaReflectionUtility;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -15,10 +13,9 @@ import java.util.ArrayList;
  * User: qii
  * Date: 14-6-18
  */
-public class HeaderListView extends ListView {
+public class HeaderListView extends HackFirstVisiblePositionListView {
 
     private boolean inTouch = false;
-
     private ArrayList<View> headerList = new ArrayList<View>();
 
     public HeaderListView(Context context) {
@@ -70,23 +67,5 @@ public class HeaderListView extends ListView {
 
     public boolean isThisViewHeader(View v) {
         return headerList.contains(v);
-    }
-
-    @Override
-    public void setSelection(int position) {
-        super.setSelection(position);
-        JavaReflectionUtility.setValue(this, "mFirstPosition", position);
-    }
-
-    @Override
-    public void setSelectionAfterHeaderView() {
-        super.setSelectionAfterHeaderView();
-        JavaReflectionUtility.setValue(this, "mFirstPosition", 0);
-    }
-
-    @Override
-    public void setSelectionFromTop(int position, int y) {
-        super.setSelectionFromTop(position, y);
-        JavaReflectionUtility.setValue(this, "mFirstPosition", position);
     }
 }

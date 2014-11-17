@@ -79,7 +79,6 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
 
     @Override
     public void addNewData(CommentListBean newValue) {
-
         if (newValue == null || newValue.getSize() == 0) {
             return;
         }
@@ -145,7 +144,6 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
 
     @Override
     public void addOldData(CommentListBean oldValue) {
-
         if (oldValue != null && oldValue.getItemList().size() > 1) {
             List<CommentBean> list = oldValue.getItemList();
             getItemList().addAll(list.subList(1, list.size()));
