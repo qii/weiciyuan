@@ -64,7 +64,7 @@ public class HackFirstVisiblePositionListView extends ListView {
 
     @Override
     public int getFirstVisiblePosition() {
-        return mCorrectFirstVisiblePosition;
+        return mCorrectFirstVisiblePosition == -1 ? super.getFirstVisiblePosition() : mCorrectFirstVisiblePosition;
     }
 
     @Override

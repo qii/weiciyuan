@@ -254,10 +254,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         PrefView prefView = null;
+        int itemViewType = getItemViewType(position);
 
         if (convertView == null
-                || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
-            int itemViewType = getItemViewType(position);
+                || convertView.getTag(R.drawable.ic_launcher + itemViewType) == null) {
             View view = null;
             switch (itemViewType) {
                 case TYPE_SIMPLE:
@@ -306,7 +306,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     .getTag(R.drawable.ic_launcher + getItemViewType(position));
         }
 
-        if (getItemViewType(position) != TYPE_MIDDLE) {
+        if (itemViewType != TYPE_MIDDLE) {
             configLayerType(holder);
             configViewFont(holder);
             bindViewData(holder, position);
