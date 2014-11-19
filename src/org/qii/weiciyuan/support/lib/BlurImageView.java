@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import android.content.Context;
@@ -21,9 +22,7 @@ import android.widget.ImageView;
 public class BlurImageView extends ImageView {
 
     private static int radius = 20;
-
     private Thread blurThread;
-
     private String url;
 
     public BlurImageView(Context context) {
@@ -44,7 +43,6 @@ public class BlurImageView extends ImageView {
 
     @Override
     public void setImageDrawable(final Drawable drawable) {
-
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -54,23 +52,33 @@ public class BlurImageView extends ImageView {
             final Bitmap bitmap = bitmapDrawable.getBitmap();
             if (bitmap != null) {
 
-                Bitmap blurBitmap = GlobalContext.getInstance().getBitmapCache().get(url + "/blur");
+                final Bitmap blurBitmap = GlobalContext.getInstance().getBitmapCache().get(url + "/blur");
                 if (blurBitmap == null) {
                     blurThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final Bitmap createdBlurBitmap = fastBlur(bitmap, radius);
-                            final Drawable blurDrawable = new BitmapDrawable(getResources(),
-                                    createdBlurBitmap);
-                            if (Thread.currentThread().isInterrupted()) {
+                            Drawable blurDrawable = null;
+                            Bitmap createdBlurBitmap = null;
+                            try {
+                                createdBlurBitmap = fastBlur(bitmap, radius);
+                                blurDrawable = new BitmapDrawable(getResources(),
+                                        createdBlurBitmap);
+                            } catch (Exception ignored) {
+                                ignored.printStackTrace();
+                                AppLogger.v("Blur image failed");
+                            }
+
+                            if (Thread.currentThread().isInterrupted() || blurDrawable == null || createdBlurBitmap == null) {
                                 return;
                             }
+                            final Bitmap finalCreatedBlurBitmap = createdBlurBitmap;
+                            final Drawable finalBlurDrawable = blurDrawable;
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
                                     GlobalContext.getInstance().getBitmapCache()
-                                            .put(url + "/blur", createdBlurBitmap);
-                                    BlurImageView.super.setImageDrawable(blurDrawable);
+                                            .put(url + "/blur", finalCreatedBlurBitmap);
+                                    BlurImageView.super.setImageDrawable(finalBlurDrawable);
                                 }
                             });
                         }

@@ -923,9 +923,7 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
                     this.e = e;
                     cancel(true);
                 }
-                if (user != null) {
-                    userBean = user;
-                } else {
+                if (user == null) {
                     cancel(true);
                 }
                 return user;
@@ -948,6 +946,7 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
             if (o == null || getActivity() == null) {
                 return;
             }
+            UserInfoFragment.this.userBean = o;
             displayBasicInfo();
             displayCoverPicture();
             if (getActivity() instanceof UserInfoActivity) {
