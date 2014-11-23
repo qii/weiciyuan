@@ -501,7 +501,6 @@ public class UserInfoActivity extends AbstractAppActivity {
     class UpdateRemarkTask extends MyAsyncTask<Void, UserBean, UserBean> {
 
         WeiboException e;
-
         String remark;
 
         UpdateRemarkTask(String remark) {

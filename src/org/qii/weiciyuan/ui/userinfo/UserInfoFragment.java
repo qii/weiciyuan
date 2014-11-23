@@ -13,6 +13,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.MyStatusDBTask;
 import org.qii.weiciyuan.support.database.TopicDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -269,6 +270,7 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
         getPullToRefreshListView().getRefreshableView().setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             float rawX;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
@@ -614,6 +616,17 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
             if (isMyself()) {
                 MyStatusDBTask.asyncReplace(getList(), userBean.getId());
             }
+
+            UserBean userInfoFromServer = newValue.getItem(0).getUser();
+            if (userInfoFromServer != null && !isSinaWeiboBlockWeiciyuanFetchUserInfo(userInfoFromServer)) {
+                UserInfoFragment.this.userBean = userInfoFromServer;
+                displayBasicInfo();
+                displayCoverPicture();
+                if (getActivity() instanceof UserInfoActivity) {
+                    ((UserInfoActivity) getActivity()).setUser(userInfoFromServer);
+                    getActivity().invalidateOptionsMenu();
+                }
+            }
         }
     }
 
@@ -799,6 +812,12 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
 
     }
 
+    //http://open.weibo.com/qa/index.php?qa=32088
+    private boolean isSinaWeiboBlockWeiciyuanFetchUserInfo(UserBean userInfoFromServer) {
+        return userInfoFromServer.getStatuses_count().equals("0") && userInfoFromServer.getFollowers_count().equals("0")
+                && userInfoFromServer.getFriends_count().equals("0");
+    }
+
     class HeaderPagerAdapter extends PagerAdapter {
 
         @Override
@@ -942,27 +961,34 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
         }
 
         @Override
-        protected void onPostExecute(UserBean o) {
-            if (o == null || getActivity() == null) {
+        protected void onPostExecute(UserBean userInfoFromServer) {
+            if (userInfoFromServer == null || getActivity() == null) {
                 return;
             }
-            UserInfoFragment.this.userBean = o;
+
+            //hack to fix sina weibo issue
+            if (isSinaWeiboBlockWeiciyuanFetchUserInfo(userInfoFromServer)) {
+                AppLogger.e("Sina Weibo block Weiciyuan fetch user info from server!");
+                return;
+            }
+
+            UserInfoFragment.this.userBean = userInfoFromServer;
             displayBasicInfo();
             displayCoverPicture();
             if (getActivity() instanceof UserInfoActivity) {
-                ((UserInfoActivity) getActivity()).setUser(o);
+                ((UserInfoActivity) getActivity()).setUser(userInfoFromServer);
                 getActivity().invalidateOptionsMenu();
             }
             for (MessageBean msg : bean.getItemList()) {
-                msg.setUser(o);
+                msg.setUser(userInfoFromServer);
             }
             if (isMyself()) {
-                GlobalContext.getInstance().updateUserInfo(o);
-                AccountDBTask.asyncUpdateMyProfile(GlobalContext.getInstance().getAccountBean(), o);
+                GlobalContext.getInstance().updateUserInfo(userInfoFromServer);
+                AccountDBTask.asyncUpdateMyProfile(GlobalContext.getInstance().getAccountBean(), userInfoFromServer);
             }
             getAdapter().notifyDataSetChanged();
             stopRefreshMenuAnimationIfPossible();
-            super.onPostExecute(o);
+            super.onPostExecute(userInfoFromServer);
         }
     }
 
