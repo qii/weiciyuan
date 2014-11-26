@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.othercomponent;
 
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 
@@ -16,31 +17,32 @@ import android.os.Looper;
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     private Handler handler = new Handler(Looper.getMainLooper());
-    private Runnable task = null;
+    private static Runnable task = null;
 
     //receive multi broadcasts at the same time
     @Override
     public void onReceive(final Context context, Intent intent) {
-
+        AppLogger.i("Network status changed");
         if (task != null) {
+            AppLogger.i("Remove previous receiver task");
             handler.removeCallbacks(task);
         }
 
         task = new Runnable() {
             @Override
             public void run() {
+                AppLogger.i("Execute current receiver task");
                 judgeNetworkStatus(context, true);
                 task = null;
             }
         };
 
-        handler.postDelayed(task, 2000);
+        handler.postDelayed(task, 4000);
     }
 
     public static void judgeNetworkStatus(Context context,
             boolean forceStartFetchNewUnreadBackgroundService) {
         if (Utility.isConnected(context)) {
-
             if (forceStartFetchNewUnreadBackgroundService) {
                 if (SettingUtility.getEnableFetchMSG()) {
                     AppNewMsgAlarm.startAlarm(context, true);
