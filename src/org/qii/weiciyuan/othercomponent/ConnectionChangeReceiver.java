@@ -16,7 +16,8 @@ import android.os.Looper;
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    //handler and task must be static, otherwise removeCallbacks will cant remove previous task
+    private static Handler handler = new Handler(Looper.getMainLooper());
     private static Runnable task = null;
 
     //receive multi broadcasts at the same time
