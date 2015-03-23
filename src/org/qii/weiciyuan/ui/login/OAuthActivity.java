@@ -213,7 +213,7 @@ public class OAuthActivity extends AbstractAppActivity {
             progressFragment.setAsyncTask(this);
             OAuthActivity activity = oAuthActivityWeakReference.get();
             if (activity != null) {
-                progressFragment.show(activity.getSupportFragmentManager(), "");
+                Utility.forceShowDialog(activity, progressFragment);
             }
         }
 

@@ -37,7 +37,6 @@ public class SendCommentService extends Service {
 
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
-
     private Handler handler = new Handler();
 
     public static Intent newIntent(AccountBean accountBean, MessageBean msg, String content,
@@ -58,7 +57,6 @@ public class SendCommentService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
         if (lastNotificationId != -1) {
             NotificationUtility.cancel(lastNotificationId);
@@ -74,7 +72,6 @@ public class SendCommentService extends Service {
         WeiboSendTask task = new WeiboSendTask(account, token, content, oriMsg, comment_ori,
                 commentDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
         tasksResult.put(task, false);
 
         return START_REDELIVER_INTENT;
@@ -83,19 +80,12 @@ public class SendCommentService extends Service {
     private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
 
         AccountBean account;
-
         String token;
-
         String content;
-
         MessageBean oriMsg;
-
         boolean comment_ori;
-
         CommentDraftBean commentDraftBean;
-
         Notification notification;
-
         WeiboException e;
 
         public WeiboSendTask(AccountBean account,
@@ -126,13 +116,10 @@ public class SendCommentService extends Service {
             builder.setProgress(0, 100, true);
 
             int notificationId = new Random().nextInt(Integer.MAX_VALUE);
-
             notification = builder.getNotification();
-
             NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(notificationId, notification);
-
             tasksNotifications.put(WeiboSendTask.this, notificationId);
         }
 
@@ -150,7 +137,6 @@ public class SendCommentService extends Service {
                 this.e = e;
                 cancel(true);
             }
-
             return null;
         }
 
@@ -209,11 +195,9 @@ public class SendCommentService extends Service {
             Intent notifyIntent = WriteCommentActivity.startBecauseSendFailed(
                     SendCommentService.this, account, content, oriMsg, commentDraftBean,
                     comment_ori, e.getError());
-
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(SendCommentService.this, 0, notifyIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
-
             builder.setContentIntent(pendingIntent);
 
             Notification notification;
@@ -230,7 +214,6 @@ public class SendCommentService extends Service {
                 intent.putExtra("comment_ori", comment_ori);
                 intent.putExtra("token", token);
                 intent.putExtra("account", account);
-
                 intent.putExtra("lastNotificationId", tasksNotifications.get(task));
 
                 PendingIntent retrySendIntent = PendingIntent
@@ -255,7 +238,6 @@ public class SendCommentService extends Service {
     }
 
     private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
-
         tasksResult.put(currentTask, true);
 
         boolean isAllTaskEnd = true;
