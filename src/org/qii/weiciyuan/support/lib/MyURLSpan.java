@@ -1,23 +1,22 @@
 package org.qii.weiciyuan.support.lib;
 
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.ThemeUtility;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.support.utils.WebBrowserSelector;
-import org.qii.weiciyuan.ui.adapter.LongClickLinkDialog;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.provider.Browser;
 import android.support.v4.app.FragmentActivity;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
+
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.WebBrowserSelector;
+import org.qii.weiciyuan.ui.adapter.LongClickLinkDialog;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -35,6 +34,7 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         mURL = src.readString();
     }
 
+    @Override
     public int getSpanTypeId() {
         return 11;
     }
