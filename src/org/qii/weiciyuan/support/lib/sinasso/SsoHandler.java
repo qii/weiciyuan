@@ -1,7 +1,15 @@
 package org.qii.weiciyuan.support.lib.sinasso;
 
+import com.sina.sso.RemoteSSO;
+
+import org.qii.weiciyuan.dao.URLHelper;
+
 import android.app.Activity;
-import android.content.*;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -9,8 +17,6 @@ import android.content.pm.Signature;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import com.sina.sso.RemoteSSO;
-import org.qii.weiciyuan.dao.URLHelper;
 
 
 /**
@@ -92,6 +98,7 @@ public class SsoHandler {
     private boolean bindRemoteSSOService(Activity activity) {
         Context context = activity.getApplicationContext();
         Intent intent = new Intent("com.sina.weibo.remotessoservice");
+        intent.setPackage("com.sina.weibo");
         return context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
     }
 
